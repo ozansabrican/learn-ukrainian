@@ -18,46 +18,59 @@ body {
   padding: 20px 16px 48px;
 }
 
-header { text-align: center; margin-bottom: 22px; }
+header { text-align: center; margin-bottom: 20px; }
 header h1 { font-size: 1.5rem; font-weight: 700; color: #f5c518; }
-header p { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
+header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 
-/* Overall progress */
-.overall-wrap { width: 100%; max-width: 520px; margin-bottom: 20px; }
-.overall-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+/* ── Overall bar ── */
+.overall-wrap { width: 100%; max-width: 520px; margin-bottom: 18px; }
+.overall-row  { display: flex; justify-content: space-between; margin-bottom: 6px; }
 .overall-label { font-size: 0.78rem; color: #4a6275; }
 .overall-count { font-size: 0.9rem; font-weight: 700; color: #f5c518; }
-.overall-bar { height: 7px; background: #1b2d3e; border-radius: 99px; overflow: hidden; }
-.overall-fill { height: 100%; background: linear-gradient(90deg, #f5c518, #ffd740); border-radius: 99px; transition: width 0.5s ease; }
+.overall-bar   { height: 7px; background: #1b2d3e; border-radius: 99px; overflow: hidden; }
+.overall-fill  { height: 100%; background: linear-gradient(90deg, #f5c518, #ffd740); border-radius: 99px; transition: width 0.5s ease; }
 
-/* Quiz card */
+/* ── Tabs ── */
+.tabs { display: flex; width: 100%; max-width: 520px; background: #0c151f; border-radius: 12px; padding: 4px; gap: 4px; margin-bottom: 20px; }
+.tab-btn { flex: 1; padding: 9px 0; border-radius: 9px; border: none; background: transparent; color: #4a6275; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.tab-btn.active { background: #162230; color: #f5c518; }
+.tab-panel { display: none; width: 100%; max-width: 520px; }
+.tab-panel.active { display: block; }
+
+/* ── Quiz card ── */
 .quiz-wrap {
-  width: 100%; max-width: 520px;
-  background: #162230;
-  border: 1.5px solid #1e3a52;
-  border-radius: 22px;
-  padding: 32px 28px 26px;
-  margin-bottom: 24px;
+  width: 100%; background: #162230;
+  border: 1.5px solid #1e3a52; border-radius: 22px;
+  padding: 28px 24px 24px; margin-bottom: 20px;
   box-shadow: 0 12px 40px rgba(0,0,0,0.4);
 }
 
-.quiz-letter-row { display: flex; flex-direction: column; align-items: center; margin-bottom: 22px; }
-.quiz-letter { font-size: 6rem; font-weight: 700; color: #f5c518; line-height: 1; text-shadow: 0 4px 20px rgba(245,197,24,0.25); }
+/* Letter quiz prompt */
+.prompt-letter { font-size: 5.5rem; font-weight: 700; color: #f5c518; line-height: 1; text-align: center; text-shadow: 0 4px 20px rgba(245,197,24,0.2); }
 
-.letter-pts-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-.letter-pts-bar { width: 120px; height: 5px; background: #1b2d3e; border-radius: 99px; overflow: hidden; }
-.letter-pts-fill { height: 100%; background: #3d8bcd; border-radius: 99px; transition: width 0.4s ease; }
-.letter-pts-text { font-size: 0.75rem; color: #4a6275; min-width: 48px; }
+/* Word quiz prompt */
+.prompt-word {
+  text-align: center; padding: 8px 0 4px;
+}
+.prompt-word .ukr-word { font-size: 2.4rem; font-weight: 700; color: #f5c518; }
+.prompt-word .ukr-pron { font-size: 0.85rem; color: #3a6a8a; margin-top: 4px; letter-spacing: 0.5px; }
 
-/* Options */
-.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-bottom: 18px; }
+/* Shared pts bar */
+.pts-row   { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; margin-bottom: 20px; }
+.pts-bar   { width: 120px; height: 5px; background: #1b2d3e; border-radius: 99px; overflow: hidden; }
+.pts-fill  { height: 100%; background: #3d8bcd; border-radius: 99px; transition: width 0.4s ease; }
+.pts-text  { font-size: 0.75rem; color: #4a6275; min-width: 52px; }
+
+/* Options grid */
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
 .opt-btn {
-  padding: 15px 10px;
+  position: relative;
+  padding: 14px 10px 14px 10px;
   border-radius: 14px;
   border: 2px solid #1e3a52;
   background: rgba(255,255,255,0.03);
   color: #cad3db;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s, transform 0.1s;
@@ -68,416 +81,572 @@ header p { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .opt-btn.correct { border-color: #4caf82 !important; background: rgba(76,175,130,0.15) !important; color: #4caf82 !important; }
 .opt-btn.wrong   { border-color: #e05c5c !important; background: rgba(224,92,92,0.15)  !important; color: #e05c5c !important; }
 .opt-btn.locked  { cursor: default; }
+.key-hint {
+  position: absolute; top: 5px; left: 7px;
+  font-size: 0.6rem; font-weight: 700; color: #2a4a60;
+  background: #0f1923; border-radius: 4px; padding: 1px 4px;
+  letter-spacing: 0.5px; pointer-events: none;
+}
 
 /* Feedback */
-.feedback-row { min-height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.feedback-row { min-height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
 .feedback-msg { font-size: 1rem; font-weight: 700; opacity: 0; transition: opacity 0.2s; }
 .feedback-msg.show { opacity: 1; }
 .feedback-msg.ok  { color: #4caf82; }
 .feedback-msg.bad { color: #e05c5c; }
-.feedback-sub { font-size: 0.8rem; color: #4a6275; opacity: 0; transition: opacity 0.2s; text-align: center; }
+.feedback-sub { font-size: 0.78rem; color: #4a6275; opacity: 0; transition: opacity 0.2s; text-align: center; line-height: 1.5; }
 .feedback-sub.show { opacity: 1; }
 
-/* Next button */
-.next-btn {
-  display: none; margin: 14px auto 0; padding: 11px 36px;
-  border-radius: 99px; border: none; background: #f5c518;
-  color: #0f1923; font-weight: 700; font-size: 0.95rem;
-  cursor: pointer; transition: background 0.2s, transform 0.15s;
-}
+.next-btn { display: none; margin: 14px auto 0; padding: 11px 36px; border-radius: 99px; border: none; background: #f5c518; color: #0f1923; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: background 0.2s, transform 0.15s; }
 .next-btn:hover { background: #ffd740; transform: scale(1.04); }
 .next-btn.show { display: block; }
 
-/* Tabs */
-.tabs { display: flex; width: 100%; max-width: 520px; margin-bottom: 20px; background: #0c151f; border-radius: 12px; padding: 4px; gap: 4px; }
-.tab-btn { flex: 1; padding: 9px 0; border-radius: 9px; border: none; background: transparent; color: #4a6275; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; }
-.tab-btn.active { background: #162230; color: #f5c518; }
-
-/* Tab panels */
-.tab-panel { display: none; width: 100%; max-width: 520px; }
-.tab-panel.active { display: block; }
-
-/* Progress grid */
-.progress-section { width: 100%; }
-.progress-section h2 { font-size: 0.72rem; font-weight: 600; color: #2d4a60; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
-.letter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 8px; }
-
-.letter-tile { background: #162230; border: 1.5px solid #1b2d3e; border-radius: 12px; padding: 9px 6px 7px; text-align: center; transition: border-color 0.3s, background 0.3s; }
-.letter-tile.learned { border-color: #2d7a55; background: #0f2a1c; }
-.tile-char { font-size: 1.3rem; font-weight: 700; color: #8fa8bc; }
-.letter-tile.learned .tile-char { color: #4caf82; }
-.tile-bar { width: 100%; height: 3px; background: #1b2d3e; border-radius: 99px; overflow: hidden; margin-top: 6px; }
-.tile-bar-fill { height: 100%; background: #3d8bcd; border-radius: 99px; transition: width 0.4s ease; }
-.letter-tile.learned .tile-bar-fill { background: #4caf82; }
-.tile-pts { font-size: 0.62rem; color: #2d4a60; margin-top: 3px; }
-.letter-tile.learned .tile-pts { color: #2d7a55; }
-
-/* Completion */
-.completion {
-  display: none; flex-direction: column; align-items: center; text-align: center; gap: 14px;
-  width: 100%; max-width: 520px; background: #162230;
-  border: 1.5px solid #2d7a55; border-radius: 22px; padding: 48px 28px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4); margin-bottom: 24px;
-}
-.completion h2 { font-size: 2rem; color: #f5c518; }
-.completion p { color: #4a6275; font-size: 0.95rem; line-height: 1.6; }
-.completion .emoji { font-size: 3.5rem; }
-.reset-btn { padding: 12px 36px; border-radius: 99px; border: none; background: #f5c518; color: #0f1923; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 6px; transition: background 0.2s, transform 0.15s; }
+/* ── Completion ── */
+.completion { display: none; flex-direction: column; align-items: center; text-align: center; gap: 14px; width: 100%; background: #162230; border: 1.5px solid #2d7a55; border-radius: 22px; padding: 44px 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+.completion h2 { font-size: 1.8rem; color: #f5c518; }
+.completion p  { color: #4a6275; font-size: 0.9rem; line-height: 1.6; }
+.reset-btn { padding: 11px 32px; border-radius: 99px; border: none; background: #f5c518; color: #0f1923; font-weight: 700; font-size: 0.95rem; cursor: pointer; margin-top: 4px; transition: background 0.2s, transform 0.15s; }
 .reset-btn:hover { background: #ffd740; transform: scale(1.05); }
 
-/* Animations */
-@keyframes learnedPop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.25); } }
-.just-learned { animation: learnedPop 0.5s ease; }
+/* ── Progress grid ── */
+.prog-section { margin-bottom: 28px; }
+.prog-section h2 { font-size: 0.72rem; font-weight: 600; color: #2d4a60; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+.letter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 8px; }
+.word-grid   { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
 
-.pts-delta { position: fixed; font-size: 1.4rem; font-weight: 800; pointer-events: none; z-index: 999; animation: floatUp 1s ease forwards; }
-@keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-60px); } }
+.tile { background: #162230; border: 1.5px solid #1b2d3e; border-radius: 12px; padding: 9px 7px 7px; text-align: center; transition: border-color 0.3s, background 0.3s; }
+.tile.learned { border-color: #2d7a55; background: #0f2a1c; }
+.tile-main { font-size: 1.25rem; font-weight: 700; color: #8fa8bc; }
+.tile-sub  { font-size: 0.62rem; color: #3a5a72; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile.learned .tile-main { color: #4caf82; }
+.tile-bar  { width: 100%; height: 3px; background: #1b2d3e; border-radius: 99px; overflow: hidden; margin-top: 6px; }
+.tile-fill { height: 100%; background: #3d8bcd; border-radius: 99px; transition: width 0.4s ease; }
+.tile.learned .tile-fill { background: #4caf82; }
+.tile-pts  { font-size: 0.6rem; color: #2d4a60; margin-top: 3px; }
+.tile.learned .tile-pts { color: #2d7a55; }
+
+/* ── Animations ── */
+@keyframes learnedPop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+.just-learned { animation: learnedPop 0.45s ease; }
+.pts-delta { position: fixed; font-size: 1.4rem; font-weight: 800; pointer-events: none; z-index: 999; animation: floatUp 0.9s ease forwards; }
+@keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-55px); } }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>&#127482;&#127462; Ukrainian Alphabet</h1>
-  <p>Answer correctly to earn points &middot; 10 pts = learned</p>
+  <h1>&#127482;&#127462; Ukrainian</h1>
+  <p>Answer correctly &middot; +2 pts &middot; wrong: &minus;1 &middot; 10 pts = learned</p>
 </header>
 
+<!-- overall bar -->
 <div class="overall-wrap">
   <div class="overall-row">
-    <span class="overall-label">LETTERS LEARNED</span>
-    <span class="overall-count"><span id="learned-count">0</span> / 33</span>
+    <span class="overall-label" id="overall-label">LETTERS LEARNED</span>
+    <span class="overall-count"><span id="learned-count">0</span> / <span id="learned-total">33</span></span>
   </div>
   <div class="overall-bar"><div class="overall-fill" id="overall-fill" style="width:0%"></div></div>
 </div>
 
+<!-- tabs -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('quiz', this)">Quiz</button>
-  <button class="tab-btn" onclick="switchTab('progress', this)">Progress</button>
+  <button class="tab-btn active" onclick="switchTab('letters', this)">Letters</button>
+  <button class="tab-btn"        onclick="switchTab('words',   this)">Words</button>
+  <button class="tab-btn"        onclick="switchTab('progress',this)">Progress</button>
 </div>
 
-<div class="tab-panel active" id="panel-quiz">
-<div class="quiz-wrap" id="quiz-wrap">
-  <div class="quiz-letter-row">
-    <div class="quiz-letter" id="quiz-letter">А</div>
-    <div class="letter-pts-row">
-      <div class="letter-pts-bar"><div class="letter-pts-fill" id="letter-pts-fill" style="width:0%"></div></div>
-      <div class="letter-pts-text" id="letter-pts-text">0 / 10 pts</div>
+<!-- ── Letters tab ── -->
+<div class="tab-panel active" id="panel-letters">
+  <div class="quiz-wrap" id="letters-quiz-wrap">
+    <div class="prompt-letter" id="letters-prompt"></div>
+    <div class="pts-row">
+      <div class="pts-bar"><div class="pts-fill" id="letters-pts-fill" style="width:0%"></div></div>
+      <div class="pts-text" id="letters-pts-text">0 / 10 pts</div>
     </div>
+    <div class="options-grid" id="letters-options"></div>
+    <div class="feedback-row">
+      <div class="feedback-msg" id="letters-fb-msg"></div>
+      <div class="feedback-sub" id="letters-fb-sub"></div>
+    </div>
+    <button class="next-btn" id="letters-next" onclick="nextQ('letters')">Next &#8594;</button>
   </div>
-  <div class="options-grid" id="options-grid"></div>
-  <div class="feedback-row">
-    <div class="feedback-msg" id="feedback-msg"></div>
-    <div class="feedback-sub" id="feedback-sub"></div>
+  <div class="completion" id="letters-done">
+    <div style="font-size:3rem">&#127942;</div>
+    <h2>Alphabet mastered!</h2>
+    <p>You learned all 33 letters.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;! (Excellent work!)</p>
+    <button class="reset-btn" onclick="resetMode('letters')">Start over</button>
   </div>
-  <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next &#8594;</button>
 </div>
 
-<div class="completion" id="completion">
-  <div class="emoji">&#127942;</div>
-  <h2>You learned them all!</h2>
-  <p>You have mastered all 33 letters of the Ukrainian alphabet.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;! (Excellent work!)</p>
-  <button class="reset-btn" onclick="resetAll()">Start over</button>
+<!-- ── Words tab ── -->
+<div class="tab-panel" id="panel-words">
+  <div class="quiz-wrap" id="words-quiz-wrap">
+    <div class="prompt-word">
+      <div class="ukr-word" id="words-prompt-ukr"></div>
+      <div class="ukr-pron" id="words-prompt-pron"></div>
+      <div style="font-size:0.7rem;color:#2a4a60;margin-top:8px;letter-spacing:0.5px">HOW IS IT PRONOUNCED?</div>
+    </div>
+    <div class="pts-row">
+      <div class="pts-bar"><div class="pts-fill" id="words-pts-fill" style="width:0%"></div></div>
+      <div class="pts-text" id="words-pts-text">0 / 10 pts</div>
+    </div>
+    <div class="options-grid" id="words-options"></div>
+    <div class="feedback-row">
+      <div class="feedback-msg" id="words-fb-msg"></div>
+      <div class="feedback-sub" id="words-fb-sub"></div>
+    </div>
+    <button class="next-btn" id="words-next" onclick="nextQ('words')">Next &#8594;</button>
+  </div>
+  <div class="completion" id="words-done">
+    <div style="font-size:3rem">&#127881;</div>
+    <h2>All 50 words learned!</h2>
+    <p>Your Ukrainian vocabulary is growing fast.<br>&#1052;&#1086;&#1083;&#1086;&#1076;&#1077;&#1094;&#1100;! (Well done!)</p>
+    <button class="reset-btn" onclick="resetMode('words')">Start over</button>
+  </div>
 </div>
-</div><!-- /panel-quiz -->
 
+<!-- ── Progress tab ── -->
 <div class="tab-panel" id="panel-progress">
-  <div class="progress-section">
-    <h2>Your Progress</h2>
-    <div class="letter-grid" id="letter-grid"></div>
+  <div class="prog-section">
+    <h2>Letters &mdash; <span id="prog-letters-count">0</span> / 33</h2>
+    <div class="letter-grid" id="grid-letters"></div>
+  </div>
+  <div class="prog-section">
+    <h2>Words &mdash; <span id="prog-words-count">0</span> / 50</h2>
+    <div class="word-grid" id="grid-words"></div>
   </div>
 </div>
 
 <script>
-var ALPHABET = [
-  { letter: 'A a',   cyrillic: 'А а', pron: '/a/',       desc: 'like a in father',       ex: 'аптека',       exEng: 'pharmacy' },
-  { letter: 'B b',   cyrillic: 'Б б', pron: '/b/',       desc: 'like b in book',          ex: 'батько',       exEng: 'father' },
-  { letter: 'V v',   cyrillic: 'В в', pron: '/v/',       desc: 'like v in voice',         ex: 'вода',                   exEng: 'water' },
-  { letter: 'H h',   cyrillic: 'Г г', pron: '/h/',       desc: 'soft h, like h in hi',    ex: 'гора',                   exEng: 'mountain' },
-  { letter: 'G g',   cyrillic: 'Ґ ґ', pron: '/g/',       desc: 'hard g, like g in go',    ex: 'ґанок',             exEng: 'porch' },
-  { letter: 'D d',   cyrillic: 'Д д', pron: '/d/',       desc: 'like d in dog',           ex: 'дім',                         exEng: 'house' },
-  { letter: 'E e',   cyrillic: 'Е е', pron: '/e/',       desc: 'like e in bed',           ex: 'енергія', exEng: 'energy' },
-  { letter: 'Ye ye', cyrillic: 'Є є', pron: '/ye/',      desc: 'like ye in yes',          ex: 'єдність', exEng: 'unity' },
-  { letter: 'Zh zh', cyrillic: 'Ж ж', pron: '/zh/',      desc: 'like s in measure',       ex: 'жінка',             exEng: 'woman' },
-  { letter: 'Z z',   cyrillic: 'З з', pron: '/z/',       desc: 'like z in zoo',           ex: 'зима',                   exEng: 'winter' },
-  { letter: 'Y y',   cyrillic: 'И и', pron: '/y/',       desc: 'short, like i in bit',    ex: 'ринок',             exEng: 'market' },
-  { letter: 'I i',   cyrillic: 'І і', pron: '/i/',       desc: 'like ee in feel',         ex: 'іти',                         exEng: 'to go' },
-  { letter: 'Yi yi', cyrillic: 'Ї ї', pron: '/yi/',      desc: 'like yi in yield',        ex: 'їжа',                         exEng: 'food' },
-  { letter: 'Y y',   cyrillic: 'Й й', pron: '/y/ (w)',   desc: 'consonant y, like y in yes', ex: 'йогурт',   exEng: 'yogurt' },
-  { letter: 'K k',   cyrillic: 'К к', pron: '/k/',       desc: 'like k in key',           ex: 'кіт',                         exEng: 'cat' },
-  { letter: 'L l',   cyrillic: 'Л л', pron: '/l/',       desc: 'like l in love',          ex: 'літо',                   exEng: 'summer' },
-  { letter: 'M m',   cyrillic: 'М м', pron: '/m/',       desc: 'like m in moon',          ex: 'місто',             exEng: 'city' },
-  { letter: 'N n',   cyrillic: 'Н н', pron: '/n/',       desc: 'like n in no',            ex: 'ніч',                         exEng: 'night' },
-  { letter: 'O o',   cyrillic: 'О о', pron: '/o/',       desc: 'like o in more',          ex: 'осінь',             exEng: 'autumn' },
-  { letter: 'P p',   cyrillic: 'П п', pron: '/p/',       desc: 'like p in park',          ex: 'парк',                   exEng: 'park' },
-  { letter: 'R r',   cyrillic: 'Р р', pron: '/r/',       desc: 'rolled r, like Spanish r', ex: 'річка',            exEng: 'river' },
-  { letter: 'S s',   cyrillic: 'С с', pron: '/s/',       desc: 'like s in sun',           ex: 'сонце',             exEng: 'sun' },
-  { letter: 'T t',   cyrillic: 'Т т', pron: '/t/',       desc: 'like t in time',          ex: 'тато',                   exEng: 'dad' },
-  { letter: 'U u',   cyrillic: 'У у', pron: '/u/',       desc: 'like oo in food',         ex: 'університет', exEng: 'university' },
-  { letter: 'F f',   cyrillic: 'Ф ф', pron: '/f/',       desc: 'like f in fun',           ex: 'фото',                   exEng: 'photo' },
-  { letter: 'Kh kh', cyrillic: 'Х х', pron: '/kh/',      desc: 'guttural, like ch in loch', ex: 'хліб',                exEng: 'bread' },
-  { letter: 'Ts ts', cyrillic: 'Ц ц', pron: '/ts/',      desc: 'like ts in cats',         ex: 'цукор',             exEng: 'sugar' },
-  { letter: 'Ch ch', cyrillic: 'Ч ч', pron: '/ch/',      desc: 'like ch in chair',        ex: 'час',                         exEng: 'time' },
-  { letter: 'Sh sh', cyrillic: 'Ш ш', pron: '/sh/',      desc: 'like sh in shoe',         ex: 'школа',             exEng: 'school' },
-  { letter: 'Shch',  cyrillic: 'Щ щ', pron: '/shch/',    desc: 'sh + ch blended together', ex: 'щастя',            exEng: 'happiness' },
-  { letter: 'soft',  cyrillic: 'Ь ь', pron: '(soft sign)', desc: 'softens the previous consonant', ex: 'сіль',         exEng: 'salt' },
-  { letter: 'Yu yu', cyrillic: 'Ю ю', pron: '/yu/',      desc: 'like you',                ex: 'юнак',                   exEng: 'youth' },
-  { letter: 'Ya ya', cyrillic: 'Я я', pron: '/ya/',      desc: 'like ya in yard',         ex: 'яблуко',       exEng: 'apple' }
+/* ════════════════════════════════════════
+   DATA
+════════════════════════════════════════ */
+var LETTERS = [
+  { show: 'А а', pron: '/a/',        desc: 'like a in father',         ex: 'аптека',       exEng: 'pharmacy' },
+  { show: 'Б б', pron: '/b/',        desc: 'like b in book',           ex: 'батько',       exEng: 'father' },
+  { show: 'В в', pron: '/v/',        desc: 'like v in voice',          ex: 'вода',         exEng: 'water' },
+  { show: 'Г г', pron: '/h/',        desc: 'soft h, like h in hi',     ex: 'гора',         exEng: 'mountain' },
+  { show: 'Ґ ґ', pron: '/g/',        desc: 'hard g, like g in go',     ex: 'ґанок',        exEng: 'porch' },
+  { show: 'Д д', pron: '/d/',        desc: 'like d in dog',            ex: 'дім',          exEng: 'house' },
+  { show: 'Е е', pron: '/e/',        desc: 'like e in bed',            ex: 'енергія',      exEng: 'energy' },
+  { show: 'Є є', pron: '/ye/',       desc: 'like ye in yes',           ex: 'єдність',      exEng: 'unity' },
+  { show: 'Ж ж', pron: '/zh/',       desc: 'like s in measure',        ex: 'жінка',        exEng: 'woman' },
+  { show: 'З з', pron: '/z/',        desc: 'like z in zoo',            ex: 'зима',         exEng: 'winter' },
+  { show: 'И и', pron: '/y/',        desc: 'short, like i in bit',     ex: 'ринок',        exEng: 'market' },
+  { show: 'І і', pron: '/i/',        desc: 'like ee in feel',          ex: 'іти',          exEng: 'to go' },
+  { show: 'Ї ї', pron: '/yi/',       desc: 'like yi in yield',         ex: 'їжа',          exEng: 'food' },
+  { show: 'Й й', pron: '/y/ (w)',    desc: 'consonant y, like y in yes', ex: 'йогурт',     exEng: 'yogurt' },
+  { show: 'К к', pron: '/k/',        desc: 'like k in key',            ex: 'кіт',          exEng: 'cat' },
+  { show: 'Л л', pron: '/l/',        desc: 'like l in love',           ex: 'літо',         exEng: 'summer' },
+  { show: 'М м', pron: '/m/',        desc: 'like m in moon',           ex: 'місто',        exEng: 'city' },
+  { show: 'Н н', pron: '/n/',        desc: 'like n in no',             ex: 'ніч',          exEng: 'night' },
+  { show: 'О о', pron: '/o/',        desc: 'like o in more',           ex: 'осінь',        exEng: 'autumn' },
+  { show: 'П п', pron: '/p/',        desc: 'like p in park',           ex: 'парк',         exEng: 'park' },
+  { show: 'Р р', pron: '/r/',        desc: 'rolled r, like Spanish r', ex: 'річка',        exEng: 'river' },
+  { show: 'С с', pron: '/s/',        desc: 'like s in sun',            ex: 'сонце',        exEng: 'sun' },
+  { show: 'Т т', pron: '/t/',        desc: 'like t in time',           ex: 'тато',         exEng: 'dad' },
+  { show: 'У у', pron: '/u/',        desc: 'like oo in food',          ex: 'університет',  exEng: 'university' },
+  { show: 'Ф ф', pron: '/f/',        desc: 'like f in fun',            ex: 'фото',         exEng: 'photo' },
+  { show: 'Х х', pron: '/kh/',       desc: 'guttural, like ch in loch', ex: 'хліб',        exEng: 'bread' },
+  { show: 'Ц ц', pron: '/ts/',       desc: 'like ts in cats',          ex: 'цукор',        exEng: 'sugar' },
+  { show: 'Ч ч', pron: '/ch/',       desc: 'like ch in chair',         ex: 'час',          exEng: 'time' },
+  { show: 'Ш ш', pron: '/sh/',       desc: 'like sh in shoe',          ex: 'школа',        exEng: 'school' },
+  { show: 'Щ щ', pron: '/shch/',     desc: 'sh + ch blended',          ex: 'щастя',        exEng: 'happiness' },
+  { show: 'Ь ь', pron: '(soft)',     desc: 'softens previous consonant', ex: 'сіль',       exEng: 'salt' },
+  { show: 'Ю ю', pron: '/yu/',       desc: 'like you',                 ex: 'юнак',         exEng: 'youth' },
+  { show: 'Я я', pron: '/ya/',       desc: 'like ya in yard',          ex: 'яблуко',       exEng: 'apple' }
 ];
 
+var WORDS = [
+  { ukr: 'привіт',     pron: 'pry-VEET',      eng: 'hello' },
+  { ukr: 'дякую',      pron: 'DYA-ku-yu',     eng: 'thank you' },
+  { ukr: 'будь ласка', pron: 'bood LASS-ka',  eng: 'please' },
+  { ukr: 'так',        pron: 'tak',            eng: 'yes' },
+  { ukr: 'ні',         pron: 'nee',            eng: 'no' },
+  { ukr: 'добре',      pron: 'DOB-re',         eng: 'good / okay' },
+  { ukr: 'вода',       pron: 'vo-DA',          eng: 'water' },
+  { ukr: 'хліб',       pron: 'khleeb',         eng: 'bread' },
+  { ukr: 'їжа',        pron: 'YI-zha',         eng: 'food' },
+  { ukr: 'людина',     pron: 'lyu-DY-na',      eng: 'person' },
+  { ukr: 'день',       pron: 'den',            eng: 'day' },
+  { ukr: 'ніч',        pron: 'neech',          eng: 'night' },
+  { ukr: 'рік',        pron: 'reek',           eng: 'year' },
+  { ukr: 'час',        pron: 'chas',           eng: 'time' },
+  { ukr: 'місто',      pron: 'MEES-to',        eng: 'city' },
+  { ukr: 'дім',        pron: 'deem',           eng: 'home' },
+  { ukr: 'родина',     pron: 'ro-DY-na',       eng: 'family' },
+  { ukr: 'мати',       pron: 'MA-ty',          eng: 'mother' },
+  { ukr: 'батько',     pron: 'BAT-ko',         eng: 'father' },
+  { ukr: 'дитина',     pron: 'dy-TY-na',       eng: 'child' },
+  { ukr: 'друг',       pron: 'droog',          eng: 'friend' },
+  { ukr: 'робота',     pron: 'ro-BO-ta',       eng: 'work / job' },
+  { ukr: 'гроші',      pron: 'HRO-shi',        eng: 'money' },
+  { ukr: 'книга',      pron: 'KNY-ha',         eng: 'book' },
+  { ukr: 'школа',      pron: 'SHKO-la',        eng: 'school' },
+  { ukr: 'магазин',    pron: 'ma-ha-ZYN',      eng: 'shop / store' },
+  { ukr: 'вулиця',     pron: 'VU-ly-tsya',     eng: 'street' },
+  { ukr: 'машина',     pron: 'ma-SHY-na',      eng: 'car' },
+  { ukr: 'поїзд',      pron: 'PO-yizd',        eng: 'train' },
+  { ukr: 'літак',      pron: 'lee-TAK',        eng: 'airplane' },
+  { ukr: 'лікар',      pron: 'LEE-kar',        eng: 'doctor' },
+  { ukr: 'лікарня',    pron: 'lee-KAR-nya',    eng: 'hospital' },
+  { ukr: 'їсти',       pron: 'YIS-ty',         eng: 'to eat' },
+  { ukr: 'пити',       pron: 'PY-ty',          eng: 'to drink' },
+  { ukr: 'іти',        pron: 'ee-TY',          eng: 'to go' },
+  { ukr: 'бачити',     pron: 'BA-chy-ty',      eng: 'to see' },
+  { ukr: 'знати',      pron: 'ZNA-ty',         eng: 'to know' },
+  { ukr: 'любити',     pron: 'lyu-BY-ty',      eng: 'to love / like' },
+  { ukr: 'говорити',   pron: 'ho-vo-RY-ty',    eng: 'to speak' },
+  { ukr: 'розуміти',   pron: 'ro-zu-MEE-ty',   eng: 'to understand' },
+  { ukr: 'читати',     pron: 'chy-TA-ty',      eng: 'to read' },
+  { ukr: 'писати',     pron: 'py-SA-ty',       eng: 'to write' },
+  { ukr: 'великий',    pron: 've-LY-ky',       eng: 'big / large' },
+  { ukr: 'малий',      pron: 'ma-LY',          eng: 'small' },
+  { ukr: 'гарний',     pron: 'HAR-ny',         eng: 'beautiful / nice' },
+  { ukr: 'новий',      pron: 'no-VY',          eng: 'new' },
+  { ukr: 'старий',     pron: 'sta-RY',         eng: 'old' },
+  { ukr: 'швидко',     pron: 'SHVYD-ko',       eng: 'fast / quickly' },
+  { ukr: 'сьогодні',   pron: 'syo-HOD-ni',     eng: 'today' },
+  { ukr: 'завтра',     pron: 'ZAV-tra',        eng: 'tomorrow' }
+];
+
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
 var MAX_PTS    = 10;
 var CORRECT_PT = 2;
 var WRONG_PT   = -1;
 
-var points     = ALPHABET.map(function() { return 0; });
-var currentIdx = null;
-var answered   = false;
-var queue      = [];   // round-robin queue of unlearned letter indices
+var state = {
+  letters: { points: LETTERS.map(function(){ return 0; }), queue: [], current: null, answered: false },
+  words:   { points: WORDS.map(function(){ return 0; }),   queue: [], current: null, answered: false }
+};
 
-/* ── helpers ── */
-function isLearned(i)  { return points[i] >= MAX_PTS; }
-function learnedCount(){ return points.filter(function(_,i){ return isLearned(i); }).length; }
+var KEYS = ['KeyQ', 'KeyW', 'KeyA', 'KeyS'];   // top-left, top-right, bottom-left, bottom-right
+var KEY_LABELS = ['Q', 'W', 'A', 'S'];
+
+var activeTab = 'letters';
+
+/* ════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════ */
+function isLearned(mode, i) { return state[mode].points[i] >= MAX_PTS; }
+
+function learnedCount(mode) {
+  return state[mode].points.filter(function(_, i){ return isLearned(mode, i); }).length;
+}
+
+function dataFor(mode) { return mode === 'letters' ? LETTERS : WORDS; }
 
 function shuffle(arr) {
   var a = arr.slice();
   for (var i = a.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
-    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    var t = a[i]; a[i] = a[j]; a[j] = t;
   }
   return a;
 }
 
-function refillQueue() {
+function refillQueue(mode) {
+  var data = dataFor(mode);
   var pool = [];
-  for (var i = 0; i < ALPHABET.length; i++) {
-    if (!isLearned(i)) pool.push(i);
+  for (var i = 0; i < data.length; i++) {
+    if (!isLearned(mode, i)) pool.push(i);
   }
-  queue = shuffle(pool);
+  state[mode].queue = shuffle(pool);
 }
 
-function pickNextLetter() {
-  // Remove any letters that got learned while still in the queue
-  queue = queue.filter(function(i) { return !isLearned(i); });
-  if (queue.length === 0) refillQueue();
-  if (queue.length === 0) return null;   // all learned
-  return queue.shift();
+function pickNext(mode) {
+  var s = state[mode];
+  s.queue = s.queue.filter(function(i){ return !isLearned(mode, i); });
+  if (s.queue.length === 0) refillQueue(mode);
+  if (s.queue.length === 0) return null;
+  return s.queue.shift();
 }
 
-function pick4(correctIdx) {
+function pick4(mode, correctIdx) {
+  var data = dataFor(mode);
   var others = [];
-  for (var i = 0; i < ALPHABET.length; i++) {
+  for (var i = 0; i < data.length; i++) {
     if (i !== correctIdx) others.push(i);
   }
-  others = shuffle(others).slice(0, 3);
-  return shuffle([correctIdx].concat(others));
+  return shuffle([correctIdx].concat(shuffle(others).slice(0, 3)));
 }
 
-/* ── render question ── */
-function renderQuestion() {
-  answered   = false;
-  currentIdx = pickNextLetter();
+/* ════════════════════════════════════════
+   RENDER QUESTION
+════════════════════════════════════════ */
+function renderQuestion(mode) {
+  var s   = state[mode];
+  s.answered = false;
+  s.current  = pickNext(mode);
 
-  if (currentIdx === null) { showCompletion(); return; }
+  if (s.current === null) { showCompletion(mode); return; }
 
-  var card = ALPHABET[currentIdx];
-  var pts  = points[currentIdx];
+  var data = dataFor(mode);
+  var item = data[s.current];
+  var pts  = s.points[s.current];
 
-  document.getElementById('quiz-letter').textContent      = card.cyrillic;
-  document.getElementById('letter-pts-fill').style.width  = (pts / MAX_PTS * 100) + '%';
-  document.getElementById('letter-pts-text').textContent  = pts + ' / ' + MAX_PTS + ' pts';
+  // prompt
+  if (mode === 'letters') {
+    document.getElementById('letters-prompt').textContent = item.show;
+  } else {
+    document.getElementById('words-prompt-ukr').textContent  = item.ukr;
+    document.getElementById('words-prompt-pron').textContent = item.eng;
+  }
+
+  // pts bar
+  document.getElementById(mode + '-pts-fill').style.width = (pts / MAX_PTS * 100) + '%';
+  document.getElementById(mode + '-pts-text').textContent  = pts + ' / ' + MAX_PTS + ' pts';
 
   // clear feedback
-  var fbMsg = document.getElementById('feedback-msg');
-  var fbSub = document.getElementById('feedback-sub');
+  var fbMsg = document.getElementById(mode + '-fb-msg');
+  var fbSub = document.getElementById(mode + '-fb-sub');
   fbMsg.className = 'feedback-msg';
   fbMsg.textContent = '';
   fbSub.className = 'feedback-sub';
   fbSub.textContent = '';
-  document.getElementById('next-btn').className = 'next-btn';
+  document.getElementById(mode + '-next').className = 'next-btn';
 
-  // build option buttons
-  var indices = pick4(currentIdx);
-  var grid    = document.getElementById('options-grid');
+  // build options
+  var indices = pick4(mode, s.current);
+  var grid    = document.getElementById(mode + '-options');
   grid.innerHTML = '';
 
-  indices.forEach(function(idx) {
-    var btn = document.createElement('button');
+  indices.forEach(function(idx, pos) {
+    var btn  = document.createElement('button');
     btn.className = 'opt-btn';
     btn.setAttribute('data-idx', idx);
-    btn.innerHTML =
-      '<span style="font-size:1.05rem;display:block">' + ALPHABET[idx].pron + '</span>' +
-      '<span style="font-size:0.68rem;color:#3a5a72;display:block;margin-top:3px">' + ALPHABET[idx].desc + '</span>';
-    btn.addEventListener('click', function() { handleAnswer(idx); });
+
+    var keySpan = '<span class="key-hint">' + KEY_LABELS[pos] + '</span>';
+
+    if (mode === 'letters') {
+      btn.innerHTML = keySpan +
+        '<span style="font-size:1rem;display:block">' + data[idx].pron + '</span>' +
+        '<span style="font-size:0.67rem;color:#3a5a72;display:block;margin-top:2px">' + data[idx].desc + '</span>';
+    } else {
+      btn.innerHTML = keySpan +
+        '<span style="font-size:0.97rem;display:block">' + data[idx].pron + '</span>';
+    }
+
+    btn.addEventListener('click', function(){ handleAnswer(mode, idx); });
     grid.appendChild(btn);
   });
 }
 
-/* ── handle answer ── */
-function handleAnswer(chosenIdx) {
-  if (answered) return;
-  answered = true;
+/* ════════════════════════════════════════
+   HANDLE ANSWER
+════════════════════════════════════════ */
+function handleAnswer(mode, chosenIdx) {
+  var s = state[mode];
+  if (s.answered) return;
+  s.answered = true;
 
-  var correct  = (chosenIdx === currentIdx);
-  var delta    = correct ? CORRECT_PT : WRONG_PT;
-  var prevPts  = points[currentIdx];
-  points[currentIdx] = Math.max(0, Math.min(MAX_PTS, prevPts + delta));
-  var newPts   = points[currentIdx];
+  var correct  = (chosenIdx === s.current);
+  var prevPts  = s.points[s.current];
+  s.points[s.current] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts   = s.points[s.current];
 
-  // colour all buttons
-  var allBtns = document.querySelectorAll('.opt-btn');
+  var allBtns = document.querySelectorAll('#' + mode + '-options .opt-btn');
   allBtns.forEach(function(b) {
     b.classList.add('locked');
     var idx = parseInt(b.getAttribute('data-idx'), 10);
-    if (idx === currentIdx)  b.classList.add('correct');
-    if (idx === chosenIdx && !correct) b.classList.add('wrong');
+    if (idx === s.current)                   b.classList.add('correct');
+    if (idx === chosenIdx && !correct)       b.classList.add('wrong');
   });
 
-  // feedback text
-  var fbMsg = document.getElementById('feedback-msg');
-  var fbSub = document.getElementById('feedback-sub');
-  var card  = ALPHABET[currentIdx];
+  var item    = dataFor(mode)[s.current];
+  var fbMsg   = document.getElementById(mode + '-fb-msg');
+  var fbSub   = document.getElementById(mode + '-fb-sub');
+  var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
 
   if (correct) {
-    var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
-    fbMsg.textContent  = justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts';
-    fbMsg.className    = 'feedback-msg show ok';
-    fbSub.textContent  = justLearned
-      ? card.cyrillic + ' is now fully learned!'
-      : newPts + ' / ' + MAX_PTS + ' pts  ·  ' + card.ex + ' = ' + card.exEng;
+    fbMsg.textContent = justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts';
+    fbMsg.className   = 'feedback-msg show ok';
+    fbSub.textContent = justLearned
+      ? (mode === 'letters' ? item.show : item.ukr) + ' is now fully learned!'
+      : (mode === 'letters'
+          ? newPts + ' / ' + MAX_PTS + ' pts  ·  ' + item.ex + ' = ' + item.exEng
+          : newPts + ' / ' + MAX_PTS + ' pts  ·  ' + item.pron);
   } else {
-    fbMsg.textContent  = (newPts < prevPts) ? '−1 pt' : 'Miss! (already at 0)';
-    fbMsg.className    = 'feedback-msg show bad';
-    fbSub.textContent  = 'Correct: ' + card.pron + '  ·  ' + card.ex + ' = ' + card.exEng;
+    fbMsg.textContent = (newPts < prevPts) ? '−1 pt' : 'Miss! (already at 0)';
+    fbMsg.className   = 'feedback-msg show bad';
+    fbSub.textContent = mode === 'letters'
+      ? 'Correct: ' + item.pron + '  ·  ' + item.ex + ' = ' + item.exEng
+      : 'Correct: ' + item.pron;
   }
   fbSub.className = 'feedback-sub show';
 
-  // floating delta
-  spawnDelta(correct ? '+' + CORRECT_PT : '−1', correct);
+  spawnDelta(correct ? '+' + CORRECT_PT : '−1', correct, mode + '-quiz-wrap');
 
-  // update pts bar in card
-  document.getElementById('letter-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
-  document.getElementById('letter-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
+  document.getElementById(mode + '-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById(mode + '-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
 
-  updateTile(currentIdx);
+  updateTile(mode, s.current);
   updateOverall();
-
-  document.getElementById('next-btn').className = 'next-btn show';
-}
-
-function nextQuestion() { renderQuestion(); }
-
-/* ── completion ── */
-function showCompletion() {
-  document.getElementById('quiz-wrap').style.display  = 'none';
-  document.getElementById('completion').style.display = 'flex';
-  updateOverall();
-}
-
-function resetAll() {
-  points = ALPHABET.map(function() { return 0; });
-  queue  = [];
-  document.getElementById('quiz-wrap').style.display  = 'block';
-  document.getElementById('completion').style.display = 'none';
-  renderLetterGrid();
-  updateOverall();
-  renderQuestion();
-}
-
-/* ── tabs ── */
-function switchTab(name, btn) {
-  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-  document.getElementById('panel-' + name).classList.add('active');
-  btn.classList.add('active');
-}
-
-/* ── save / load ── */
-var STORAGE_KEY = 'ua_alphabet_points';
-
-function saveProgress() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(points)); } catch(e) {}
-}
-
-function loadProgress() {
-  try {
-    var saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      var parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length === ALPHABET.length) {
-        points = parsed.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
-      }
-    }
-  } catch(e) {}
-}
-
-/* ── overall bar ── */
-function updateOverall() {
-  var n = learnedCount();
-  document.getElementById('learned-count').textContent  = n;
-  document.getElementById('overall-fill').style.width   = (n / ALPHABET.length * 100) + '%';
   saveProgress();
+
+  document.getElementById(mode + '-next').className = 'next-btn show';
 }
 
-/* ── letter grid ── */
-function renderLetterGrid() {
-  var grid = document.getElementById('letter-grid');
+function nextQ(mode) { renderQuestion(mode); }
+
+/* ════════════════════════════════════════
+   COMPLETION
+════════════════════════════════════════ */
+function showCompletion(mode) {
+  document.getElementById(mode + '-quiz-wrap').style.display = 'none';
+  document.getElementById(mode + '-done').style.display      = 'flex';
+  updateOverall();
+}
+
+function resetMode(mode) {
+  state[mode].points = dataFor(mode).map(function(){ return 0; });
+  state[mode].queue  = [];
+  document.getElementById(mode + '-quiz-wrap').style.display = 'block';
+  document.getElementById(mode + '-done').style.display      = 'none';
+  renderGrid(mode);
+  updateOverall();
+  saveProgress();
+  renderQuestion(mode);
+}
+
+/* ════════════════════════════════════════
+   OVERALL BAR
+════════════════════════════════════════ */
+function updateOverall() {
+  var mode  = activeTab === 'words' ? 'words' : 'letters';
+  var data  = dataFor(mode);
+  var n     = learnedCount(mode);
+  document.getElementById('overall-label').textContent        = mode === 'letters' ? 'LETTERS LEARNED' : 'WORDS LEARNED';
+  document.getElementById('learned-count').textContent        = n;
+  document.getElementById('learned-total').textContent        = data.length;
+  document.getElementById('overall-fill').style.width         = (n / data.length * 100) + '%';
+  document.getElementById('prog-letters-count').textContent   = learnedCount('letters');
+  document.getElementById('prog-words-count').textContent     = learnedCount('words');
+}
+
+/* ════════════════════════════════════════
+   PROGRESS GRIDS
+════════════════════════════════════════ */
+function renderGrid(mode) {
+  var data    = dataFor(mode);
+  var gridId  = mode === 'letters' ? 'grid-letters' : 'grid-words';
+  var grid    = document.getElementById(gridId);
   grid.innerHTML = '';
-  ALPHABET.forEach(function(card, i) {
+  data.forEach(function(item, i) {
     var tile = document.createElement('div');
-    tile.className = 'letter-tile' + (isLearned(i) ? ' learned' : '');
-    tile.id        = 'tile-' + i;
+    tile.className = 'tile' + (isLearned(mode, i) ? ' learned' : '');
+    tile.id = 'tile-' + mode + '-' + i;
+    var mainText = mode === 'letters' ? item.show.split(' ')[0] : item.ukr;
+    var subText  = mode === 'letters' ? item.pron : item.eng;
     tile.innerHTML =
-      '<div class="tile-char">' + card.cyrillic.split(' ')[0] + '</div>' +
-      '<div class="tile-bar"><div class="tile-bar-fill" style="width:' + (points[i] / MAX_PTS * 100) + '%"></div></div>' +
-      '<div class="tile-pts">' + (isLearned(i) ? '✓ done' : points[i] + ' pts') + '</div>';
+      '<div class="tile-main">' + mainText + '</div>' +
+      '<div class="tile-sub">' + subText + '</div>' +
+      '<div class="tile-bar"><div class="tile-fill" style="width:' + (state[mode].points[i] / MAX_PTS * 100) + '%"></div></div>' +
+      '<div class="tile-pts">' + (isLearned(mode, i) ? '✓ done' : state[mode].points[i] + ' pts') + '</div>';
     grid.appendChild(tile);
   });
 }
 
-function updateTile(i) {
-  var tile = document.getElementById('tile-' + i);
+function updateTile(mode, i) {
+  var tile = document.getElementById('tile-' + mode + '-' + i);
   if (!tile) return;
   var wasLearned = tile.classList.contains('learned');
-  var nowLearned = isLearned(i);
-  tile.className = 'letter-tile' + (nowLearned ? ' learned' : '');
-  tile.querySelector('.tile-bar-fill').style.width = (points[i] / MAX_PTS * 100) + '%';
-  tile.querySelector('.tile-pts').textContent = nowLearned ? '✓ done' : points[i] + ' pts';
+  var nowLearned = isLearned(mode, i);
+  tile.className = 'tile' + (nowLearned ? ' learned' : '');
+  tile.querySelector('.tile-fill').style.width = (state[mode].points[i] / MAX_PTS * 100) + '%';
+  tile.querySelector('.tile-pts').textContent  = nowLearned ? '✓ done' : state[mode].points[i] + ' pts';
   if (!wasLearned && nowLearned) {
     tile.classList.add('just-learned');
-    setTimeout(function() { tile.classList.remove('just-learned'); }, 600);
+    setTimeout(function(){ tile.classList.remove('just-learned'); }, 500);
   }
 }
 
-/* ── floating delta ── */
-function spawnDelta(text, correct) {
-  var el   = document.createElement('div');
+/* ════════════════════════════════════════
+   TABS
+════════════════════════════════════════ */
+function switchTab(name, btn) {
+  activeTab = name;
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+  updateOverall();
+}
+
+/* ════════════════════════════════════════
+   FLOATING DELTA
+════════════════════════════════════════ */
+function spawnDelta(text, correct, wrapId) {
+  var el = document.createElement('div');
   el.className   = 'pts-delta';
   el.textContent = text;
   el.style.color = correct ? '#4caf82' : '#e05c5c';
-  var rect = document.getElementById('quiz-wrap').getBoundingClientRect();
-  el.style.left  = (rect.left + rect.width / 2 - 16) + 'px';
-  el.style.top   = (rect.top + 70 + window.scrollY) + 'px';
+  var rect = document.getElementById(wrapId).getBoundingClientRect();
+  el.style.left  = (rect.left + rect.width / 2 - 14) + 'px';
+  el.style.top   = (rect.top + 60 + window.scrollY) + 'px';
   document.body.appendChild(el);
-  setTimeout(function() { el.remove(); }, 1000);
+  setTimeout(function(){ el.remove(); }, 950);
 }
 
-/* ── keyboard ── */
+/* ════════════════════════════════════════
+   SAVE / LOAD
+════════════════════════════════════════ */
+var STORAGE_KEY = 'ua_learn_v2';
+
+function saveProgress() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      lp: state.letters.points,
+      wp: state.words.points
+    }));
+  } catch(e) {}
+}
+
+function loadProgress() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    var d = JSON.parse(raw);
+    if (d.lp && d.lp.length === LETTERS.length)
+      state.letters.points = d.lp.map(function(v){ return Math.max(0, Math.min(MAX_PTS, Number(v)||0)); });
+    if (d.wp && d.wp.length === WORDS.length)
+      state.words.points   = d.wp.map(function(v){ return Math.max(0, Math.min(MAX_PTS, Number(v)||0)); });
+  } catch(e) {}
+}
+
+/* ════════════════════════════════════════
+   KEYBOARD  (Q W A S + Space/Enter)
+════════════════════════════════════════ */
 document.addEventListener('keydown', function(e) {
-  if ((e.code === 'Space' || e.code === 'Enter') && answered) {
+  var mode = activeTab === 'words' ? 'words' : 'letters';
+  if (activeTab === 'progress') return;
+
+  var s = state[mode];
+  if ((e.code === 'Space' || e.code === 'Enter') && s.answered) {
     e.preventDefault();
-    nextQuestion();
+    nextQ(mode);
+    return;
   }
-  if (!answered) {
-    var map = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3 };
-    if (map[e.code] !== undefined) {
-      var btns = document.querySelectorAll('.opt-btn');
-      if (btns[map[e.code]]) btns[map[e.code]].click();
+  if (!s.answered) {
+    var ki = KEYS.indexOf(e.code);
+    if (ki !== -1) {
+      var btns = document.querySelectorAll('#' + mode + '-options .opt-btn');
+      if (btns[ki]) btns[ki].click();
     }
   }
 });
 
-/* ── init ── */
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
 loadProgress();
-renderLetterGrid();
+renderGrid('letters');
+renderGrid('words');
 updateOverall();
-renderQuestion();
+renderQuestion('letters');
+renderQuestion('words');
 </script>
 </body>
 </html>
