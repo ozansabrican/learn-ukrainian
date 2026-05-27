@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ukrainian Alphabet</title>
+<title>Ukrainian</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -45,27 +45,54 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   box-shadow: 0 12px 40px rgba(0,0,0,0.4);
 }
 
-/* Letter quiz prompt */
-.prompt-letter { font-size: 5.5rem; font-weight: 700; color: #f5c518; line-height: 1; text-align: center; text-shadow: 0 4px 20px rgba(245,197,24,0.2); }
-
-/* Word quiz prompt */
-.prompt-word {
-  text-align: center; padding: 8px 0 4px;
+/* Question type badge */
+.q-type-badge {
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #2a4a60;
+  margin-bottom: 14px;
 }
-.prompt-word .ukr-word { font-size: 2.4rem; font-weight: 700; color: #f5c518; }
-.prompt-word .ukr-pron { font-size: 0.85rem; color: #3a6a8a; margin-top: 4px; letter-spacing: 0.5px; }
+
+/* Letter prompt */
+.prompt-letter {
+  font-size: 5.5rem; font-weight: 700; color: #f5c518;
+  line-height: 1; text-align: center;
+  text-shadow: 0 4px 20px rgba(245,197,24,0.2);
+  margin-bottom: 4px;
+}
+
+/* Verb prompt */
+.prompt-verb { text-align: center; margin-bottom: 4px; }
+.verb-inf     { font-size: 2.8rem; font-weight: 700; color: #f5c518; line-height: 1.1; }
+.verb-eng     { font-size: 0.85rem; color: #3a6a8a; margin-top: 4px; }
+
+/* Pronoun display (conjugation questions) */
+.pronoun-row {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #1e3a52;
+  border-radius: 12px;
+  padding: 10px 20px;
+  margin: 14px 0 4px;
+}
+.pronoun-ukr { font-size: 1.5rem; font-weight: 700; color: #fff; }
+.pronoun-sep { color: #2a4a60; font-size: 1rem; }
+.pronoun-eng { font-size: 0.9rem; color: #4a6275; }
 
 /* Shared pts bar */
-.pts-row   { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; margin-bottom: 20px; }
-.pts-bar   { width: 120px; height: 5px; background: #1b2d3e; border-radius: 99px; overflow: hidden; }
-.pts-fill  { height: 100%; background: #3d8bcd; border-radius: 99px; transition: width 0.4s ease; }
-.pts-text  { font-size: 0.75rem; color: #4a6275; min-width: 52px; }
+.pts-row  { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; margin-bottom: 20px; }
+.pts-bar  { width: 120px; height: 5px; background: #1b2d3e; border-radius: 99px; overflow: hidden; }
+.pts-fill { height: 100%; background: #3d8bcd; border-radius: 99px; transition: width 0.4s ease; }
+.pts-text { font-size: 0.75rem; color: #4a6275; min-width: 52px; }
 
-/* Options grid */
+/* Options */
 .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
 .opt-btn {
   position: relative;
-  padding: 14px 10px 14px 10px;
+  padding: 14px 10px;
   border-radius: 14px;
   border: 2px solid #1e3a52;
   background: rgba(255,255,255,0.03);
@@ -94,7 +121,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .feedback-msg.show { opacity: 1; }
 .feedback-msg.ok  { color: #4caf82; }
 .feedback-msg.bad { color: #e05c5c; }
-.feedback-sub { font-size: 0.78rem; color: #4a6275; opacity: 0; transition: opacity 0.2s; text-align: center; line-height: 1.5; }
+.feedback-sub { font-size: 0.78rem; color: #4a6275; opacity: 0; transition: opacity 0.2s; text-align: center; line-height: 1.6; }
 .feedback-sub.show { opacity: 1; }
 
 .next-btn { display: none; margin: 14px auto 0; padding: 11px 36px; border-radius: 99px; border: none; background: #f5c518; color: #0f1923; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: background 0.2s, transform 0.15s; }
@@ -102,28 +129,47 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .next-btn.show { display: block; }
 
 /* ── Completion ── */
-.completion { display: none; flex-direction: column; align-items: center; text-align: center; gap: 14px; width: 100%; background: #162230; border: 1.5px solid #2d7a55; border-radius: 22px; padding: 44px 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+.completion { display: none; flex-direction: column; align-items: center; text-align: center; gap: 14px; width: 100%; background: #162230; border: 1.5px solid #2d7a55; border-radius: 22px; padding: 44px 24px; margin-bottom: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
 .completion h2 { font-size: 1.8rem; color: #f5c518; }
 .completion p  { color: #4a6275; font-size: 0.9rem; line-height: 1.6; }
 .reset-btn { padding: 11px 32px; border-radius: 99px; border: none; background: #f5c518; color: #0f1923; font-weight: 700; font-size: 0.95rem; cursor: pointer; margin-top: 4px; transition: background 0.2s, transform 0.15s; }
 .reset-btn:hover { background: #ffd740; transform: scale(1.05); }
 
-/* ── Progress grid ── */
+/* ── Progress ── */
 .prog-section { margin-bottom: 28px; }
 .prog-section h2 { font-size: 0.72rem; font-weight: 600; color: #2d4a60; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
-.letter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 8px; }
-.word-grid   { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
 
-.tile { background: #162230; border: 1.5px solid #1b2d3e; border-radius: 12px; padding: 9px 7px 7px; text-align: center; transition: border-color 0.3s, background 0.3s; }
+/* Letter tiles */
+.letter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 8px; }
+
+/* Vocab tiles */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+/* Verb tiles */
+.verb-grid  { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+
+.tile { background: #162230; border: 1.5px solid #1b2d3e; border-radius: 12px; padding: 10px 8px 8px; text-align: center; transition: border-color 0.3s, background 0.3s; }
 .tile.learned { border-color: #2d7a55; background: #0f2a1c; }
 .tile-main { font-size: 1.25rem; font-weight: 700; color: #8fa8bc; }
-.tile-sub  { font-size: 0.62rem; color: #3a5a72; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tile.learned .tile-main { color: #4caf82; }
+.tile-sub  { font-size: 0.62rem; color: #3a5a72; margin-top: 2px; }
 .tile-bar  { width: 100%; height: 3px; background: #1b2d3e; border-radius: 99px; overflow: hidden; margin-top: 6px; }
 .tile-fill { height: 100%; background: #3d8bcd; border-radius: 99px; transition: width 0.4s ease; }
 .tile.learned .tile-fill { background: #4caf82; }
 .tile-pts  { font-size: 0.6rem; color: #2d4a60; margin-top: 3px; }
 .tile.learned .tile-pts { color: #2d7a55; }
+
+/* ── Vocab pronunciation reveal ── */
+.vocab-prompt-clickable { cursor: pointer; user-select: none; }
+.vocab-prompt-clickable:hover .vocab-tap-hint { opacity: 0.7; }
+.vocab-tap-hint { font-size: 0.65rem; color: #2a4a60; margin-top: 8px; text-align: center; letter-spacing: 0.5px; transition: opacity 0.2s; }
+.vocab-pron-reveal {
+  font-size: 0.88rem; color: #3d8bcd; text-align: center;
+  margin-top: 6px; font-style: italic; letter-spacing: 0.3px;
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+.vocab-pron-reveal.visible { max-height: 60px; opacity: 1; }
 
 /* ── Animations ── */
 @keyframes learnedPop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
@@ -136,10 +182,9 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 
 <header>
   <h1>&#127482;&#127462; Ukrainian</h1>
-  <p>Answer correctly &middot; +2 pts &middot; wrong: &minus;1 &middot; 10 pts = learned</p>
+  <p>+2 correct &middot; &minus;1 wrong &middot; 10 pts = learned</p>
 </header>
 
-<!-- overall bar -->
 <div class="overall-wrap">
   <div class="overall-row">
     <span class="overall-label" id="overall-label">LETTERS LEARNED</span>
@@ -148,16 +193,17 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   <div class="overall-bar"><div class="overall-fill" id="overall-fill" style="width:0%"></div></div>
 </div>
 
-<!-- tabs -->
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('letters', this)">Letters</button>
-  <button class="tab-btn"        onclick="switchTab('words',   this)">Words</button>
+  <button class="tab-btn"        onclick="switchTab('vocab',   this)">Vocab</button>
+  <button class="tab-btn"        onclick="switchTab('verbs',   this)">Verbs</button>
   <button class="tab-btn"        onclick="switchTab('progress',this)">Progress</button>
 </div>
 
-<!-- ── Letters tab ── -->
+<!-- ══ LETTERS TAB ══ -->
 <div class="tab-panel active" id="panel-letters">
   <div class="quiz-wrap" id="letters-quiz-wrap">
+    <div class="q-type-badge">pronunciation</div>
     <div class="prompt-letter" id="letters-prompt"></div>
     <div class="pts-row">
       <div class="pts-bar"><div class="pts-fill" id="letters-pts-fill" style="width:0%"></div></div>
@@ -173,171 +219,311 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   <div class="completion" id="letters-done">
     <div style="font-size:3rem">&#127942;</div>
     <h2>Alphabet mastered!</h2>
-    <p>You learned all 33 letters.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;! (Excellent work!)</p>
+    <p>All 33 letters learned.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;!</p>
     <button class="reset-btn" onclick="resetMode('letters')">Start over</button>
   </div>
 </div>
 
-<!-- ── Words tab ── -->
-<div class="tab-panel" id="panel-words">
-  <div class="quiz-wrap" id="words-quiz-wrap">
-    <div class="prompt-word">
-      <div class="ukr-word" id="words-prompt-ukr"></div>
-      <div class="ukr-pron" id="words-prompt-pron"></div>
-      <div style="font-size:0.7rem;color:#2a4a60;margin-top:8px;letter-spacing:0.5px">HOW IS IT PRONOUNCED?</div>
-    </div>
+<!-- ══ VOCAB TAB ══ -->
+<div class="tab-panel" id="panel-vocab">
+  <div class="quiz-wrap" id="vocab-quiz-wrap">
+    <div class="q-type-badge" id="vocab-badge">vocabulary</div>
+    <div class="prompt-verb" id="vocab-prompt" style="padding:8px 0"></div>
     <div class="pts-row">
-      <div class="pts-bar"><div class="pts-fill" id="words-pts-fill" style="width:0%"></div></div>
-      <div class="pts-text" id="words-pts-text">0 / 10 pts</div>
+      <div class="pts-bar"><div class="pts-fill" id="vocab-pts-fill" style="width:0%"></div></div>
+      <div class="pts-text" id="vocab-pts-text">0 / 10 pts</div>
     </div>
-    <div class="options-grid" id="words-options"></div>
+    <div class="options-grid" id="vocab-options"></div>
     <div class="feedback-row">
-      <div class="feedback-msg" id="words-fb-msg"></div>
-      <div class="feedback-sub" id="words-fb-sub"></div>
+      <div class="feedback-msg" id="vocab-fb-msg"></div>
+      <div class="feedback-sub" id="vocab-fb-sub"></div>
     </div>
-    <button class="next-btn" id="words-next" onclick="nextQ('words')">Next &#8594;</button>
+    <button class="next-btn" id="vocab-next" onclick="nextQ('vocab')">Next &#8594;</button>
   </div>
-  <div class="completion" id="words-done">
-    <div style="font-size:3rem">&#127881;</div>
-    <h2>All 50 words learned!</h2>
-    <p>Your Ukrainian vocabulary is growing fast.<br>&#1052;&#1086;&#1083;&#1086;&#1076;&#1077;&#1094;&#1100;! (Well done!)</p>
-    <button class="reset-btn" onclick="resetMode('words')">Start over</button>
+  <div class="completion" id="vocab-done">
+    <div style="font-size:3rem">&#128218;</div>
+    <h2>Vocabulary mastered!</h2>
+    <p>All 24 words and phrases learned.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;!</p>
+    <button class="reset-btn" onclick="resetMode('vocab')">Start over</button>
   </div>
 </div>
 
-<!-- ── Progress tab ── -->
+<!-- ══ VERBS TAB ══ -->
+<div class="tab-panel" id="panel-verbs">
+  <div class="quiz-wrap" id="verbs-quiz-wrap">
+    <div class="q-type-badge" id="verbs-badge">pronunciation</div>
+    <div class="prompt-verb">
+      <div class="verb-inf" id="verbs-inf"></div>
+      <div class="verb-eng" id="verbs-eng"></div>
+    </div>
+    <div class="pronoun-row" id="verbs-pronoun-row" style="display:none">
+      <span class="pronoun-ukr" id="verbs-pronoun-ukr"></span>
+      <span class="pronoun-sep">&middot;</span>
+      <span class="pronoun-eng" id="verbs-pronoun-eng"></span>
+    </div>
+    <div class="pts-row">
+      <div class="pts-bar"><div class="pts-fill" id="verbs-pts-fill" style="width:0%"></div></div>
+      <div class="pts-text" id="verbs-pts-text">0 / 10 pts</div>
+    </div>
+    <div class="options-grid" id="verbs-options"></div>
+    <div class="feedback-row">
+      <div class="feedback-msg" id="verbs-fb-msg"></div>
+      <div class="feedback-sub" id="verbs-fb-sub"></div>
+    </div>
+    <button class="next-btn" id="verbs-next" onclick="nextQ('verbs')">Next &#8594;</button>
+  </div>
+  <div class="completion" id="verbs-done">
+    <div style="font-size:3rem">&#127881;</div>
+    <h2>All verbs mastered!</h2>
+    <p>77 items — pronunciation &amp; all conjugations.<br>&#1052;&#1086;&#1083;&#1086;&#1076;&#1077;&#1094;&#1100;!</p>
+    <button class="reset-btn" onclick="resetMode('verbs')">Start over</button>
+  </div>
+</div>
+
+<!-- ══ PROGRESS TAB ══ -->
 <div class="tab-panel" id="panel-progress">
   <div class="prog-section">
     <h2>Letters &mdash; <span id="prog-letters-count">0</span> / 33</h2>
     <div class="letter-grid" id="grid-letters"></div>
   </div>
   <div class="prog-section">
-    <h2>Words &mdash; <span id="prog-words-count">0</span> / 50</h2>
-    <div class="word-grid" id="grid-words"></div>
+    <h2>Vocabulary &mdash; <span id="prog-vocab-count">0</span> / 24</h2>
+    <div class="vocab-grid" id="grid-vocab"></div>
+  </div>
+  <div class="prog-section">
+    <h2>Verbs &mdash; <span id="prog-verbs-count">0</span> / 11 mastered</h2>
+    <div class="verb-grid" id="grid-verbs"></div>
   </div>
 </div>
 
 <script>
-/* ════════════════════════════════════════
-   DATA
-════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   LETTERS DATA
+══════════════════════════════════════════ */
 var LETTERS = [
-  { show: 'А а', pron: '/a/',        desc: 'like a in father',         ex: 'аптека',       exEng: 'pharmacy' },
-  { show: 'Б б', pron: '/b/',        desc: 'like b in book',           ex: 'батько',       exEng: 'father' },
-  { show: 'В в', pron: '/v/',        desc: 'like v in voice',          ex: 'вода',         exEng: 'water' },
-  { show: 'Г г', pron: '/h/',        desc: 'soft h, like h in hi',     ex: 'гора',         exEng: 'mountain' },
-  { show: 'Ґ ґ', pron: '/g/',        desc: 'hard g, like g in go',     ex: 'ґанок',        exEng: 'porch' },
-  { show: 'Д д', pron: '/d/',        desc: 'like d in dog',            ex: 'дім',          exEng: 'house' },
-  { show: 'Е е', pron: '/e/',        desc: 'like e in bed',            ex: 'енергія',      exEng: 'energy' },
-  { show: 'Є є', pron: '/ye/',       desc: 'like ye in yes',           ex: 'єдність',      exEng: 'unity' },
-  { show: 'Ж ж', pron: '/zh/',       desc: 'like s in measure',        ex: 'жінка',        exEng: 'woman' },
-  { show: 'З з', pron: '/z/',        desc: 'like z in zoo',            ex: 'зима',         exEng: 'winter' },
-  { show: 'И и', pron: '/y/',        desc: 'short, like i in bit',     ex: 'ринок',        exEng: 'market' },
-  { show: 'І і', pron: '/i/',        desc: 'like ee in feel',          ex: 'іти',          exEng: 'to go' },
-  { show: 'Ї ї', pron: '/yi/',       desc: 'like yi in yield',         ex: 'їжа',          exEng: 'food' },
-  { show: 'Й й', pron: '/y/ (w)',    desc: 'consonant y, like y in yes', ex: 'йогурт',     exEng: 'yogurt' },
-  { show: 'К к', pron: '/k/',        desc: 'like k in key',            ex: 'кіт',          exEng: 'cat' },
-  { show: 'Л л', pron: '/l/',        desc: 'like l in love',           ex: 'літо',         exEng: 'summer' },
-  { show: 'М м', pron: '/m/',        desc: 'like m in moon',           ex: 'місто',        exEng: 'city' },
-  { show: 'Н н', pron: '/n/',        desc: 'like n in no',             ex: 'ніч',          exEng: 'night' },
-  { show: 'О о', pron: '/o/',        desc: 'like o in more',           ex: 'осінь',        exEng: 'autumn' },
-  { show: 'П п', pron: '/p/',        desc: 'like p in park',           ex: 'парк',         exEng: 'park' },
-  { show: 'Р р', pron: '/r/',        desc: 'rolled r, like Spanish r', ex: 'річка',        exEng: 'river' },
-  { show: 'С с', pron: '/s/',        desc: 'like s in sun',            ex: 'сонце',        exEng: 'sun' },
-  { show: 'Т т', pron: '/t/',        desc: 'like t in time',           ex: 'тато',         exEng: 'dad' },
-  { show: 'У у', pron: '/u/',        desc: 'like oo in food',          ex: 'університет',  exEng: 'university' },
-  { show: 'Ф ф', pron: '/f/',        desc: 'like f in fun',            ex: 'фото',         exEng: 'photo' },
-  { show: 'Х х', pron: '/kh/',       desc: 'guttural, like ch in loch', ex: 'хліб',        exEng: 'bread' },
-  { show: 'Ц ц', pron: '/ts/',       desc: 'like ts in cats',          ex: 'цукор',        exEng: 'sugar' },
-  { show: 'Ч ч', pron: '/ch/',       desc: 'like ch in chair',         ex: 'час',          exEng: 'time' },
-  { show: 'Ш ш', pron: '/sh/',       desc: 'like sh in shoe',          ex: 'школа',        exEng: 'school' },
-  { show: 'Щ щ', pron: '/shch/',     desc: 'sh + ch blended',          ex: 'щастя',        exEng: 'happiness' },
-  { show: 'Ь ь', pron: '(soft)',     desc: 'softens previous consonant', ex: 'сіль',       exEng: 'salt' },
-  { show: 'Ю ю', pron: '/yu/',       desc: 'like you',                 ex: 'юнак',         exEng: 'youth' },
-  { show: 'Я я', pron: '/ya/',       desc: 'like ya in yard',          ex: 'яблуко',       exEng: 'apple' }
+  { show: 'А а', pron: '/a/',      desc: 'like a in father',         ex: 'аптека',      exEng: 'pharmacy' },
+  { show: 'Б б', pron: '/b/',      desc: 'like b in book',           ex: 'батько',      exEng: 'father' },
+  { show: 'В в', pron: '/v/',      desc: 'like v in voice',          ex: 'вода',        exEng: 'water' },
+  { show: 'Г г', pron: '/h/',      desc: 'soft h, like h in hi',     ex: 'гора',        exEng: 'mountain' },
+  { show: 'Ґ ґ', pron: '/g/',      desc: 'hard g, like g in go',     ex: 'ґанок',       exEng: 'porch' },
+  { show: 'Д д', pron: '/d/',      desc: 'like d in dog',            ex: 'дім',         exEng: 'house' },
+  { show: 'Е е', pron: '/e/',      desc: 'like e in bed',            ex: 'енергія',     exEng: 'energy' },
+  { show: 'Є є', pron: '/ye/',     desc: 'like ye in yes',           ex: 'єдність',     exEng: 'unity' },
+  { show: 'Ж ж', pron: '/zh/',     desc: 'like s in measure',        ex: 'жінка',       exEng: 'woman' },
+  { show: 'З з', pron: '/z/',      desc: 'like z in zoo',            ex: 'зима',        exEng: 'winter' },
+  { show: 'И и', pron: '/y/',      desc: 'short, like i in bit',     ex: 'ринок',       exEng: 'market' },
+  { show: 'І і', pron: '/i/',      desc: 'like ee in feel',          ex: 'іти',         exEng: 'to go' },
+  { show: 'Ї ї', pron: '/yi/',     desc: 'like yi in yield',         ex: 'їжа',         exEng: 'food' },
+  { show: 'Й й', pron: '/y/ (w)', desc: 'consonant y, like y in yes', ex: 'йогурт',    exEng: 'yogurt' },
+  { show: 'К к', pron: '/k/',      desc: 'like k in key',            ex: 'кіт',         exEng: 'cat' },
+  { show: 'Л л', pron: '/l/',      desc: 'like l in love',           ex: 'літо',        exEng: 'summer' },
+  { show: 'М м', pron: '/m/',      desc: 'like m in moon',           ex: 'місто',       exEng: 'city' },
+  { show: 'Н н', pron: '/n/',      desc: 'like n in no',             ex: 'ніч',         exEng: 'night' },
+  { show: 'О о', pron: '/o/',      desc: 'like o in more',           ex: 'осінь',       exEng: 'autumn' },
+  { show: 'П п', pron: '/p/',      desc: 'like p in park',           ex: 'парк',        exEng: 'park' },
+  { show: 'Р р', pron: '/r/',      desc: 'rolled r, like Spanish r', ex: 'річка',       exEng: 'river' },
+  { show: 'С с', pron: '/s/',      desc: 'like s in sun',            ex: 'сонце',       exEng: 'sun' },
+  { show: 'Т т', pron: '/t/',      desc: 'like t in time',           ex: 'тато',        exEng: 'dad' },
+  { show: 'У у', pron: '/u/',      desc: 'like oo in food',          ex: 'університет', exEng: 'university' },
+  { show: 'Ф ф', pron: '/f/',      desc: 'like f in fun',            ex: 'фото',        exEng: 'photo' },
+  { show: 'Х х', pron: '/kh/',     desc: 'guttural, ch in loch',     ex: 'хліб',        exEng: 'bread' },
+  { show: 'Ц ц', pron: '/ts/',     desc: 'like ts in cats',          ex: 'цукор',       exEng: 'sugar' },
+  { show: 'Ч ч', pron: '/ch/',     desc: 'like ch in chair',         ex: 'час',         exEng: 'time' },
+  { show: 'Ш ш', pron: '/sh/',     desc: 'like sh in shoe',          ex: 'школа',       exEng: 'school' },
+  { show: 'Щ щ', pron: '/shch/',   desc: 'sh + ch blended',          ex: 'щастя',       exEng: 'happiness' },
+  { show: 'Ь ь', pron: '(soft)',   desc: 'softens prev. consonant',  ex: 'сіль',        exEng: 'salt' },
+  { show: 'Ю ю', pron: '/yu/',     desc: 'like you',                 ex: 'юнак',        exEng: 'youth' },
+  { show: 'Я я', pron: '/ya/',     desc: 'like ya in yard',          ex: 'яблуко',      exEng: 'apple' }
 ];
 
-var WORDS = [
-  { ukr: 'привіт',     pron: 'pry-VEET',      eng: 'hello' },
-  { ukr: 'дякую',      pron: 'DYA-ku-yu',     eng: 'thank you' },
-  { ukr: 'будь ласка', pron: 'bood LASS-ka',  eng: 'please' },
-  { ukr: 'так',        pron: 'tak',            eng: 'yes' },
-  { ukr: 'ні',         pron: 'nee',            eng: 'no' },
-  { ukr: 'добре',      pron: 'DOB-re',         eng: 'good / okay' },
-  { ukr: 'вода',       pron: 'vo-DA',          eng: 'water' },
-  { ukr: 'хліб',       pron: 'khleeb',         eng: 'bread' },
-  { ukr: 'їжа',        pron: 'YI-zha',         eng: 'food' },
-  { ukr: 'людина',     pron: 'lyu-DY-na',      eng: 'person' },
-  { ukr: 'день',       pron: 'den',            eng: 'day' },
-  { ukr: 'ніч',        pron: 'neech',          eng: 'night' },
-  { ukr: 'рік',        pron: 'reek',           eng: 'year' },
-  { ukr: 'час',        pron: 'chas',           eng: 'time' },
-  { ukr: 'місто',      pron: 'MEES-to',        eng: 'city' },
-  { ukr: 'дім',        pron: 'deem',           eng: 'home' },
-  { ukr: 'родина',     pron: 'ro-DY-na',       eng: 'family' },
-  { ukr: 'мати',       pron: 'MA-ty',          eng: 'mother' },
-  { ukr: 'батько',     pron: 'BAT-ko',         eng: 'father' },
-  { ukr: 'дитина',     pron: 'dy-TY-na',       eng: 'child' },
-  { ukr: 'друг',       pron: 'droog',          eng: 'friend' },
-  { ukr: 'робота',     pron: 'ro-BO-ta',       eng: 'work / job' },
-  { ukr: 'гроші',      pron: 'HRO-shi',        eng: 'money' },
-  { ukr: 'книга',      pron: 'KNY-ha',         eng: 'book' },
-  { ukr: 'школа',      pron: 'SHKO-la',        eng: 'school' },
-  { ukr: 'магазин',    pron: 'ma-ha-ZYN',      eng: 'shop / store' },
-  { ukr: 'вулиця',     pron: 'VU-ly-tsya',     eng: 'street' },
-  { ukr: 'машина',     pron: 'ma-SHY-na',      eng: 'car' },
-  { ukr: 'поїзд',      pron: 'PO-yizd',        eng: 'train' },
-  { ukr: 'літак',      pron: 'lee-TAK',        eng: 'airplane' },
-  { ukr: 'лікар',      pron: 'LEE-kar',        eng: 'doctor' },
-  { ukr: 'лікарня',    pron: 'lee-KAR-nya',    eng: 'hospital' },
-  { ukr: 'їсти',       pron: 'YIS-ty',         eng: 'to eat' },
-  { ukr: 'пити',       pron: 'PY-ty',          eng: 'to drink' },
-  { ukr: 'іти',        pron: 'ee-TY',          eng: 'to go' },
-  { ukr: 'бачити',     pron: 'BA-chy-ty',      eng: 'to see' },
-  { ukr: 'знати',      pron: 'ZNA-ty',         eng: 'to know' },
-  { ukr: 'любити',     pron: 'lyu-BY-ty',      eng: 'to love / like' },
-  { ukr: 'говорити',   pron: 'ho-vo-RY-ty',    eng: 'to speak' },
-  { ukr: 'розуміти',   pron: 'ro-zu-MEE-ty',   eng: 'to understand' },
-  { ukr: 'читати',     pron: 'chy-TA-ty',      eng: 'to read' },
-  { ukr: 'писати',     pron: 'py-SA-ty',       eng: 'to write' },
-  { ukr: 'великий',    pron: 've-LY-ky',       eng: 'big / large' },
-  { ukr: 'малий',      pron: 'ma-LY',          eng: 'small' },
-  { ukr: 'гарний',     pron: 'HAR-ny',         eng: 'beautiful / nice' },
-  { ukr: 'новий',      pron: 'no-VY',          eng: 'new' },
-  { ukr: 'старий',     pron: 'sta-RY',         eng: 'old' },
-  { ukr: 'швидко',     pron: 'SHVYD-ko',       eng: 'fast / quickly' },
-  { ukr: 'сьогодні',   pron: 'syo-HOD-ni',     eng: 'today' },
-  { ukr: 'завтра',     pron: 'ZAV-tra',        eng: 'tomorrow' }
+/* ══════════════════════════════════════════
+   VERBS DATA
+══════════════════════════════════════════ */
+var VERBS = [
+  {
+    inf: 'мати', pron: 'MA-ty', eng: 'to have',
+    conj: [
+      { form: 'маю',           cpron: 'MA-yu',           pronoun: 'я',        peng: 'I' },
+      { form: 'маєш',          cpron: 'MA-yesh',         pronoun: 'ти',       peng: 'you' },
+      { form: 'має',           cpron: 'MA-ye',           pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'маємо',         cpron: 'MA-ye-mo',        pronoun: 'ми',       peng: 'we' },
+      { form: 'маєте',         cpron: 'MA-ye-te',        pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'мають',         cpron: 'MA-yut',          pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'знати', pron: 'ZNA-ty', eng: 'to know',
+    conj: [
+      { form: 'знаю',          cpron: 'ZNA-yu',          pronoun: 'я',        peng: 'I' },
+      { form: 'знаєш',         cpron: 'ZNA-yesh',        pronoun: 'ти',       peng: 'you' },
+      { form: 'знає',          cpron: 'ZNA-ye',          pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'знаємо',        cpron: 'ZNA-ye-mo',       pronoun: 'ми',       peng: 'we' },
+      { form: 'знаєте',        cpron: 'ZNA-ye-te',       pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'знають',        cpron: 'ZNA-yut',         pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'думати', pron: 'DU-ma-ty', eng: 'to think',
+    conj: [
+      { form: 'думаю',         cpron: 'DU-ma-yu',        pronoun: 'я',        peng: 'I' },
+      { form: 'думаєш',        cpron: 'DU-ma-yesh',      pronoun: 'ти',       peng: 'you' },
+      { form: 'думає',         cpron: 'DU-ma-ye',        pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'думаємо',       cpron: 'DU-ma-ye-mo',     pronoun: 'ми',       peng: 'we' },
+      { form: 'думаєте',       cpron: 'DU-ma-ye-te',     pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'думають',       cpron: 'DU-ma-yut',       pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'читати', pron: 'chy-TA-ty', eng: 'to read',
+    conj: [
+      { form: 'читаю',         cpron: 'chy-TA-yu',       pronoun: 'я',        peng: 'I' },
+      { form: 'читаєш',        cpron: 'chy-TA-yesh',     pronoun: 'ти',       peng: 'you' },
+      { form: 'читає',         cpron: 'chy-TA-ye',       pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'читаємо',       cpron: 'chy-TA-ye-mo',    pronoun: 'ми',       peng: 'we' },
+      { form: 'читаєте',       cpron: 'chy-TA-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'читають',       cpron: 'chy-TA-yut',      pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'слухати', pron: 'SLU-kha-ty', eng: 'to listen',
+    conj: [
+      { form: 'слухаю',        cpron: 'SLU-kha-yu',      pronoun: 'я',        peng: 'I' },
+      { form: 'слухаєш',       cpron: 'SLU-kha-yesh',    pronoun: 'ти',       peng: 'you' },
+      { form: 'слухає',        cpron: 'SLU-kha-ye',      pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'слухаємо',      cpron: 'SLU-kha-ye-mo',   pronoun: 'ми',       peng: 'we' },
+      { form: 'слухаєте',      cpron: 'SLU-kha-ye-te',   pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'слухають',      cpron: 'SLU-kha-yut',     pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'відпочивати', pron: 'vid-po-chy-VA-ty', eng: 'to rest',
+    conj: [
+      { form: 'відпочиваю',    cpron: 'vid-po-chy-VA-yu',    pronoun: 'я',        peng: 'I' },
+      { form: 'відпочиваєш',   cpron: 'vid-po-chy-VA-yesh',  pronoun: 'ти',       peng: 'you' },
+      { form: 'відпочиває',    cpron: 'vid-po-chy-VA-ye',    pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'відпочиваємо',  cpron: 'vid-po-chy-VA-ye-mo', pronoun: 'ми',       peng: 'we' },
+      { form: 'відпочиваєте',  cpron: 'vid-po-chy-VA-ye-te', pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'відпочивають',  cpron: 'vid-po-chy-VA-yut',   pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'працювати', pron: 'pra-tsyu-VA-ty', eng: 'to work',
+    conj: [
+      { form: 'працюю',        cpron: 'pra-TSYU-yu',     pronoun: 'я',        peng: 'I' },
+      { form: 'працюєш',       cpron: 'pra-TSYU-yesh',   pronoun: 'ти',       peng: 'you' },
+      { form: 'працює',        cpron: 'pra-TSYU-ye',     pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'працюємо',      cpron: 'pra-TSYU-ye-mo',  pronoun: 'ми',       peng: 'we' },
+      { form: 'працюєте',      cpron: 'pra-TSYU-ye-te',  pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'працюють',      cpron: 'pra-TSYU-yut',    pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'обідати', pron: 'o-BI-da-ty', eng: 'to have lunch',
+    conj: [
+      { form: 'обідаю',        cpron: 'o-bi-DA-yu',      pronoun: 'я',        peng: 'I' },
+      { form: 'обідаєш',       cpron: 'o-bi-DA-yesh',    pronoun: 'ти',       peng: 'you' },
+      { form: 'обідає',        cpron: 'o-bi-DA-ye',      pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'обідаємо',      cpron: 'o-bi-DA-ye-mo',   pronoun: 'ми',       peng: 'we' },
+      { form: 'обідаєте',      cpron: 'o-bi-DA-ye-te',   pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'обідають',      cpron: 'o-bi-DA-yut',     pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'грати', pron: 'HRA-ty', eng: 'to play',
+    conj: [
+      { form: 'граю',          cpron: 'HRA-yu',          pronoun: 'я',        peng: 'I' },
+      { form: 'граєш',         cpron: 'HRA-yesh',        pronoun: 'ти',       peng: 'you' },
+      { form: 'грає',          cpron: 'HRA-ye',          pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'граємо',        cpron: 'HRA-ye-mo',       pronoun: 'ми',       peng: 'we' },
+      { form: 'граєте',        cpron: 'HRA-ye-te',       pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'грають',        cpron: 'HRA-yut',         pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'вчити', pron: 'VCHy-ty', eng: 'to learn',
+    conj: [
+      { form: 'вчу',           cpron: 'vchu',            pronoun: 'я',        peng: 'I' },
+      { form: 'вчиш',          cpron: 'vchysh',          pronoun: 'ти',       peng: 'you' },
+      { form: 'вчить',         cpron: 'vchyt',           pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'вчимо',         cpron: 'VCHy-mo',         pronoun: 'ми',       peng: 'we' },
+      { form: 'вчите',         cpron: 'VCHy-te',         pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'вчать',         cpron: 'vchAt',           pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'їхати', pron: 'YI-kha-ty', eng: 'to travel',
+    conj: [
+      { form: 'їду',           cpron: 'YI-du',           pronoun: 'я',        peng: 'I' },
+      { form: 'їдеш',          cpron: 'YI-desh',         pronoun: 'ти',       peng: 'you' },
+      { form: 'їде',           cpron: 'YI-de',           pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'їдемо',         cpron: 'YI-de-mo',        pronoun: 'ми',       peng: 'we' },
+      { form: 'їдете',         cpron: 'YI-de-te',        pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'їдуть',         cpron: 'YI-dut',          pronoun: 'вони',     peng: 'they' }
+    ]
+  }
 ];
 
-/* ════════════════════════════════════════
+/* ══════════════════════════════════════════
+   VOCABULARY DATA  (11 verbs + 13 phrases)
+══════════════════════════════════════════ */
+var VOCAB = [
+  { ukr: 'мати',                               eng: 'to have',                                 pron: 'MA-ty',                                          type: 'verb' },
+  { ukr: 'знати',                              eng: 'to know',                                 pron: 'ZNA-ty',                                         type: 'verb' },
+  { ukr: 'думати',                             eng: 'to think',                                pron: 'DU-ma-ty',                                       type: 'verb' },
+  { ukr: 'читати',                             eng: 'to read',                                 pron: 'chy-TA-ty',                                      type: 'verb' },
+  { ukr: 'слухати',                            eng: 'to listen',                               pron: 'SLU-kha-ty',                                     type: 'verb' },
+  { ukr: 'відпочивати',                        eng: 'to rest',                                 pron: 'vid-po-chy-VA-ty',                               type: 'verb' },
+  { ukr: 'працювати',                          eng: 'to work',                                 pron: 'pra-tsyu-VA-ty',                                 type: 'verb' },
+  { ukr: 'обідати',                            eng: 'to have lunch',                           pron: 'o-BI-da-ty',                                     type: 'verb' },
+  { ukr: 'грати',                              eng: 'to play',                                 pron: 'HRA-ty',                                         type: 'verb' },
+  { ukr: 'вчити',                              eng: 'to learn',                                pron: 'VCHy-ty',                                        type: 'verb' },
+  { ukr: 'їхати',                              eng: 'to travel',                               pron: 'YI-kha-ty',                                      type: 'verb' },
+  { ukr: 'Я працюю в офісі.',                  eng: 'I work in an office.',                    pron: 'ya pra-TSYU-yu v O-fi-si',                       type: 'phrase' },
+  { ukr: 'Ми слухаємо музику вдома.',          eng: 'We listen to music at home.',             pron: 'my slu-KHA-ye-mo MU-zy-ku vdo-MA',               type: 'phrase' },
+  { ukr: 'Він не працює.',                     eng: 'He does not work.',                       pron: 'veen ne pra-TSYU-ye',                            type: 'phrase' },
+  { ukr: 'Я відпочиваю після роботи.',         eng: 'I rest after work.',                      pron: 'ya vid-po-chy-VA-yu PIS-lya ro-BO-ty',           type: 'phrase' },
+  { ukr: 'Вона вчить українську.',             eng: 'She learns Ukrainian.',                   pron: 'vo-NA vchyt u-kra-YINS-ku',                      type: 'phrase' },
+  { ukr: 'Ти обідаєш вдома.',                  eng: 'You have lunch at home.',                 pron: 'ty o-bi-DA-yesh vdo-MA',                         type: 'phrase' },
+  { ukr: 'Вони грають у гру.',                 eng: 'They play a game.',                       pron: 'vo-NY HRA-yut u hru',                            type: 'phrase' },
+  { ukr: 'Де ти обідаєш?',                     eng: 'Where do you have lunch?',                pron: 'de ty o-bi-DA-yesh',                             type: 'phrase' },
+  { ukr: 'Ти зараз читаєш?',                   eng: 'Are you reading right now?',              pron: 'ty ZA-raz chy-TA-yesh',                          type: 'phrase' },
+  { ukr: 'Ти плануєш їхати кудись сьогодні?', eng: 'Do you plan to travel somewhere today?',  pron: 'ty pla-NU-yesh YI-kha-ty ku-DYS syo-HOD-ni',    type: 'phrase' },
+  { ukr: 'Де ти любиш відпочивати?',           eng: 'Where do you like to rest?',              pron: 'de ty LYU-bysh vid-po-chy-VA-ty',                type: 'phrase' },
+  { ukr: 'У тебе є робота мрії?',              eng: 'Do you have a dream job?',                pron: 'u TE-be ye ro-BO-ta MRI-yi',                     type: 'phrase' },
+  { ukr: 'Ти думаєш, що завтра буде сонячно?', eng: 'Do you think it will be sunny tomorrow?', pron: 'ty DU-ma-yesh shcho ZAV-tra BU-de SO-nyach-no', type: 'phrase' }
+];
+
+/* Build flat items array: for each verb → 1 pron item + 6 conj items */
+var VERB_ITEMS = [];
+VERBS.forEach(function(verb, vi) {
+  VERB_ITEMS.push({ type: 'pron', vi: vi });
+  verb.conj.forEach(function(c, ci) {
+    VERB_ITEMS.push({ type: 'conj', vi: vi, ci: ci });
+  });
+});
+/* VERB_ITEMS.length === 77 */
+
+/* ══════════════════════════════════════════
    STATE
-════════════════════════════════════════ */
+══════════════════════════════════════════ */
 var MAX_PTS    = 10;
 var CORRECT_PT = 2;
 var WRONG_PT   = -1;
-
-var state = {
-  letters: { points: LETTERS.map(function(){ return 0; }), queue: [], current: null, answered: false },
-  words:   { points: WORDS.map(function(){ return 0; }),   queue: [], current: null, answered: false }
-};
-
-var KEYS = ['KeyQ', 'KeyW', 'KeyA', 'KeyS'];   // top-left, top-right, bottom-left, bottom-right
+var KEYS       = ['KeyQ', 'KeyW', 'KeyA', 'KeyS'];
 var KEY_LABELS = ['Q', 'W', 'A', 'S'];
+var activeTab  = 'letters';
 
-var activeTab = 'letters';
+var letterPts  = LETTERS.map(function() { return 0; });
+var vocabPts   = VOCAB.map(function() { return 0; });
+var verbPts    = VERB_ITEMS.map(function() { return 0; });
 
-/* ════════════════════════════════════════
+var letterQueue = [], vocabQueue = [], verbQueue = [];
+var letterCurrent = null, vocabCurrent = null, verbCurrent = null;
+var letterAnswered = false, vocabAnswered = false, verbAnswered = false;
+
+/* ══════════════════════════════════════════
    HELPERS
-════════════════════════════════════════ */
-function isLearned(mode, i) { return state[mode].points[i] >= MAX_PTS; }
-
-function learnedCount(mode) {
-  return state[mode].points.filter(function(_, i){ return isLearned(mode, i); }).length;
-}
-
-function dataFor(mode) { return mode === 'letters' ? LETTERS : WORDS; }
-
+══════════════════════════════════════════ */
 function shuffle(arr) {
   var a = arr.slice();
   for (var i = a.length - 1; i > 0; i--) {
@@ -347,153 +533,426 @@ function shuffle(arr) {
   return a;
 }
 
-function refillQueue(mode) {
-  var data = dataFor(mode);
+function refillLetterQueue() {
   var pool = [];
-  for (var i = 0; i < data.length; i++) {
-    if (!isLearned(mode, i)) pool.push(i);
+  for (var i = 0; i < LETTERS.length; i++) {
+    if (letterPts[i] < MAX_PTS) pool.push(i);
   }
-  state[mode].queue = shuffle(pool);
+  letterQueue = shuffle(pool);
 }
 
-function pickNext(mode) {
-  var s = state[mode];
-  s.queue = s.queue.filter(function(i){ return !isLearned(mode, i); });
-  if (s.queue.length === 0) refillQueue(mode);
-  if (s.queue.length === 0) return null;
-  return s.queue.shift();
+function refillVocabQueue() {
+  var pool = [];
+  for (var i = 0; i < VOCAB.length; i++) {
+    if (vocabPts[i] < MAX_PTS) pool.push(i);
+  }
+  vocabQueue = shuffle(pool);
 }
 
-function pick4(mode, correctIdx) {
-  var data = dataFor(mode);
-  var others = [];
-  for (var i = 0; i < data.length; i++) {
-    if (i !== correctIdx) others.push(i);
-  }
-  return shuffle([correctIdx].concat(shuffle(others).slice(0, 3)));
+function pickNextVocab() {
+  vocabQueue = vocabQueue.filter(function(i) { return vocabPts[i] < MAX_PTS; });
+  if (vocabQueue.length === 0) refillVocabQueue();
+  if (vocabQueue.length === 0) return null;
+  return vocabQueue.shift();
 }
 
-/* ════════════════════════════════════════
-   RENDER QUESTION
-════════════════════════════════════════ */
-function renderQuestion(mode) {
-  var s   = state[mode];
-  s.answered = false;
-  s.current  = pickNext(mode);
-
-  if (s.current === null) { showCompletion(mode); return; }
-
-  var data = dataFor(mode);
-  var item = data[s.current];
-  var pts  = s.points[s.current];
-
-  // prompt
-  if (mode === 'letters') {
-    document.getElementById('letters-prompt').textContent = item.show;
-  } else {
-    document.getElementById('words-prompt-ukr').textContent  = item.ukr;
-    document.getElementById('words-prompt-pron').textContent = item.eng;
+function refillVerbQueue() {
+  var pool = [];
+  for (var i = 0; i < VERB_ITEMS.length; i++) {
+    if (verbPts[i] < MAX_PTS) pool.push(i);
   }
+  verbQueue = shuffle(pool);
+}
 
-  // pts bar
-  document.getElementById(mode + '-pts-fill').style.width = (pts / MAX_PTS * 100) + '%';
-  document.getElementById(mode + '-pts-text').textContent  = pts + ' / ' + MAX_PTS + ' pts';
+function pickNextLetter() {
+  letterQueue = letterQueue.filter(function(i) { return letterPts[i] < MAX_PTS; });
+  if (letterQueue.length === 0) refillLetterQueue();
+  if (letterQueue.length === 0) return null;
+  return letterQueue.shift();
+}
 
-  // clear feedback
-  var fbMsg = document.getElementById(mode + '-fb-msg');
-  var fbSub = document.getElementById(mode + '-fb-sub');
-  fbMsg.className = 'feedback-msg';
-  fbMsg.textContent = '';
-  fbSub.className = 'feedback-sub';
-  fbSub.textContent = '';
-  document.getElementById(mode + '-next').className = 'next-btn';
+function pickNextVerb() {
+  verbQueue = verbQueue.filter(function(i) { return verbPts[i] < MAX_PTS; });
+  if (verbQueue.length === 0) refillVerbQueue();
+  if (verbQueue.length === 0) return null;
+  return verbQueue.shift();
+}
 
-  // build options
-  var indices = pick4(mode, s.current);
-  var grid    = document.getElementById(mode + '-options');
+/* ══════════════════════════════════════════
+   LETTERS QUIZ
+══════════════════════════════════════════ */
+function renderLetterQuestion() {
+  letterAnswered = false;
+  letterCurrent  = pickNextLetter();
+  if (letterCurrent === null) { showCompletion('letters'); return; }
+
+  var item = LETTERS[letterCurrent];
+  var pts  = letterPts[letterCurrent];
+
+  document.getElementById('letters-prompt').textContent     = item.show;
+  document.getElementById('letters-pts-fill').style.width   = (pts / MAX_PTS * 100) + '%';
+  document.getElementById('letters-pts-text').textContent   = pts + ' / ' + MAX_PTS + ' pts';
+  clearFeedback('letters');
+
+  /* Pick 3 other letter indices as distractors */
+  var others = shuffle(LETTERS.map(function(_, i) { return i; })
+    .filter(function(i) { return i !== letterCurrent; })).slice(0, 3);
+  var optIs  = shuffle([letterCurrent].concat(others));
+
+  var grid = document.getElementById('letters-options');
   grid.innerHTML = '';
-
-  indices.forEach(function(idx, pos) {
-    var btn  = document.createElement('button');
+  optIs.forEach(function(idx, pos) {
+    var btn = document.createElement('button');
     btn.className = 'opt-btn';
-    btn.setAttribute('data-idx', idx);
-
-    var keySpan = '<span class="key-hint">' + KEY_LABELS[pos] + '</span>';
-
-    if (mode === 'letters') {
-      btn.innerHTML = keySpan +
-        '<span style="font-size:1rem;display:block">' + data[idx].pron + '</span>' +
-        '<span style="font-size:0.67rem;color:#3a5a72;display:block;margin-top:2px">' + data[idx].desc + '</span>';
-    } else {
-      btn.innerHTML = keySpan +
-        '<span style="font-size:0.97rem;display:block">' + data[idx].pron + '</span>';
-    }
-
-    btn.addEventListener('click', function(){ handleAnswer(mode, idx); });
+    btn.setAttribute('data-vi', idx);
+    btn.innerHTML =
+      '<span class="key-hint">' + KEY_LABELS[pos] + '</span>' +
+      '<span style="font-size:1rem;display:block">' + LETTERS[idx].pron + '</span>' +
+      '<span style="font-size:0.67rem;color:#3a5a72;display:block;margin-top:2px">' + LETTERS[idx].desc + '</span>';
+    btn.addEventListener('click', function() { handleLetterAnswer(idx); });
     grid.appendChild(btn);
   });
 }
 
-/* ════════════════════════════════════════
-   HANDLE ANSWER
-════════════════════════════════════════ */
-function handleAnswer(mode, chosenIdx) {
-  var s = state[mode];
-  if (s.answered) return;
-  s.answered = true;
+function handleLetterAnswer(chosenIdx) {
+  if (letterAnswered) return;
+  letterAnswered = true;
 
-  var correct  = (chosenIdx === s.current);
-  var prevPts  = s.points[s.current];
-  s.points[s.current] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
-  var newPts   = s.points[s.current];
+  var correct  = (chosenIdx === letterCurrent);
+  var prevPts  = letterPts[letterCurrent];
+  letterPts[letterCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts   = letterPts[letterCurrent];
+  var item     = LETTERS[letterCurrent];
 
-  var allBtns = document.querySelectorAll('#' + mode + '-options .opt-btn');
-  allBtns.forEach(function(b) {
-    b.classList.add('locked');
-    var idx = parseInt(b.getAttribute('data-idx'), 10);
-    if (idx === s.current)                   b.classList.add('correct');
-    if (idx === chosenIdx && !correct)       b.classList.add('wrong');
-  });
+  highlightBtns('letters-options', chosenIdx, letterCurrent);
+  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'letters-quiz-wrap');
 
-  var item    = dataFor(mode)[s.current];
-  var fbMsg   = document.getElementById(mode + '-fb-msg');
-  var fbSub   = document.getElementById(mode + '-fb-sub');
   var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
-
   if (correct) {
-    fbMsg.textContent = justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts';
-    fbMsg.className   = 'feedback-msg show ok';
-    fbSub.textContent = justLearned
-      ? (mode === 'letters' ? item.show : item.ukr) + ' is now fully learned!'
-      : (mode === 'letters'
-          ? newPts + ' / ' + MAX_PTS + ' pts  ·  ' + item.ex + ' = ' + item.exEng
-          : newPts + ' / ' + MAX_PTS + ' pts  ·  ' + item.pron);
+    showFeedback('letters', true,
+      justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
+      justLearned ? item.show + ' is fully learned!' : newPts + ' / ' + MAX_PTS + ' pts  -  ' + item.ex + ' = ' + item.exEng);
   } else {
-    fbMsg.textContent = (newPts < prevPts) ? '−1 pt' : 'Miss! (already at 0)';
-    fbMsg.className   = 'feedback-msg show bad';
-    fbSub.textContent = mode === 'letters'
-      ? 'Correct: ' + item.pron + '  ·  ' + item.ex + ' = ' + item.exEng
-      : 'Correct: ' + item.pron;
+    showFeedback('letters', false,
+      (newPts < prevPts) ? '-1 pt' : 'Miss!',
+      'Correct: ' + item.pron + '  -  ' + item.ex + ' = ' + item.exEng);
   }
-  fbSub.className = 'feedback-sub show';
 
-  spawnDelta(correct ? '+' + CORRECT_PT : '−1', correct, mode + '-quiz-wrap');
+  document.getElementById('letters-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById('letters-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
 
-  document.getElementById(mode + '-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
-  document.getElementById(mode + '-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
-
-  updateTile(mode, s.current);
+  updateLetterTile(letterCurrent);
   updateOverall();
   saveProgress();
-
-  document.getElementById(mode + '-next').className = 'next-btn show';
+  document.getElementById('letters-next').className = 'next-btn show';
 }
 
-function nextQ(mode) { renderQuestion(mode); }
+/* ══════════════════════════════════════════
+   VOCAB QUIZ
+══════════════════════════════════════════ */
+function renderVocabQuestion() {
+  vocabAnswered = false;
+  vocabCurrent  = pickNextVocab();
+  if (vocabCurrent === null) { showCompletion('vocab'); return; }
 
-/* ════════════════════════════════════════
-   COMPLETION
-════════════════════════════════════════ */
+  var item = VOCAB[vocabCurrent];
+  var pts  = vocabPts[vocabCurrent];
+
+  var prompt = document.getElementById('vocab-prompt');
+  var ukrHtml = item.type === 'verb'
+    ? '<div class="verb-inf">' + item.ukr + '</div>'
+    : '<div style="font-size:1.3rem;font-weight:600;color:#f5c518;line-height:1.4;text-align:center">' + item.ukr + '</div>';
+
+  prompt.innerHTML =
+    '<div class="vocab-prompt-clickable" id="vocab-clickable" onclick="revealVocabPron()">' +
+      ukrHtml +
+      '<div class="vocab-pron-reveal" id="vocab-pron-reveal">' + item.pron + '</div>' +
+      '<div class="vocab-tap-hint">tap to see pronunciation</div>' +
+    '</div>';
+
+  document.getElementById('vocab-badge').textContent = item.type === 'verb' ? 'verb' : 'phrase';
+
+  document.getElementById('vocab-pts-fill').style.width = (pts / MAX_PTS * 100) + '%';
+  document.getElementById('vocab-pts-text').textContent = pts + ' / ' + MAX_PTS + ' pts';
+  clearFeedback('vocab');
+
+  /* 3 distractors from other vocab items */
+  var others = shuffle(VOCAB.map(function(_, i) { return i; })
+    .filter(function(i) { return i !== vocabCurrent; })).slice(0, 3);
+  var optIs  = shuffle([vocabCurrent].concat(others));
+
+  var grid = document.getElementById('vocab-options');
+  grid.innerHTML = '';
+  optIs.forEach(function(idx, pos) {
+    var btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.setAttribute('data-idx', idx);
+    btn.innerHTML =
+      '<span class="key-hint">' + KEY_LABELS[pos] + '</span>' +
+      '<span style="font-size:0.92rem">' + VOCAB[idx].eng + '</span>';
+    btn.addEventListener('click', function() { handleVocabAnswer(idx); });
+    grid.appendChild(btn);
+  });
+}
+
+function revealVocabPron() {
+  var reveal = document.getElementById('vocab-pron-reveal');
+  var hint   = document.querySelector('.vocab-tap-hint');
+  if (reveal) reveal.classList.add('visible');
+  if (hint)   hint.style.display = 'none';
+}
+
+function handleVocabAnswer(chosenIdx) {
+  if (vocabAnswered) return;
+  vocabAnswered = true;
+
+  var correct = (chosenIdx === vocabCurrent);
+  var prevPts = vocabPts[vocabCurrent];
+  vocabPts[vocabCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts  = vocabPts[vocabCurrent];
+  var item    = VOCAB[vocabCurrent];
+
+  /* Highlight buttons */
+  document.querySelectorAll('#vocab-options .opt-btn').forEach(function(b) {
+    b.classList.add('locked');
+    var idx = parseInt(b.getAttribute('data-idx'), 10);
+    if (idx === vocabCurrent)                     b.classList.add('correct');
+    if (idx === chosenIdx && idx !== vocabCurrent) b.classList.add('wrong');
+  });
+
+  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'vocab-quiz-wrap');
+
+  var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
+  if (correct) {
+    showFeedback('vocab', true,
+      justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
+      justLearned ? item.ukr + ' fully learned!' : newPts + ' / ' + MAX_PTS + ' pts');
+  } else {
+    showFeedback('vocab', false,
+      (newPts < prevPts) ? '-1 pt' : 'Miss!',
+      'Correct: ' + item.eng);
+  }
+
+  document.getElementById('vocab-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById('vocab-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
+
+  updateVocabTile(vocabCurrent);
+  updateOverall();
+  saveProgress();
+  document.getElementById('vocab-next').className = 'next-btn show';
+}
+
+/* ══════════════════════════════════════════
+   VERBS QUIZ
+══════════════════════════════════════════ */
+function renderVerbQuestion() {
+  verbAnswered = false;
+  verbCurrent  = pickNextVerb();
+  if (verbCurrent === null) { showCompletion('verbs'); return; }
+
+  var item = VERB_ITEMS[verbCurrent];
+  var verb = VERBS[item.vi];
+  var pts  = verbPts[verbCurrent];
+
+  document.getElementById('verbs-inf').textContent          = verb.inf;
+  document.getElementById('verbs-eng').textContent          = verb.eng;
+  document.getElementById('verbs-pts-fill').style.width     = (pts / MAX_PTS * 100) + '%';
+  document.getElementById('verbs-pts-text').textContent     = pts + ' / ' + MAX_PTS + ' pts';
+  clearFeedback('verbs');
+
+  var pronRow = document.getElementById('verbs-pronoun-row');
+  var badge   = document.getElementById('verbs-badge');
+
+  if (item.type === 'pron') {
+    badge.textContent    = 'pronunciation';
+    pronRow.style.display = 'none';
+    renderVerbPronOptions(item.vi);
+  } else {
+    badge.textContent = 'conjugation';
+    var c = verb.conj[item.ci];
+    document.getElementById('verbs-pronoun-ukr').textContent = c.pronoun;
+    document.getElementById('verbs-pronoun-eng').textContent = c.peng;
+    pronRow.style.display = 'flex';
+    renderVerbConjOptions(item.vi, item.ci);
+  }
+}
+
+function renderVerbPronOptions(correctVI) {
+  var others = shuffle(VERBS.map(function(_, vi) { return vi; })
+    .filter(function(vi) { return vi !== correctVI; })).slice(0, 3);
+  var optVIs = shuffle([correctVI].concat(others));
+
+  var grid = document.getElementById('verbs-options');
+  grid.innerHTML = '';
+  optVIs.forEach(function(vi, pos) {
+    var btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.setAttribute('data-vi', vi);
+    btn.innerHTML =
+      '<span class="key-hint">' + KEY_LABELS[pos] + '</span>' +
+      '<span style="font-size:0.97rem">' + VERBS[vi].pron + '</span>';
+    btn.addEventListener('click', function() { handleVerbPronAnswer(vi, correctVI); });
+    grid.appendChild(btn);
+  });
+}
+
+function renderVerbConjOptions(correctVI, ci) {
+  /* Distractors are other conjugation slots of the SAME verb */
+  var otherCIs = shuffle([0, 1, 2, 3, 4, 5].filter(function(c) { return c !== ci; })).slice(0, 3);
+  var optCIs   = shuffle([ci].concat(otherCIs));
+
+  var grid = document.getElementById('verbs-options');
+  grid.innerHTML = '';
+  optCIs.forEach(function(optCI, pos) {
+    var btn  = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.setAttribute('data-ci', optCI);
+    var conj = VERBS[correctVI].conj[optCI];
+    btn.innerHTML =
+      '<span class="key-hint">' + KEY_LABELS[pos] + '</span>' +
+      '<span style="font-size:1.1rem;font-weight:700">' + conj.form + '</span>' +
+      '<span style="font-size:0.68rem;color:#3a5a72;display:block;margin-top:2px">' + conj.cpron + '</span>';
+    btn.addEventListener('click', function() { handleVerbConjAnswer(optCI, correctVI, ci); });
+    grid.appendChild(btn);
+  });
+}
+
+function handleVerbPronAnswer(chosenVI, correctVI) {
+  if (verbAnswered) return;
+  verbAnswered = true;
+
+  var correct = (chosenVI === correctVI);
+  var prevPts = verbPts[verbCurrent];
+  verbPts[verbCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts  = verbPts[verbCurrent];
+  var verb    = VERBS[correctVI];
+
+  highlightBtnsByVI('verbs-options', chosenVI, correctVI);
+  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'verbs-quiz-wrap');
+
+  var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
+  if (correct) {
+    showFeedback('verbs', true,
+      justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
+      justLearned ? verb.inf + ' pronunciation learned!' : newPts + ' / ' + MAX_PTS + ' pts  -  ' + verb.pron);
+  } else {
+    showFeedback('verbs', false,
+      (newPts < prevPts) ? '-1 pt' : 'Miss!',
+      'Correct: ' + verb.pron);
+  }
+
+  document.getElementById('verbs-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById('verbs-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
+  updateVerbTile(correctVI);
+  updateOverall();
+  saveProgress();
+  document.getElementById('verbs-next').className = 'next-btn show';
+}
+
+function handleVerbConjAnswer(chosenCI, correctVI, ci) {
+  if (verbAnswered) return;
+  verbAnswered = true;
+
+  var correct = (chosenCI === ci);
+  var prevPts = verbPts[verbCurrent];
+  verbPts[verbCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts  = verbPts[verbCurrent];
+  var verb    = VERBS[correctVI];
+  var c       = verb.conj[ci];
+
+  highlightBtnsByCI('verbs-options', chosenCI, ci);
+  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'verbs-quiz-wrap');
+
+  var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
+  if (correct) {
+    showFeedback('verbs', true,
+      justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
+      justLearned ? c.pronoun + ' ' + c.form + ' fully learned!' : newPts + ' / ' + MAX_PTS + ' pts  -  ' + c.pronoun + ' ' + c.form + '  (' + c.cpron + ')');
+  } else {
+    showFeedback('verbs', false,
+      (newPts < prevPts) ? '-1 pt' : 'Miss!',
+      'Correct: ' + c.form + '  (' + c.cpron + ')');
+  }
+
+  document.getElementById('verbs-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById('verbs-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
+  updateVerbTile(correctVI);
+  updateOverall();
+  saveProgress();
+  document.getElementById('verbs-next').className = 'next-btn show';
+}
+
+function nextQ(mode) {
+  if (mode === 'letters') renderLetterQuestion();
+  else if (mode === 'vocab') renderVocabQuestion();
+  else renderVerbQuestion();
+}
+
+/* ══════════════════════════════════════════
+   SHARED UI HELPERS
+══════════════════════════════════════════ */
+function clearFeedback(mode) {
+  var msg = document.getElementById(mode + '-fb-msg');
+  var sub = document.getElementById(mode + '-fb-sub');
+  msg.className = 'feedback-msg'; msg.textContent = '';
+  sub.className = 'feedback-sub'; sub.textContent = '';
+  document.getElementById(mode + '-next').className = 'next-btn';
+}
+
+function showFeedback(mode, ok, msgText, subText) {
+  var msg = document.getElementById(mode + '-fb-msg');
+  var sub = document.getElementById(mode + '-fb-sub');
+  msg.textContent = msgText;
+  msg.className   = 'feedback-msg show ' + (ok ? 'ok' : 'bad');
+  sub.textContent = subText;
+  sub.className   = 'feedback-sub show';
+}
+
+/* Highlight by array index (letters) */
+function highlightBtns(gridId, chosenIdx, correctIdx) {
+  document.querySelectorAll('#' + gridId + ' .opt-btn').forEach(function(b) {
+    b.classList.add('locked');
+    var vi = parseInt(b.getAttribute('data-vi'), 10);
+    if (vi === correctIdx)             b.classList.add('correct');
+    if (vi === chosenIdx && vi !== correctIdx) b.classList.add('wrong');
+  });
+}
+
+/* Highlight by verb index (pron questions) */
+function highlightBtnsByVI(gridId, chosenVI, correctVI) {
+  document.querySelectorAll('#' + gridId + ' .opt-btn').forEach(function(b) {
+    b.classList.add('locked');
+    var vi = parseInt(b.getAttribute('data-vi'), 10);
+    if (vi === correctVI)                        b.classList.add('correct');
+    if (vi === chosenVI && vi !== correctVI)     b.classList.add('wrong');
+  });
+}
+
+/* Highlight by conjugation index (conj questions) */
+function highlightBtnsByCI(gridId, chosenCI, correctCI) {
+  document.querySelectorAll('#' + gridId + ' .opt-btn').forEach(function(b) {
+    b.classList.add('locked');
+    var ci = parseInt(b.getAttribute('data-ci'), 10);
+    if (ci === correctCI)                        b.classList.add('correct');
+    if (ci === chosenCI && ci !== correctCI)     b.classList.add('wrong');
+  });
+}
+
+function spawnDelta(text, correct, wrapId) {
+  var el = document.createElement('div');
+  el.className = 'pts-delta';
+  el.textContent = text;
+  el.style.color = correct ? '#4caf82' : '#e05c5c';
+  var rect = document.getElementById(wrapId).getBoundingClientRect();
+  el.style.left = (rect.left + rect.width / 2 - 14) + 'px';
+  el.style.top  = (rect.top + 60 + window.scrollY) + 'px';
+  document.body.appendChild(el);
+  setTimeout(function() { el.remove(); }, 950);
+}
+
+/* ══════════════════════════════════════════
+   COMPLETION & RESET
+══════════════════════════════════════════ */
 function showCompletion(mode) {
   document.getElementById(mode + '-quiz-wrap').style.display = 'none';
   document.getElementById(mode + '-done').style.display      = 'flex';
@@ -501,106 +960,195 @@ function showCompletion(mode) {
 }
 
 function resetMode(mode) {
-  state[mode].points = dataFor(mode).map(function(){ return 0; });
-  state[mode].queue  = [];
-  document.getElementById(mode + '-quiz-wrap').style.display = 'block';
-  document.getElementById(mode + '-done').style.display      = 'none';
-  renderGrid(mode);
+  if (mode === 'letters') {
+    letterPts   = LETTERS.map(function() { return 0; });
+    letterQueue = [];
+    document.getElementById('letters-quiz-wrap').style.display = 'block';
+    document.getElementById('letters-done').style.display      = 'none';
+    renderLetterGrid();
+    renderLetterQuestion();
+  } else if (mode === 'vocab') {
+    vocabPts   = VOCAB.map(function() { return 0; });
+    vocabQueue = [];
+    document.getElementById('vocab-quiz-wrap').style.display = 'block';
+    document.getElementById('vocab-done').style.display      = 'none';
+    renderVocabGrid();
+    renderVocabQuestion();
+  } else {
+    verbPts   = VERB_ITEMS.map(function() { return 0; });
+    verbQueue = [];
+    document.getElementById('verbs-quiz-wrap').style.display = 'block';
+    document.getElementById('verbs-done').style.display      = 'none';
+    renderVerbGrid();
+    renderVerbQuestion();
+  }
   updateOverall();
   saveProgress();
-  renderQuestion(mode);
 }
 
-/* ════════════════════════════════════════
+/* ══════════════════════════════════════════
    OVERALL BAR
-════════════════════════════════════════ */
+══════════════════════════════════════════ */
 function updateOverall() {
-  var mode  = activeTab === 'words' ? 'words' : 'letters';
-  var data  = dataFor(mode);
-  var n     = learnedCount(mode);
-  document.getElementById('overall-label').textContent        = mode === 'letters' ? 'LETTERS LEARNED' : 'WORDS LEARNED';
-  document.getElementById('learned-count').textContent        = n;
-  document.getElementById('learned-total').textContent        = data.length;
-  document.getElementById('overall-fill').style.width         = (n / data.length * 100) + '%';
-  document.getElementById('prog-letters-count').textContent   = learnedCount('letters');
-  document.getElementById('prog-words-count').textContent     = learnedCount('words');
+  var learnedL = letterPts.filter(function(p) { return p >= MAX_PTS; }).length;
+  var learnedV = verbPts.filter(function(p) { return p >= MAX_PTS; }).length;
+
+  var learnedVoc = vocabPts.filter(function(p) { return p >= MAX_PTS; }).length;
+
+  if (activeTab === 'verbs') {
+    document.getElementById('overall-label').textContent  = 'VERB ITEMS LEARNED';
+    document.getElementById('learned-count').textContent  = learnedV;
+    document.getElementById('learned-total').textContent  = VERB_ITEMS.length;
+    document.getElementById('overall-fill').style.width   = (learnedV / VERB_ITEMS.length * 100) + '%';
+  } else if (activeTab === 'vocab') {
+    document.getElementById('overall-label').textContent  = 'VOCAB ITEMS LEARNED';
+    document.getElementById('learned-count').textContent  = learnedVoc;
+    document.getElementById('learned-total').textContent  = VOCAB.length;
+    document.getElementById('overall-fill').style.width   = (learnedVoc / VOCAB.length * 100) + '%';
+  } else {
+    document.getElementById('overall-label').textContent  = 'LETTERS LEARNED';
+    document.getElementById('learned-count').textContent  = learnedL;
+    document.getElementById('learned-total').textContent  = LETTERS.length;
+    document.getElementById('overall-fill').style.width   = (learnedL / LETTERS.length * 100) + '%';
+  }
+
+  document.getElementById('prog-vocab-count').textContent = learnedVoc;
+
+  document.getElementById('prog-letters-count').textContent = learnedL;
+
+  /* Verb mastery = verbs where all 7 items are at MAX_PTS */
+  var masteredVerbs = 0;
+  VERBS.forEach(function(verb, vi) {
+    var allDone = VERB_ITEMS.every(function(item, ii) {
+      if (item.vi !== vi) return true;
+      return verbPts[ii] >= MAX_PTS;
+    });
+    if (allDone) masteredVerbs++;
+  });
+  document.getElementById('prog-verbs-count').textContent = masteredVerbs;
 }
 
-/* ════════════════════════════════════════
+/* ══════════════════════════════════════════
    PROGRESS GRIDS
-════════════════════════════════════════ */
-function renderGrid(mode) {
-  var data    = dataFor(mode);
-  var gridId  = mode === 'letters' ? 'grid-letters' : 'grid-words';
-  var grid    = document.getElementById(gridId);
+══════════════════════════════════════════ */
+function renderLetterGrid() {
+  var grid = document.getElementById('grid-letters');
   grid.innerHTML = '';
-  data.forEach(function(item, i) {
+  LETTERS.forEach(function(item, i) {
     var tile = document.createElement('div');
-    tile.className = 'tile' + (isLearned(mode, i) ? ' learned' : '');
-    tile.id = 'tile-' + mode + '-' + i;
-    var mainText = mode === 'letters' ? item.show.split(' ')[0] : item.ukr;
-    var subText  = mode === 'letters' ? item.pron : item.eng;
+    var learned = letterPts[i] >= MAX_PTS;
+    tile.className = 'tile' + (learned ? ' learned' : '');
+    tile.id = 'ltile-' + i;
     tile.innerHTML =
-      '<div class="tile-main">' + mainText + '</div>' +
-      '<div class="tile-sub">' + subText + '</div>' +
-      '<div class="tile-bar"><div class="tile-fill" style="width:' + (state[mode].points[i] / MAX_PTS * 100) + '%"></div></div>' +
-      '<div class="tile-pts">' + (isLearned(mode, i) ? '✓ done' : state[mode].points[i] + ' pts') + '</div>';
+      '<div class="tile-main">' + item.show.split(' ')[0] + '</div>' +
+      '<div class="tile-sub">' + item.pron + '</div>' +
+      '<div class="tile-bar"><div class="tile-fill" style="width:' + (letterPts[i] / MAX_PTS * 100) + '%"></div></div>' +
+      '<div class="tile-pts">' + (learned ? 'done' : letterPts[i] + ' pts') + '</div>';
     grid.appendChild(tile);
   });
 }
 
-function updateTile(mode, i) {
-  var tile = document.getElementById('tile-' + mode + '-' + i);
+function updateLetterTile(i) {
+  var tile = document.getElementById('ltile-' + i);
   if (!tile) return;
-  var wasLearned = tile.classList.contains('learned');
-  var nowLearned = isLearned(mode, i);
-  tile.className = 'tile' + (nowLearned ? ' learned' : '');
-  tile.querySelector('.tile-fill').style.width = (state[mode].points[i] / MAX_PTS * 100) + '%';
-  tile.querySelector('.tile-pts').textContent  = nowLearned ? '✓ done' : state[mode].points[i] + ' pts';
-  if (!wasLearned && nowLearned) {
-    tile.classList.add('just-learned');
-    setTimeout(function(){ tile.classList.remove('just-learned'); }, 500);
-  }
+  var was = tile.classList.contains('learned');
+  var now = letterPts[i] >= MAX_PTS;
+  tile.className = 'tile' + (now ? ' learned' : '');
+  tile.querySelector('.tile-fill').style.width = (letterPts[i] / MAX_PTS * 100) + '%';
+  tile.querySelector('.tile-pts').textContent  = now ? 'done' : letterPts[i] + ' pts';
+  if (!was && now) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
 }
 
-/* ════════════════════════════════════════
+function renderVocabGrid() {
+  var grid = document.getElementById('grid-vocab');
+  if (!grid) return;
+  grid.innerHTML = '';
+  VOCAB.forEach(function(item, i) {
+    var learned = vocabPts[i] >= MAX_PTS;
+    var tile = document.createElement('div');
+    tile.className = 'tile' + (learned ? ' learned' : '');
+    tile.id = 'vctile-' + i;
+    var mainText = item.type === 'verb' ? item.ukr : item.ukr.substring(0, 22) + (item.ukr.length > 22 ? '...' : '');
+    tile.innerHTML =
+      '<div class="tile-main" style="font-size:0.95rem">' + mainText + '</div>' +
+      '<div class="tile-sub">' + item.eng.substring(0, 24) + (item.eng.length > 24 ? '...' : '') + '</div>' +
+      '<div class="tile-bar"><div class="tile-fill" style="width:' + (vocabPts[i] / MAX_PTS * 100) + '%"></div></div>' +
+      '<div class="tile-pts">' + (learned ? 'done' : vocabPts[i] + ' pts') + '</div>';
+    grid.appendChild(tile);
+  });
+}
+
+function updateVocabTile(i) {
+  var tile = document.getElementById('vctile-' + i);
+  if (!tile) return;
+  var was = tile.classList.contains('learned');
+  var now = vocabPts[i] >= MAX_PTS;
+  tile.className = 'tile' + (now ? ' learned' : '');
+  tile.querySelector('.tile-fill').style.width = (vocabPts[i] / MAX_PTS * 100) + '%';
+  tile.querySelector('.tile-pts').textContent  = now ? 'done' : vocabPts[i] + ' pts';
+  if (!was && now) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
+}
+
+function renderVerbGrid() {
+  var grid = document.getElementById('grid-verbs');
+  grid.innerHTML = '';
+  VERBS.forEach(function(verb, vi) {
+    /* Count learned items for this verb */
+    var itemCount = 0, learnedCount = 0;
+    VERB_ITEMS.forEach(function(item, ii) {
+      if (item.vi === vi) { itemCount++; if (verbPts[ii] >= MAX_PTS) learnedCount++; }
+    });
+    var pct     = learnedCount / itemCount * 100;
+    var mastered = learnedCount === itemCount;
+
+    var tile = document.createElement('div');
+    tile.className = 'tile' + (mastered ? ' learned' : '');
+    tile.id = 'vtile-' + vi;
+    tile.innerHTML =
+      '<div class="tile-main" style="font-size:1rem">' + verb.inf + '</div>' +
+      '<div class="tile-sub">' + verb.eng + '</div>' +
+      '<div class="tile-bar"><div class="tile-fill" style="width:' + pct + '%"></div></div>' +
+      '<div class="tile-pts">' + (mastered ? 'mastered' : learnedCount + ' / ' + itemCount) + '</div>';
+    grid.appendChild(tile);
+  });
+}
+
+function updateVerbTile(vi) {
+  var tile = document.getElementById('vtile-' + vi);
+  if (!tile) return;
+  var itemCount = 0, learnedCount = 0;
+  VERB_ITEMS.forEach(function(item, ii) {
+    if (item.vi === vi) { itemCount++; if (verbPts[ii] >= MAX_PTS) learnedCount++; }
+  });
+  var pct      = learnedCount / itemCount * 100;
+  var mastered = learnedCount === itemCount;
+  var was      = tile.classList.contains('learned');
+  tile.className = 'tile' + (mastered ? ' learned' : '');
+  tile.querySelector('.tile-fill').style.width = pct + '%';
+  tile.querySelector('.tile-pts').textContent  = mastered ? 'mastered' : learnedCount + ' / ' + itemCount;
+  if (!was && mastered) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
+}
+
+/* ══════════════════════════════════════════
    TABS
-════════════════════════════════════════ */
+══════════════════════════════════════════ */
 function switchTab(name, btn) {
   activeTab = name;
-  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b)   { b.classList.remove('active'); });
   document.getElementById('panel-' + name).classList.add('active');
   btn.classList.add('active');
   updateOverall();
 }
 
-/* ════════════════════════════════════════
-   FLOATING DELTA
-════════════════════════════════════════ */
-function spawnDelta(text, correct, wrapId) {
-  var el = document.createElement('div');
-  el.className   = 'pts-delta';
-  el.textContent = text;
-  el.style.color = correct ? '#4caf82' : '#e05c5c';
-  var rect = document.getElementById(wrapId).getBoundingClientRect();
-  el.style.left  = (rect.left + rect.width / 2 - 14) + 'px';
-  el.style.top   = (rect.top + 60 + window.scrollY) + 'px';
-  document.body.appendChild(el);
-  setTimeout(function(){ el.remove(); }, 950);
-}
-
-/* ════════════════════════════════════════
+/* ══════════════════════════════════════════
    SAVE / LOAD
-════════════════════════════════════════ */
-var STORAGE_KEY = 'ua_learn_v2';
+══════════════════════════════════════════ */
+var STORAGE_KEY = 'ua_learn_v4';
 
 function saveProgress() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      lp: state.letters.points,
-      wp: state.words.points
-    }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ lp: letterPts, vc: vocabPts, vp: verbPts }));
   } catch(e) {}
 }
 
@@ -610,43 +1158,47 @@ function loadProgress() {
     if (!raw) return;
     var d = JSON.parse(raw);
     if (d.lp && d.lp.length === LETTERS.length)
-      state.letters.points = d.lp.map(function(v){ return Math.max(0, Math.min(MAX_PTS, Number(v)||0)); });
-    if (d.wp && d.wp.length === WORDS.length)
-      state.words.points   = d.wp.map(function(v){ return Math.max(0, Math.min(MAX_PTS, Number(v)||0)); });
+      letterPts = d.lp.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
+    if (d.vc && d.vc.length === VOCAB.length)
+      vocabPts = d.vc.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
+    if (d.vp && d.vp.length === VERB_ITEMS.length)
+      verbPts = d.vp.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
   } catch(e) {}
 }
 
-/* ════════════════════════════════════════
-   KEYBOARD  (Q W A S + Space/Enter)
-════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   KEYBOARD  Q W A S + Space/Enter
+══════════════════════════════════════════ */
 document.addEventListener('keydown', function(e) {
-  var mode = activeTab === 'words' ? 'words' : 'letters';
   if (activeTab === 'progress') return;
+  var tab      = activeTab;
+  var answered = tab === 'letters' ? letterAnswered : tab === 'vocab' ? vocabAnswered : verbAnswered;
 
-  var s = state[mode];
-  if ((e.code === 'Space' || e.code === 'Enter') && s.answered) {
+  if ((e.code === 'Space' || e.code === 'Enter') && answered) {
     e.preventDefault();
-    nextQ(mode);
+    nextQ(tab);
     return;
   }
-  if (!s.answered) {
+  if (!answered) {
     var ki = KEYS.indexOf(e.code);
     if (ki !== -1) {
-      var btns = document.querySelectorAll('#' + mode + '-options .opt-btn');
+      var btns = document.querySelectorAll('#' + tab + '-options .opt-btn');
       if (btns[ki]) btns[ki].click();
     }
   }
 });
 
-/* ════════════════════════════════════════
+/* ══════════════════════════════════════════
    INIT
-════════════════════════════════════════ */
+══════════════════════════════════════════ */
 loadProgress();
-renderGrid('letters');
-renderGrid('words');
+renderLetterGrid();
+renderVocabGrid();
+renderVerbGrid();
 updateOverall();
-renderQuestion('letters');
-renderQuestion('words');
+renderLetterQuestion();
+renderVocabQuestion();
+renderVerbQuestion();
 </script>
 </body>
 </html>
