@@ -676,9 +676,9 @@ function renderVocabQuestion() {
   document.getElementById('vocab-pts-text').textContent = pts + ' / ' + MAX_PTS + ' pts';
   clearFeedback('vocab');
 
-  /* 3 distractors from other vocab items */
+  /* 3 distractors from other vocab items of the same type */
   var others = shuffle(VOCAB.map(function(_, i) { return i; })
-    .filter(function(i) { return i !== vocabCurrent; })).slice(0, 3);
+    .filter(function(i) { return i !== vocabCurrent && VOCAB[i].type === item.type; })).slice(0, 3);
   var optIs  = shuffle([vocabCurrent].concat(others));
 
   var grid = document.getElementById('vocab-options');
