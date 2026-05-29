@@ -275,7 +275,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   <div class="completion" id="verbs-done">
     <div style="font-size:3rem">&#127881;</div>
     <h2>All verbs mastered!</h2>
-    <p>77 items — pronunciation &amp; all conjugations.<br>&#1052;&#1086;&#1083;&#1086;&#1076;&#1077;&#1094;&#1100;!</p>
+    <p>154 items — pronunciation &amp; all conjugations.<br>&#1052;&#1086;&#1083;&#1086;&#1076;&#1077;&#1094;&#1100;!</p>
     <button class="reset-btn" onclick="resetMode('verbs')">Start over</button>
   </div>
 </div>
@@ -459,6 +459,127 @@ var VERBS = [
       { form: 'їдемо',         cpron: 'YI-de-mo',        pronoun: 'ми',       peng: 'we' },
       { form: 'їдете',         cpron: 'YI-de-te',        pronoun: 'ви',       peng: 'you (pl.)' },
       { form: 'їдуть',         cpron: 'YI-dut',          pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'дивитися', pron: 'dy-VY-ty-sya', eng: 'to watch',
+    conj: [
+      { form: 'дивлюся',       cpron: 'dyv-LYU-sya',     pronoun: 'я',        peng: 'I' },
+      { form: 'дивишся',       cpron: 'DY-vysh-sya',     pronoun: 'ти',       peng: 'you' },
+      { form: 'дивиться',      cpron: 'DY-vyt-sya',      pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'дивимося',      cpron: 'DY-vy-mo-sya',    pronoun: 'ми',       peng: 'we' },
+      { form: 'дивитеся',      cpron: 'DY-vy-te-sya',    pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'дивляться',     cpron: 'DYV-lya-tsya',    pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'допомагати', pron: 'do-po-ma-HA-ty', eng: 'to help',
+    conj: [
+      { form: 'допомагаю',     cpron: 'do-po-ma-HA-yu',     pronoun: 'я',        peng: 'I' },
+      { form: 'допомагаєш',    cpron: 'do-po-ma-HA-yesh',   pronoun: 'ти',       peng: 'you' },
+      { form: 'допомагає',     cpron: 'do-po-ma-HA-ye',     pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'допомагаємо',   cpron: 'do-po-ma-HA-ye-mo',  pronoun: 'ми',       peng: 'we' },
+      { form: 'допомагаєте',   cpron: 'do-po-ma-HA-ye-te',  pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'допомагають',   cpron: 'do-po-ma-HA-yut',    pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'розслаблятися', pron: 'roz-slab-LYA-ty-sya', eng: 'to relax',
+    conj: [
+      { form: 'розслабляюся',  cpron: 'roz-slab-LYA-yu-sya',    pronoun: 'я',        peng: 'I' },
+      { form: 'розслабляєшся', cpron: 'roz-slab-LYA-yesh-sya',  pronoun: 'ти',       peng: 'you' },
+      { form: 'розслабляється', cpron: 'roz-slab-LYA-ye-tsya',  pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'розслабляємося', cpron: 'roz-slab-LYA-ye-mo-sya', pronoun: 'ми',      peng: 'we' },
+      { form: 'розслабляєтеся', cpron: 'roz-slab-LYA-ye-te-sya', pronoun: 'ви',      peng: 'you (pl.)' },
+      { form: 'розслабляються', cpron: 'roz-slab-LYA-yut-sya',   pronoun: 'вони',    peng: 'they' }
+    ]
+  },
+  {
+    inf: 'любити', pron: 'lyu-BY-ty', eng: 'to love',
+    conj: [
+      { form: 'люблю',         cpron: 'lyu-BLYU',        pronoun: 'я',        peng: 'I' },
+      { form: 'любиш',         cpron: 'LYU-bysh',        pronoun: 'ти',       peng: 'you' },
+      { form: 'любить',        cpron: 'LYU-byt',         pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'любимо',        cpron: 'LYU-by-mo',       pronoun: 'ми',       peng: 'we' },
+      { form: 'любите',        cpron: 'LYU-by-te',       pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'люблять',       cpron: 'LYUB-lyat',       pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'брати', pron: 'BRA-ty', eng: 'to take',
+    conj: [
+      { form: 'беру',          cpron: 'be-RU',           pronoun: 'я',        peng: 'I' },
+      { form: 'береш',         cpron: 'be-RESH',         pronoun: 'ти',       peng: 'you' },
+      { form: 'бере',          cpron: 'be-RE',           pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'беремо',        cpron: 'be-RE-mo',        pronoun: 'ми',       peng: 'we' },
+      { form: 'берете',        cpron: 'be-RE-te',        pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'беруть',        cpron: 'be-RUT',          pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'пробувати', pron: 'pro-BU-va-ty', eng: 'to try',
+    conj: [
+      { form: 'пробую',        cpron: 'PRO-bu-yu',       pronoun: 'я',        peng: 'I' },
+      { form: 'пробуєш',       cpron: 'pro-BU-yesh',     pronoun: 'ти',       peng: 'you' },
+      { form: 'пробує',        cpron: 'pro-BU-ye',       pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'пробуємо',      cpron: 'pro-BU-ye-mo',    pronoun: 'ми',       peng: 'we' },
+      { form: 'пробуєте',      cpron: 'pro-BU-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'пробують',      cpron: 'pro-BU-yut',      pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'робити', pron: 'ro-BY-ty', eng: 'to do',
+    conj: [
+      { form: 'роблю',         cpron: 'ROB-lyu',         pronoun: 'я',        peng: 'I' },
+      { form: 'робиш',         cpron: 'RO-bysh',         pronoun: 'ти',       peng: 'you' },
+      { form: 'робить',        cpron: 'RO-byt',          pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'робимо',        cpron: 'RO-by-mo',        pronoun: 'ми',       peng: 'we' },
+      { form: 'робите',        cpron: 'RO-by-te',        pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'роблять',       cpron: 'ROB-lyat',        pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'готувати', pron: 'ho-tu-VA-ty', eng: 'to cook',
+    conj: [
+      { form: 'готую',         cpron: 'ho-TU-yu',        pronoun: 'я',        peng: 'I' },
+      { form: 'готуєш',        cpron: 'ho-TU-yesh',      pronoun: 'ти',       peng: 'you' },
+      { form: 'готує',         cpron: 'ho-TU-ye',        pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'готуємо',       cpron: 'ho-TU-ye-mo',     pronoun: 'ми',       peng: 'we' },
+      { form: 'готуєте',       cpron: 'ho-TU-ye-te',     pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'готують',       cpron: 'ho-TU-yut',       pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'гуляти', pron: 'hu-LYA-ty', eng: 'to walk / stroll',
+    conj: [
+      { form: 'гуляю',         cpron: 'hu-LYA-yu',       pronoun: 'я',        peng: 'I' },
+      { form: 'гуляєш',        cpron: 'hu-LYA-yesh',     pronoun: 'ти',       peng: 'you' },
+      { form: 'гуляє',         cpron: 'hu-LYA-ye',       pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'гуляємо',       cpron: 'hu-LYA-ye-mo',    pronoun: 'ми',       peng: 'we' },
+      { form: 'гуляєте',       cpron: 'hu-LYA-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'гуляють',       cpron: 'hu-LYA-yut',      pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'співати', pron: 'spi-VA-ty', eng: 'to sing',
+    conj: [
+      { form: 'співаю',        cpron: 'spi-VA-yu',       pronoun: 'я',        peng: 'I' },
+      { form: 'співаєш',       cpron: 'spi-VA-yesh',     pronoun: 'ти',       peng: 'you' },
+      { form: 'співає',        cpron: 'spi-VA-ye',       pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'співаємо',      cpron: 'spi-VA-ye-mo',    pronoun: 'ми',       peng: 'we' },
+      { form: 'співаєте',      cpron: 'spi-VA-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'співають',      cpron: 'spi-VA-yut',      pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'танцювати', pron: 'tan-tsyu-VA-ty', eng: 'to dance',
+    conj: [
+      { form: 'танцюю',        cpron: 'tan-TSYU-yu',     pronoun: 'я',        peng: 'I' },
+      { form: 'танцюєш',       cpron: 'tan-TSYU-yesh',   pronoun: 'ти',       peng: 'you' },
+      { form: 'танцює',        cpron: 'tan-TSYU-ye',     pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'танцюємо',      cpron: 'tan-TSYU-ye-mo',  pronoun: 'ми',       peng: 'we' },
+      { form: 'танцюєте',      cpron: 'tan-TSYU-ye-te',  pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'танцюють',      cpron: 'tan-TSYU-yut',    pronoun: 'вони',     peng: 'they' }
     ]
   }
 ];
@@ -1144,7 +1265,7 @@ function switchTab(name, btn) {
 /* ══════════════════════════════════════════
    SAVE / LOAD
 ══════════════════════════════════════════ */
-var STORAGE_KEY = 'ua_learn_v4';
+var STORAGE_KEY = 'ua_learn_v5';
 
 function saveProgress() {
   try {
