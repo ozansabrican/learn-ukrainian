@@ -275,7 +275,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   <div class="completion" id="verbs-done">
     <div style="font-size:3rem">&#127881;</div>
     <h2>All verbs mastered!</h2>
-    <p>154 items — pronunciation &amp; all conjugations.<br>&#1052;&#1086;&#1083;&#1086;&#1076;&#1077;&#1094;&#1100;!</p>
+    <p>315 items — pronunciation &amp; all conjugations.<br>&#1052;&#1086;&#1083;&#1086;&#1076;&#1077;&#1094;&#1100;!</p>
     <button class="reset-btn" onclick="resetMode('verbs')">Start over</button>
   </div>
 </div>
@@ -580,6 +580,259 @@ var VERBS = [
       { form: 'танцюємо',      cpron: 'tan-TSYU-ye-mo',  pronoun: 'ми',       peng: 'we' },
       { form: 'танцюєте',      cpron: 'tan-TSYU-ye-te',  pronoun: 'ви',       peng: 'you (pl.)' },
       { form: 'танцюють',      cpron: 'tan-TSYU-yut',    pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'питати', pron: 'py-TA-ty', eng: 'to ask',
+    conj: [
+      { form: 'питаю',         cpron: 'py-TA-yu',        pronoun: 'я',        peng: 'I' },
+      { form: 'питаєш',        cpron: 'py-TA-yesh',      pronoun: 'ти',       peng: 'you' },
+      { form: 'питає',         cpron: 'py-TA-ye',        pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'питаємо',       cpron: 'py-TA-ye-mo',     pronoun: 'ми',       peng: 'we' },
+      { form: 'питаєте',       cpron: 'py-TA-ye-te',     pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'питають',       cpron: 'py-TA-yut',       pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'повторювати', pron: 'pov-to-ryu-VA-ty', eng: 'to repeat',
+    conj: [
+      { form: 'повторюю',      cpron: 'pov-TO-ryu-yu',   pronoun: 'я',        peng: 'I' },
+      { form: 'повторюєш',     cpron: 'pov-TO-ryu-yesh', pronoun: 'ти',       peng: 'you' },
+      { form: 'повторює',      cpron: 'pov-TO-ryu-ye',   pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'повторюємо',    cpron: 'pov-TO-ryu-ye-mo',pronoun: 'ми',       peng: 'we' },
+      { form: 'повторюєте',    cpron: 'pov-TO-ryu-ye-te',pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'повторюють',    cpron: 'pov-TO-ryu-yut',  pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'пояснювати', pron: 'po-yas-nyu-VA-ty', eng: 'to explain',
+    conj: [
+      { form: 'пояснюю',       cpron: 'po-yas-NYU-yu',   pronoun: 'я',        peng: 'I' },
+      { form: 'пояснюєш',      cpron: 'po-yas-NYU-yesh', pronoun: 'ти',       peng: 'you' },
+      { form: 'пояснює',       cpron: 'po-yas-NYU-ye',   pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'пояснюємо',     cpron: 'po-yas-NYU-ye-mo',pronoun: 'ми',       peng: 'we' },
+      { form: 'пояснюєте',     cpron: 'po-yas-NYU-ye-te',pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'пояснюють',     cpron: 'po-yas-NYU-yut',  pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'працювати', pron: 'pra-tsyu-VA-ty', eng: 'to work',
+    conj: [
+      { form: 'працюю',        cpron: 'pra-TSYU-yu',     pronoun: 'я',        peng: 'I' },
+      { form: 'працюєш',       cpron: 'pra-TSYU-yesh',   pronoun: 'ти',       peng: 'you' },
+      { form: 'працює',        cpron: 'pra-TSYU-ye',     pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'працюємо',      cpron: 'pra-TSYU-ye-mo',  pronoun: 'ми',       peng: 'we' },
+      { form: 'працюєте',      cpron: 'pra-TSYU-ye-te',  pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'працюють',      cpron: 'pra-TSYU-yut',    pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'розмовляти', pron: 'roz-mov-LYA-ty', eng: 'to talk',
+    conj: [
+      { form: 'розмовляю',     cpron: 'roz-mov-LYA-yu',  pronoun: 'я',        peng: 'I' },
+      { form: 'розмовляєш',    cpron: 'roz-mov-LYA-yesh',pronoun: 'ти',       peng: 'you' },
+      { form: 'розмовляє',     cpron: 'roz-mov-LYA-ye',  pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'розмовляємо',   cpron: 'roz-mov-LYA-ye-mo',pronoun: 'ми',      peng: 'we' },
+      { form: 'розмовляєте',   cpron: 'roz-mov-LYA-ye-te',pronoun: 'ви',      peng: 'you (pl.)' },
+      { form: 'розмовляють',   cpron: 'roz-mov-LYA-yut', pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'розповідати', pron: 'roz-po-vi-DA-ty', eng: 'to tell / narrate',
+    conj: [
+      { form: 'розповідаю',    cpron: 'roz-po-vi-DA-yu',  pronoun: 'я',        peng: 'I' },
+      { form: 'розповідаєш',   cpron: 'roz-po-vi-DA-yesh',pronoun: 'ти',       peng: 'you' },
+      { form: 'розповідає',    cpron: 'roz-po-vi-DA-ye',  pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'розповідаємо',  cpron: 'roz-po-vi-DA-ye-mo',pronoun: 'ми',      peng: 'we' },
+      { form: 'розповідаєте',  cpron: 'roz-po-vi-DA-ye-te',pronoun: 'ви',      peng: 'you (pl.)' },
+      { form: 'розповідають',  cpron: 'roz-po-vi-DA-yut', pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'снідати', pron: 'sni-DA-ty', eng: 'to have breakfast',
+    conj: [
+      { form: 'снідаю',        cpron: 'sni-DA-yu',        pronoun: 'я',        peng: 'I' },
+      { form: 'снідаєш',       cpron: 'sni-DA-yesh',      pronoun: 'ти',       peng: 'you' },
+      { form: 'снідає',        cpron: 'sni-DA-ye',        pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'снідаємо',      cpron: 'sni-DA-ye-mo',     pronoun: 'ми',       peng: 'we' },
+      { form: 'снідаєте',      cpron: 'sni-DA-ye-te',     pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'снідають',      cpron: 'sni-DA-yut',       pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'учити', pron: 'u-CHY-ty', eng: 'to teach',
+    conj: [
+      { form: 'учу',           cpron: 'u-CHYU',           pronoun: 'я',        peng: 'I' },
+      { form: 'учиш',          cpron: 'u-CHYSH',          pronoun: 'ти',       peng: 'you' },
+      { form: 'учить',         cpron: 'u-CHYT',           pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'учимо',         cpron: 'u-CHY-mo',         pronoun: 'ми',       peng: 'we' },
+      { form: 'учите',         cpron: 'u-CHY-te',         pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'учать',         cpron: 'u-CHAT',           pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'учитися', pron: 'u-CHY-ty-sya', eng: 'to study / learn',
+    conj: [
+      { form: 'учуся',         cpron: 'u-CHYU-sya',       pronoun: 'я',        peng: 'I' },
+      { form: 'учишся',        cpron: 'u-CHYSH-sya',      pronoun: 'ти',       peng: 'you' },
+      { form: 'учиться',       cpron: 'u-CHYT-sya',       pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'учимося',       cpron: 'u-CHY-mo-sya',     pronoun: 'ми',       peng: 'we' },
+      { form: 'учитеся',       cpron: 'u-CHY-te-sya',     pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'учаться',       cpron: 'u-CHA-tsya',       pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'вечеряти', pron: 've-che-RYA-ty', eng: 'to have dinner',
+    conj: [
+      { form: 'вечеряю',       cpron: 've-che-RYA-yu',    pronoun: 'я',        peng: 'I' },
+      { form: 'вечеряєш',      cpron: 've-che-RYA-yesh',  pronoun: 'ти',       peng: 'you' },
+      { form: 'вечеряє',       cpron: 've-che-RYA-ye',    pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'вечеряємо',     cpron: 've-che-RYA-ye-mo', pronoun: 'ми',       peng: 'we' },
+      { form: 'вечеряєте',     cpron: 've-che-RYA-ye-te', pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'вечеряють',     cpron: 've-che-RYA-yut',   pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'вивчати', pron: 'vyv-CHA-ty', eng: 'to study',
+    conj: [
+      { form: 'вивчаю',        cpron: 'vyv-CHA-yu',       pronoun: 'я',        peng: 'I' },
+      { form: 'вивчаєш',       cpron: 'vyv-CHA-yesh',     pronoun: 'ти',       peng: 'you' },
+      { form: 'вивчає',        cpron: 'vyv-CHA-ye',       pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'вивчаємо',      cpron: 'vyv-CHA-ye-mo',    pronoun: 'ми',       peng: 'we' },
+      { form: 'вивчаєте',      cpron: 'vyv-CHA-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'вивчають',      cpron: 'vyv-CHA-yut',      pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'виконувати', pron: 'vy-KO-nu-va-ty', eng: 'to perform / carry out',
+    conj: [
+      { form: 'виконую',       cpron: 'vy-KO-nu-yu',      pronoun: 'я',        peng: 'I' },
+      { form: 'виконуєш',      cpron: 'vy-KO-nu-yesh',    pronoun: 'ти',       peng: 'you' },
+      { form: 'виконує',       cpron: 'vy-KO-nu-ye',      pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'виконуємо',     cpron: 'vy-KO-nu-ye-mo',   pronoun: 'ми',       peng: 'we' },
+      { form: 'виконуєте',     cpron: 'vy-KO-nu-ye-te',   pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'виконують',     cpron: 'vy-KO-nu-yut',     pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'відповідати', pron: 'vid-po-vi-DA-ty', eng: 'to answer',
+    conj: [
+      { form: 'відповідаю',    cpron: 'vid-po-vi-DA-yu',  pronoun: 'я',        peng: 'I' },
+      { form: 'відповідаєш',   cpron: 'vid-po-vi-DA-yesh',pronoun: 'ти',       peng: 'you' },
+      { form: 'відповідає',    cpron: 'vid-po-vi-DA-ye',  pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'відповідаємо',  cpron: 'vid-po-vi-DA-ye-mo',pronoun: 'ми',      peng: 'we' },
+      { form: 'відповідаєте',  cpron: 'vid-po-vi-DA-ye-te',pronoun: 'ви',      peng: 'you (pl.)' },
+      { form: 'відповідають',  cpron: 'vid-po-vi-DA-yut', pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'відпочивати', pron: 'vid-po-chy-VA-ty', eng: 'to rest',
+    conj: [
+      { form: 'відпочиваю',    cpron: 'vid-po-chy-VA-yu',  pronoun: 'я',        peng: 'I' },
+      { form: 'відпочиваєш',   cpron: 'vid-po-chy-VA-yesh',pronoun: 'ти',       peng: 'you' },
+      { form: 'відпочиває',    cpron: 'vid-po-chy-VA-ye',  pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'відпочиваємо',  cpron: 'vid-po-chy-VA-ye-mo',pronoun: 'ми',      peng: 'we' },
+      { form: 'відпочиваєте',  cpron: 'vid-po-chy-VA-ye-te',pronoun: 'ви',      peng: 'you (pl.)' },
+      { form: 'відпочивають',  cpron: 'vid-po-chy-VA-yut', pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'грати', pron: 'HRA-ty', eng: 'to play',
+    conj: [
+      { form: 'граю',          cpron: 'HRA-yu',            pronoun: 'я',        peng: 'I' },
+      { form: 'граєш',         cpron: 'HRA-yesh',          pronoun: 'ти',       peng: 'you' },
+      { form: 'грає',          cpron: 'HRA-ye',            pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'граємо',        cpron: 'HRA-ye-mo',         pronoun: 'ми',       peng: 'we' },
+      { form: 'граєте',        cpron: 'HRA-ye-te',         pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'грають',        cpron: 'HRA-yut',           pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'займатися', pron: 'zay-MA-ty-sya', eng: 'to do / to practice',
+    conj: [
+      { form: 'займаюся',      cpron: 'zay-MA-yu-sya',     pronoun: 'я',        peng: 'I' },
+      { form: 'займаєшся',     cpron: 'zay-MA-yesh-sya',   pronoun: 'ти',       peng: 'you' },
+      { form: 'займається',    cpron: 'zay-MA-ye-tsya',    pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'займаємося',    cpron: 'zay-MA-ye-mo-sya',  pronoun: 'ми',       peng: 'we' },
+      { form: 'займаєтеся',    cpron: 'zay-MA-ye-te-sya',  pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'займаються',    cpron: 'zay-MA-yu-tsya',    pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'запитувати', pron: 'za-PY-tu-va-ty', eng: 'to ask / inquire',
+    conj: [
+      { form: 'запитую',       cpron: 'za-PY-tu-yu',       pronoun: 'я',        peng: 'I' },
+      { form: 'запитуєш',      cpron: 'za-PY-tu-yesh',     pronoun: 'ти',       peng: 'you' },
+      { form: 'запитує',       cpron: 'za-PY-tu-ye',       pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'запитуємо',     cpron: 'za-PY-tu-ye-mo',    pronoun: 'ми',       peng: 'we' },
+      { form: 'запитуєте',     cpron: 'za-PY-tu-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'запитують',     cpron: 'za-PY-tu-yut',      pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'нести', pron: 'ne-STY', eng: 'to carry',
+    conj: [
+      { form: 'несу',          cpron: 'ne-SU',             pronoun: 'я',        peng: 'I' },
+      { form: 'несеш',         cpron: 'ne-SESH',           pronoun: 'ти',       peng: 'you' },
+      { form: 'несе',          cpron: 'ne-SE',             pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'несемо',        cpron: 'ne-se-MO',          pronoun: 'ми',       peng: 'we' },
+      { form: 'несете',        cpron: 'ne-SE-te',          pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'несуть',        cpron: 'ne-SUT',            pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'обідати', pron: 'o-bi-DA-ty', eng: 'to have lunch',
+    conj: [
+      { form: 'обідаю',        cpron: 'o-bi-DA-yu',        pronoun: 'я',        peng: 'I' },
+      { form: 'обідаєш',       cpron: 'o-bi-DA-yesh',      pronoun: 'ти',       peng: 'you' },
+      { form: 'обідає',        cpron: 'o-bi-DA-ye',        pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'обідаємо',      cpron: 'o-bi-DA-ye-mo',     pronoun: 'ми',       peng: 'we' },
+      { form: 'обідаєте',      cpron: 'o-bi-DA-ye-te',     pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'обідають',      cpron: 'o-bi-DA-yut',       pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'перевіряти', pron: 'pe-re-vi-RYA-ty', eng: 'to check',
+    conj: [
+      { form: 'перевіряю',     cpron: 'pe-re-vi-RYA-yu',   pronoun: 'я',        peng: 'I' },
+      { form: 'перевіряєш',    cpron: 'pe-re-vi-RYA-yesh', pronoun: 'ти',       peng: 'you' },
+      { form: 'перевіряє',     cpron: 'pe-re-vi-RYA-ye',   pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'перевіряємо',   cpron: 'pe-re-vi-RYA-ye-mo',pronoun: 'ми',       peng: 'we' },
+      { form: 'перевіряєте',   cpron: 'pe-re-vi-RYA-ye-te',pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'перевіряють',   cpron: 'pe-re-vi-RYA-yut',  pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'могти', pron: 'moh-TY', eng: 'to be able to',
+    conj: [
+      { form: 'можу',          cpron: 'MO-zhu',            pronoun: 'я',        peng: 'I' },
+      { form: 'можеш',         cpron: 'MO-zhesh',          pronoun: 'ти',       peng: 'you' },
+      { form: 'може',          cpron: 'MO-zhe',            pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'можемо',        cpron: 'MO-zhe-mo',         pronoun: 'ми',       peng: 'we' },
+      { form: 'можете',        cpron: 'MO-zhe-te',         pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'можуть',        cpron: 'MO-zhut',           pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'вміти', pron: 'VMI-ty', eng: 'to know how to',
+    conj: [
+      { form: 'вмію',          cpron: 'VMI-yu',            pronoun: 'я',        peng: 'I' },
+      { form: 'вмієш',         cpron: 'VMI-yesh',          pronoun: 'ти',       peng: 'you' },
+      { form: 'вміє',          cpron: 'VMI-ye',            pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'вміємо',        cpron: 'VMI-ye-mo',         pronoun: 'ми',       peng: 'we' },
+      { form: 'вмієте',        cpron: 'VMI-ye-te',         pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'вміють',        cpron: 'VMI-yut',           pronoun: 'вони',     peng: 'they' }
+    ]
+  },
+  {
+    inf: 'цікавитися', pron: 'tsi-KA-vy-ty-sya', eng: 'to be interested in',
+    conj: [
+      { form: 'цікавлюся',     cpron: 'tsi-KAV-lyu-sya',   pronoun: 'я',        peng: 'I' },
+      { form: 'цікавишся',     cpron: 'tsi-KA-vysh-sya',   pronoun: 'ти',       peng: 'you' },
+      { form: 'цікавиться',    cpron: 'tsi-KA-vy-tsya',    pronoun: 'він/вона', peng: 'he / she' },
+      { form: 'цікавимося',    cpron: 'tsi-KA-vy-mo-sya',  pronoun: 'ми',       peng: 'we' },
+      { form: 'цікавитеся',    cpron: 'tsi-KA-vy-te-sya',  pronoun: 'ви',       peng: 'you (pl.)' },
+      { form: 'цікавляться',   cpron: 'tsi-KAV-lya-tsya',  pronoun: 'вони',     peng: 'they' }
     ]
   }
 ];
@@ -1265,7 +1518,7 @@ function switchTab(name, btn) {
 /* ══════════════════════════════════════════
    SAVE / LOAD
 ══════════════════════════════════════════ */
-var STORAGE_KEY = 'ua_learn_v5';
+var STORAGE_KEY = 'ua_learn_v6';
 
 function saveProgress() {
   try {
