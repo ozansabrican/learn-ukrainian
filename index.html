@@ -194,10 +194,11 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 </div>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('letters', this)">Letters</button>
-  <button class="tab-btn"        onclick="switchTab('vocab',   this)">Vocab</button>
-  <button class="tab-btn"        onclick="switchTab('verbs',   this)">Verbs</button>
-  <button class="tab-btn"        onclick="switchTab('progress',this)">Progress</button>
+  <button class="tab-btn active" onclick="switchTab('letters',     this)">Letters</button>
+  <button class="tab-btn"        onclick="switchTab('words',        this)">Words</button>
+  <button class="tab-btn"        onclick="switchTab('sentences',    this)">Sentences</button>
+  <button class="tab-btn"        onclick="switchTab('conjugation',  this)">Conjugation</button>
+  <button class="tab-btn"        onclick="switchTab('progress',     this)">Progress</button>
 </div>
 
 <!-- ══ LETTERS TAB ══ -->
@@ -224,32 +225,56 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   </div>
 </div>
 
-<!-- ══ VOCAB TAB ══ -->
-<div class="tab-panel" id="panel-vocab">
-  <div class="quiz-wrap" id="vocab-quiz-wrap">
-    <div class="q-type-badge" id="vocab-badge">vocabulary</div>
-    <div class="prompt-verb" id="vocab-prompt" style="padding:8px 0"></div>
+<!-- ══ WORDS TAB ══ -->
+<div class="tab-panel" id="panel-words">
+  <div class="quiz-wrap" id="words-quiz-wrap">
+    <div class="q-type-badge">word</div>
+    <div class="prompt-verb" id="words-prompt" style="padding:8px 0"></div>
     <div class="pts-row">
-      <div class="pts-bar"><div class="pts-fill" id="vocab-pts-fill" style="width:0%"></div></div>
-      <div class="pts-text" id="vocab-pts-text">0 / 10 pts</div>
+      <div class="pts-bar"><div class="pts-fill" id="words-pts-fill" style="width:0%"></div></div>
+      <div class="pts-text" id="words-pts-text">0 / 10 pts</div>
     </div>
-    <div class="options-grid" id="vocab-options"></div>
+    <div class="options-grid" id="words-options"></div>
     <div class="feedback-row">
-      <div class="feedback-msg" id="vocab-fb-msg"></div>
-      <div class="feedback-sub" id="vocab-fb-sub"></div>
+      <div class="feedback-msg" id="words-fb-msg"></div>
+      <div class="feedback-sub" id="words-fb-sub"></div>
     </div>
-    <button class="next-btn" id="vocab-next" onclick="nextQ('vocab')">Next &#8594;</button>
+    <button class="next-btn" id="words-next" onclick="nextQ('words')">Next &#8594;</button>
   </div>
-  <div class="completion" id="vocab-done">
+  <div class="completion" id="words-done">
     <div style="font-size:3rem">&#128218;</div>
-    <h2>Vocabulary mastered!</h2>
-    <p>All 24 words and phrases learned.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;!</p>
-    <button class="reset-btn" onclick="resetMode('vocab')">Start over</button>
+    <h2>Words mastered!</h2>
+    <p>All 31 words learned.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;!</p>
+    <button class="reset-btn" onclick="resetMode('words')">Start over</button>
   </div>
 </div>
 
-<!-- ══ VERBS TAB ══ -->
-<div class="tab-panel" id="panel-verbs">
+<!-- ══ SENTENCES TAB ══ -->
+<div class="tab-panel" id="panel-sentences">
+  <div class="quiz-wrap" id="sentences-quiz-wrap">
+    <div class="q-type-badge">sentence</div>
+    <div class="prompt-verb" id="sentences-prompt" style="padding:8px 0"></div>
+    <div class="pts-row">
+      <div class="pts-bar"><div class="pts-fill" id="sentences-pts-fill" style="width:0%"></div></div>
+      <div class="pts-text" id="sentences-pts-text">0 / 10 pts</div>
+    </div>
+    <div class="options-grid" id="sentences-options"></div>
+    <div class="feedback-row">
+      <div class="feedback-msg" id="sentences-fb-msg"></div>
+      <div class="feedback-sub" id="sentences-fb-sub"></div>
+    </div>
+    <button class="next-btn" id="sentences-next" onclick="nextQ('sentences')">Next &#8594;</button>
+  </div>
+  <div class="completion" id="sentences-done">
+    <div style="font-size:3rem">&#128218;</div>
+    <h2>Sentences mastered!</h2>
+    <p>All 13 sentences learned.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;!</p>
+    <button class="reset-btn" onclick="resetMode('sentences')">Start over</button>
+  </div>
+</div>
+
+<!-- ══ CONJUGATION TAB ══ -->
+<div class="tab-panel" id="panel-conjugation">
   <div class="quiz-wrap" id="verbs-quiz-wrap">
     <div class="q-type-badge" id="verbs-badge">pronunciation</div>
     <div class="prompt-verb">
@@ -270,13 +295,13 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
       <div class="feedback-msg" id="verbs-fb-msg"></div>
       <div class="feedback-sub" id="verbs-fb-sub"></div>
     </div>
-    <button class="next-btn" id="verbs-next" onclick="nextQ('verbs')">Next &#8594;</button>
+    <button class="next-btn" id="verbs-next" onclick="nextQ('conjugation')">Next &#8594;</button>
   </div>
   <div class="completion" id="verbs-done">
     <div style="font-size:3rem">&#127881;</div>
-    <h2>All verbs mastered!</h2>
+    <h2>All conjugations mastered!</h2>
     <p>315 items — pronunciation &amp; all conjugations.<br>&#1052;&#1086;&#1083;&#1086;&#1076;&#1077;&#1094;&#1100;!</p>
-    <button class="reset-btn" onclick="resetMode('verbs')">Start over</button>
+    <button class="reset-btn" onclick="resetMode('conjugation')">Start over</button>
   </div>
 </div>
 
@@ -287,11 +312,15 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
     <div class="letter-grid" id="grid-letters"></div>
   </div>
   <div class="prog-section">
-    <h2>Vocabulary &mdash; <span id="prog-vocab-count">0</span> / 24</h2>
-    <div class="vocab-grid" id="grid-vocab"></div>
+    <h2>Words &mdash; <span id="prog-words-count">0</span> / 31</h2>
+    <div class="vocab-grid" id="grid-words"></div>
   </div>
   <div class="prog-section">
-    <h2>Verbs &mdash; <span id="prog-verbs-count">0</span> / 11 mastered</h2>
+    <h2>Sentences &mdash; <span id="prog-sentences-count">0</span> / 13</h2>
+    <div class="vocab-grid" id="grid-sentences"></div>
+  </div>
+  <div class="prog-section">
+    <h2>Conjugation &mdash; <span id="prog-verbs-count">0</span> / 45 mastered</h2>
     <div class="verb-grid" id="grid-verbs"></div>
   </div>
 </div>
@@ -852,6 +881,26 @@ var VOCAB = [
   { ukr: 'грати',                              eng: 'to play',                                 pron: 'HRA-ty',                                         type: 'verb' },
   { ukr: 'вчити',                              eng: 'to learn',                                pron: 'VCHy-ty',                                        type: 'verb' },
   { ukr: 'їхати',                              eng: 'to travel',                               pron: 'YI-kha-ty',                                      type: 'verb' },
+  { ukr: 'говорити',                           eng: 'to speak',                                pron: 'ho-VO-ry-ty',                                    type: 'verb' },
+  { ukr: 'писати',                             eng: 'to write',                                pron: 'py-SA-ty',                                       type: 'verb' },
+  { ukr: 'розуміти',                           eng: 'to understand',                           pron: 'ro-zu-MI-ty',                                    type: 'verb' },
+  { ukr: 'питати',                             eng: 'to ask',                                  pron: 'py-TA-ty',                                       type: 'verb' },
+  { ukr: 'запитувати',                         eng: 'to ask / inquire',                        pron: 'za-PY-tu-va-ty',                                 type: 'verb' },
+  { ukr: 'відповідати',                        eng: 'to answer',                               pron: 'vid-po-vi-DA-ty',                                type: 'verb' },
+  { ukr: 'снідати',                            eng: 'to have breakfast',                       pron: 'sni-DA-ty',                                      type: 'verb' },
+  { ukr: 'вечеряти',                           eng: 'to have dinner',                          pron: 've-che-RYA-ty',                                  type: 'verb' },
+  { ukr: 'гуляти',                             eng: 'to walk / hang out',                      pron: 'hu-LYA-ty',                                      type: 'verb' },
+  { ukr: 'дивитися',                           eng: 'to watch',                                pron: 'dy-VY-ty-sya',                                   type: 'verb' },
+  { ukr: 'перевіряти',                         eng: 'to check',                                pron: 'pe-re-vi-RYA-ty',                                type: 'verb' },
+  { ukr: 'займатися',                          eng: 'to do / to practice',                     pron: 'zay-MA-ty-sya',                                  type: 'verb' },
+  { ukr: 'вивчати',                            eng: 'to study',                                pron: 'vyv-CHA-ty',                                     type: 'verb' },
+  { ukr: 'повторювати',                        eng: 'to repeat',                               pron: 'pov-to-ryu-VA-ty',                               type: 'verb' },
+  { ukr: 'пояснювати',                         eng: 'to explain',                              pron: 'po-yas-nyu-VA-ty',                               type: 'verb' },
+  { ukr: 'учитися',                            eng: 'to study / learn',                        pron: 'u-CHY-ty-sya',                                   type: 'verb' },
+  { ukr: 'розмовляти',                         eng: 'to talk',                                 pron: 'roz-mov-LYA-ty',                                 type: 'verb' },
+  { ukr: 'розповідати',                        eng: 'to tell / narrate',                       pron: 'roz-po-vi-DA-ty',                                type: 'verb' },
+  { ukr: 'виконувати',                         eng: 'to perform / carry out',                  pron: 'vy-KO-nu-va-ty',                                 type: 'verb' },
+  { ukr: 'нести',                              eng: 'to carry',                                pron: 'ne-STY',                                         type: 'verb' },
   { ukr: 'Я працюю в офісі.',                  eng: 'I work in an office.',                    pron: 'ya pra-TSYU-yu v O-fi-si',                       type: 'phrase' },
   { ukr: 'Ми слухаємо музику вдома.',          eng: 'We listen to music at home.',             pron: 'my slu-KHA-ye-mo MU-zy-ku vdo-MA',               type: 'phrase' },
   { ukr: 'Він не працює.',                     eng: 'He does not work.',                       pron: 'veen ne pra-TSYU-ye',                            type: 'phrase' },
@@ -888,12 +937,12 @@ var KEY_LABELS = ['Q', 'W', 'A', 'S'];
 var activeTab  = 'letters';
 
 var letterPts  = LETTERS.map(function() { return 0; });
-var vocabPts   = VOCAB.map(function() { return 0; });
+var vocabPts   = VOCAB.map(function() { return 0; });   /* indexed by VOCAB idx; split into words/sentences queues */
 var verbPts    = VERB_ITEMS.map(function() { return 0; });
 
-var letterQueue = [], vocabQueue = [], verbQueue = [];
-var letterCurrent = null, vocabCurrent = null, verbCurrent = null;
-var letterAnswered = false, vocabAnswered = false, verbAnswered = false;
+var letterQueue = [], wordsQueue = [], sentencesQueue = [], verbQueue = [];
+var letterCurrent = null, wordsCurrent = null, sentencesCurrent = null, verbCurrent = null;
+var letterAnswered = false, wordsAnswered = false, sentencesAnswered = false, verbAnswered = false;
 
 /* ══════════════════════════════════════════
    HELPERS
@@ -915,19 +964,34 @@ function refillLetterQueue() {
   letterQueue = shuffle(pool);
 }
 
-function refillVocabQueue() {
+function refillWordsQueue() {
   var pool = [];
   for (var i = 0; i < VOCAB.length; i++) {
-    if (vocabPts[i] < MAX_PTS) pool.push(i);
+    if (VOCAB[i].type === 'verb' && vocabPts[i] < MAX_PTS) pool.push(i);
   }
-  vocabQueue = shuffle(pool);
+  wordsQueue = shuffle(pool);
 }
 
-function pickNextVocab() {
-  vocabQueue = vocabQueue.filter(function(i) { return vocabPts[i] < MAX_PTS; });
-  if (vocabQueue.length === 0) refillVocabQueue();
-  if (vocabQueue.length === 0) return null;
-  return vocabQueue.shift();
+function pickNextWord() {
+  wordsQueue = wordsQueue.filter(function(i) { return vocabPts[i] < MAX_PTS; });
+  if (wordsQueue.length === 0) refillWordsQueue();
+  if (wordsQueue.length === 0) return null;
+  return wordsQueue.shift();
+}
+
+function refillSentencesQueue() {
+  var pool = [];
+  for (var i = 0; i < VOCAB.length; i++) {
+    if (VOCAB[i].type === 'phrase' && vocabPts[i] < MAX_PTS) pool.push(i);
+  }
+  sentencesQueue = shuffle(pool);
+}
+
+function pickNextSentence() {
+  sentencesQueue = sentencesQueue.filter(function(i) { return vocabPts[i] < MAX_PTS; });
+  if (sentencesQueue.length === 0) refillSentencesQueue();
+  if (sentencesQueue.length === 0) return null;
+  return sentencesQueue.shift();
 }
 
 function refillVerbQueue() {
@@ -1022,40 +1086,42 @@ function handleLetterAnswer(chosenIdx) {
 }
 
 /* ══════════════════════════════════════════
-   VOCAB QUIZ
+   SHARED VOCAB HELPER
 ══════════════════════════════════════════ */
-function renderVocabQuestion() {
-  vocabAnswered = false;
-  vocabCurrent  = pickNextVocab();
-  if (vocabCurrent === null) { showCompletion('vocab'); return; }
+function revealPron(mode) {
+  var reveal = document.getElementById(mode + '-pron-reveal');
+  var hint   = document.querySelector('#' + mode + '-prompt .vocab-tap-hint');
+  if (reveal) reveal.classList.add('visible');
+  if (hint)   hint.style.display = 'none';
+}
 
-  var item = VOCAB[vocabCurrent];
-  var pts  = vocabPts[vocabCurrent];
+/* ══════════════════════════════════════════
+   WORDS QUIZ
+══════════════════════════════════════════ */
+function renderWordsQuestion() {
+  wordsAnswered = false;
+  wordsCurrent  = pickNextWord();
+  if (wordsCurrent === null) { showCompletion('words'); return; }
 
-  var prompt = document.getElementById('vocab-prompt');
-  var ukrHtml = item.type === 'verb'
-    ? '<div class="verb-inf">' + item.ukr + '</div>'
-    : '<div style="font-size:1.3rem;font-weight:600;color:#f5c518;line-height:1.4;text-align:center">' + item.ukr + '</div>';
+  var item = VOCAB[wordsCurrent];
+  var pts  = vocabPts[wordsCurrent];
 
-  prompt.innerHTML =
-    '<div class="vocab-prompt-clickable" id="vocab-clickable" onclick="revealVocabPron()">' +
-      ukrHtml +
-      '<div class="vocab-pron-reveal" id="vocab-pron-reveal">' + item.pron + '</div>' +
+  document.getElementById('words-prompt').innerHTML =
+    '<div class="vocab-prompt-clickable" onclick="revealPron(\'words\')">' +
+      '<div class="verb-inf">' + item.ukr + '</div>' +
+      '<div class="vocab-pron-reveal" id="words-pron-reveal">' + item.pron + '</div>' +
       '<div class="vocab-tap-hint">tap to see pronunciation</div>' +
     '</div>';
 
-  document.getElementById('vocab-badge').textContent = item.type === 'verb' ? 'verb' : 'phrase';
+  document.getElementById('words-pts-fill').style.width = (pts / MAX_PTS * 100) + '%';
+  document.getElementById('words-pts-text').textContent = pts + ' / ' + MAX_PTS + ' pts';
+  clearFeedback('words');
 
-  document.getElementById('vocab-pts-fill').style.width = (pts / MAX_PTS * 100) + '%';
-  document.getElementById('vocab-pts-text').textContent = pts + ' / ' + MAX_PTS + ' pts';
-  clearFeedback('vocab');
-
-  /* 3 distractors from other vocab items of the same type */
   var others = shuffle(VOCAB.map(function(_, i) { return i; })
-    .filter(function(i) { return i !== vocabCurrent && VOCAB[i].type === item.type; })).slice(0, 3);
-  var optIs  = shuffle([vocabCurrent].concat(others));
+    .filter(function(i) { return i !== wordsCurrent && VOCAB[i].type === 'verb'; })).slice(0, 3);
+  var optIs  = shuffle([wordsCurrent].concat(others));
 
-  var grid = document.getElementById('vocab-options');
+  var grid = document.getElementById('words-options');
   grid.innerHTML = '';
   optIs.forEach(function(idx, pos) {
     var btn = document.createElement('button');
@@ -1064,56 +1130,121 @@ function renderVocabQuestion() {
     btn.innerHTML =
       '<span class="key-hint">' + KEY_LABELS[pos] + '</span>' +
       '<span style="font-size:0.92rem">' + VOCAB[idx].eng + '</span>';
-    btn.addEventListener('click', function() { handleVocabAnswer(idx); });
+    btn.addEventListener('click', function() { handleWordsAnswer(idx); });
     grid.appendChild(btn);
   });
 }
 
-function revealVocabPron() {
-  var reveal = document.getElementById('vocab-pron-reveal');
-  var hint   = document.querySelector('.vocab-tap-hint');
-  if (reveal) reveal.classList.add('visible');
-  if (hint)   hint.style.display = 'none';
-}
+function handleWordsAnswer(chosenIdx) {
+  if (wordsAnswered) return;
+  wordsAnswered = true;
 
-function handleVocabAnswer(chosenIdx) {
-  if (vocabAnswered) return;
-  vocabAnswered = true;
+  var correct = (chosenIdx === wordsCurrent);
+  var prevPts = vocabPts[wordsCurrent];
+  vocabPts[wordsCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts  = vocabPts[wordsCurrent];
+  var item    = VOCAB[wordsCurrent];
 
-  var correct = (chosenIdx === vocabCurrent);
-  var prevPts = vocabPts[vocabCurrent];
-  vocabPts[vocabCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
-  var newPts  = vocabPts[vocabCurrent];
-  var item    = VOCAB[vocabCurrent];
-
-  /* Highlight buttons */
-  document.querySelectorAll('#vocab-options .opt-btn').forEach(function(b) {
+  document.querySelectorAll('#words-options .opt-btn').forEach(function(b) {
     b.classList.add('locked');
     var idx = parseInt(b.getAttribute('data-idx'), 10);
-    if (idx === vocabCurrent)                     b.classList.add('correct');
-    if (idx === chosenIdx && idx !== vocabCurrent) b.classList.add('wrong');
+    if (idx === wordsCurrent)                      b.classList.add('correct');
+    if (idx === chosenIdx && idx !== wordsCurrent) b.classList.add('wrong');
   });
 
-  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'vocab-quiz-wrap');
+  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'words-quiz-wrap');
 
   var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
   if (correct) {
-    showFeedback('vocab', true,
+    showFeedback('words', true,
       justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
       justLearned ? item.ukr + ' fully learned!' : newPts + ' / ' + MAX_PTS + ' pts');
   } else {
-    showFeedback('vocab', false,
-      (newPts < prevPts) ? '-1 pt' : 'Miss!',
-      'Correct: ' + item.eng);
+    showFeedback('words', false, (newPts < prevPts) ? '-1 pt' : 'Miss!', 'Correct: ' + item.eng);
   }
 
-  document.getElementById('vocab-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
-  document.getElementById('vocab-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
-
-  updateVocabTile(vocabCurrent);
+  document.getElementById('words-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById('words-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
+  updateVocabTile(wordsCurrent);
   updateOverall();
   saveProgress();
-  document.getElementById('vocab-next').className = 'next-btn show';
+  document.getElementById('words-next').className = 'next-btn show';
+}
+
+/* ══════════════════════════════════════════
+   SENTENCES QUIZ
+══════════════════════════════════════════ */
+function renderSentencesQuestion() {
+  sentencesAnswered = false;
+  sentencesCurrent  = pickNextSentence();
+  if (sentencesCurrent === null) { showCompletion('sentences'); return; }
+
+  var item = VOCAB[sentencesCurrent];
+  var pts  = vocabPts[sentencesCurrent];
+
+  document.getElementById('sentences-prompt').innerHTML =
+    '<div class="vocab-prompt-clickable" onclick="revealPron(\'sentences\')">' +
+      '<div style="font-size:1.3rem;font-weight:600;color:#f5c518;line-height:1.4;text-align:center">' + item.ukr + '</div>' +
+      '<div class="vocab-pron-reveal" id="sentences-pron-reveal">' + item.pron + '</div>' +
+      '<div class="vocab-tap-hint">tap to see pronunciation</div>' +
+    '</div>';
+
+  document.getElementById('sentences-pts-fill').style.width = (pts / MAX_PTS * 100) + '%';
+  document.getElementById('sentences-pts-text').textContent = pts + ' / ' + MAX_PTS + ' pts';
+  clearFeedback('sentences');
+
+  var others = shuffle(VOCAB.map(function(_, i) { return i; })
+    .filter(function(i) { return i !== sentencesCurrent && VOCAB[i].type === 'phrase'; })).slice(0, 3);
+  var optIs  = shuffle([sentencesCurrent].concat(others));
+
+  var grid = document.getElementById('sentences-options');
+  grid.innerHTML = '';
+  optIs.forEach(function(idx, pos) {
+    var btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.setAttribute('data-idx', idx);
+    btn.innerHTML =
+      '<span class="key-hint">' + KEY_LABELS[pos] + '</span>' +
+      '<span style="font-size:0.88rem">' + VOCAB[idx].eng + '</span>';
+    btn.addEventListener('click', function() { handleSentencesAnswer(idx); });
+    grid.appendChild(btn);
+  });
+}
+
+function handleSentencesAnswer(chosenIdx) {
+  if (sentencesAnswered) return;
+  sentencesAnswered = true;
+
+  var correct = (chosenIdx === sentencesCurrent);
+  var prevPts = vocabPts[sentencesCurrent];
+  vocabPts[sentencesCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts  = vocabPts[sentencesCurrent];
+  var item    = VOCAB[sentencesCurrent];
+
+  document.querySelectorAll('#sentences-options .opt-btn').forEach(function(b) {
+    b.classList.add('locked');
+    var idx = parseInt(b.getAttribute('data-idx'), 10);
+    if (idx === sentencesCurrent)                      b.classList.add('correct');
+    if (idx === chosenIdx && idx !== sentencesCurrent) b.classList.add('wrong');
+  });
+
+  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'sentences-quiz-wrap');
+
+  var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
+  if (correct) {
+    showFeedback('sentences', true,
+      justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
+      justLearned ? 'Sentence fully learned!' : newPts + ' / ' + MAX_PTS + ' pts');
+  } else {
+    showFeedback('sentences', false, (newPts < prevPts) ? '-1 pt' : 'Miss!', 'Correct: ' + item.eng);
+  }
+
+  document.getElementById('sentences-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById('sentences-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
+  updateVocabTile(sentencesCurrent);
+  updateOverall();
+  saveProgress();
+  document.getElementById('sentences-next').className = 'next-btn show';
 }
 
 /* ══════════════════════════════════════════
@@ -1257,9 +1388,10 @@ function handleVerbConjAnswer(chosenCI, correctVI, ci) {
 }
 
 function nextQ(mode) {
-  if (mode === 'letters') renderLetterQuestion();
-  else if (mode === 'vocab') renderVocabQuestion();
-  else renderVerbQuestion();
+  if (mode === 'letters')         renderLetterQuestion();
+  else if (mode === 'words')      renderWordsQuestion();
+  else if (mode === 'sentences')  renderSentencesQuestion();
+  else                            renderVerbQuestion();
 }
 
 /* ══════════════════════════════════════════
@@ -1341,13 +1473,20 @@ function resetMode(mode) {
     document.getElementById('letters-done').style.display      = 'none';
     renderLetterGrid();
     renderLetterQuestion();
-  } else if (mode === 'vocab') {
-    vocabPts   = VOCAB.map(function() { return 0; });
-    vocabQueue = [];
-    document.getElementById('vocab-quiz-wrap').style.display = 'block';
-    document.getElementById('vocab-done').style.display      = 'none';
-    renderVocabGrid();
-    renderVocabQuestion();
+  } else if (mode === 'words') {
+    for (var i = 0; i < VOCAB.length; i++) { if (VOCAB[i].type === 'verb')   vocabPts[i] = 0; }
+    wordsQueue = [];
+    document.getElementById('words-quiz-wrap').style.display = 'block';
+    document.getElementById('words-done').style.display      = 'none';
+    renderWordsGrid();
+    renderWordsQuestion();
+  } else if (mode === 'sentences') {
+    for (var i = 0; i < VOCAB.length; i++) { if (VOCAB[i].type === 'phrase') vocabPts[i] = 0; }
+    sentencesQueue = [];
+    document.getElementById('sentences-quiz-wrap').style.display = 'block';
+    document.getElementById('sentences-done').style.display      = 'none';
+    renderSentencesGrid();
+    renderSentencesQuestion();
   } else {
     verbPts   = VERB_ITEMS.map(function() { return 0; });
     verbQueue = [];
@@ -1366,19 +1505,26 @@ function resetMode(mode) {
 function updateOverall() {
   var learnedL = letterPts.filter(function(p) { return p >= MAX_PTS; }).length;
   var learnedV = verbPts.filter(function(p) { return p >= MAX_PTS; }).length;
+  var learnedW = vocabPts.filter(function(p, i) { return p >= MAX_PTS && VOCAB[i].type === 'verb'; }).length;
+  var learnedS = vocabPts.filter(function(p, i) { return p >= MAX_PTS && VOCAB[i].type === 'phrase'; }).length;
+  var totalW   = VOCAB.filter(function(v) { return v.type === 'verb'; }).length;
+  var totalS   = VOCAB.filter(function(v) { return v.type === 'phrase'; }).length;
 
-  var learnedVoc = vocabPts.filter(function(p) { return p >= MAX_PTS; }).length;
-
-  if (activeTab === 'verbs') {
-    document.getElementById('overall-label').textContent  = 'VERB ITEMS LEARNED';
+  if (activeTab === 'conjugation') {
+    document.getElementById('overall-label').textContent  = 'CONJUGATION ITEMS LEARNED';
     document.getElementById('learned-count').textContent  = learnedV;
     document.getElementById('learned-total').textContent  = VERB_ITEMS.length;
     document.getElementById('overall-fill').style.width   = (learnedV / VERB_ITEMS.length * 100) + '%';
-  } else if (activeTab === 'vocab') {
-    document.getElementById('overall-label').textContent  = 'VOCAB ITEMS LEARNED';
-    document.getElementById('learned-count').textContent  = learnedVoc;
-    document.getElementById('learned-total').textContent  = VOCAB.length;
-    document.getElementById('overall-fill').style.width   = (learnedVoc / VOCAB.length * 100) + '%';
+  } else if (activeTab === 'words') {
+    document.getElementById('overall-label').textContent  = 'WORDS LEARNED';
+    document.getElementById('learned-count').textContent  = learnedW;
+    document.getElementById('learned-total').textContent  = totalW;
+    document.getElementById('overall-fill').style.width   = (learnedW / totalW * 100) + '%';
+  } else if (activeTab === 'sentences') {
+    document.getElementById('overall-label').textContent  = 'SENTENCES LEARNED';
+    document.getElementById('learned-count').textContent  = learnedS;
+    document.getElementById('learned-total').textContent  = totalS;
+    document.getElementById('overall-fill').style.width   = (learnedS / totalS * 100) + '%';
   } else {
     document.getElementById('overall-label').textContent  = 'LETTERS LEARNED';
     document.getElementById('learned-count').textContent  = learnedL;
@@ -1386,11 +1532,11 @@ function updateOverall() {
     document.getElementById('overall-fill').style.width   = (learnedL / LETTERS.length * 100) + '%';
   }
 
-  document.getElementById('prog-vocab-count').textContent = learnedVoc;
+  document.getElementById('prog-letters-count').textContent   = learnedL;
+  document.getElementById('prog-words-count').textContent      = learnedW;
+  document.getElementById('prog-sentences-count').textContent  = learnedS;
 
-  document.getElementById('prog-letters-count').textContent = learnedL;
-
-  /* Verb mastery = verbs where all 7 items are at MAX_PTS */
+  /* Conjugation mastery = verbs where all 7 items are at MAX_PTS */
   var masteredVerbs = 0;
   VERBS.forEach(function(verb, vi) {
     var allDone = VERB_ITEMS.every(function(item, ii) {
@@ -1433,16 +1579,36 @@ function updateLetterTile(i) {
   if (!was && now) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
 }
 
-function renderVocabGrid() {
-  var grid = document.getElementById('grid-vocab');
+function renderWordsGrid() {
+  var grid = document.getElementById('grid-words');
   if (!grid) return;
   grid.innerHTML = '';
   VOCAB.forEach(function(item, i) {
+    if (item.type !== 'verb') return;
     var learned = vocabPts[i] >= MAX_PTS;
     var tile = document.createElement('div');
     tile.className = 'tile' + (learned ? ' learned' : '');
-    tile.id = 'vctile-' + i;
-    var mainText = item.type === 'verb' ? item.ukr : item.ukr.substring(0, 22) + (item.ukr.length > 22 ? '...' : '');
+    tile.id = 'wtile-' + i;
+    tile.innerHTML =
+      '<div class="tile-main" style="font-size:0.95rem">' + item.ukr + '</div>' +
+      '<div class="tile-sub">' + item.eng.substring(0, 24) + (item.eng.length > 24 ? '...' : '') + '</div>' +
+      '<div class="tile-bar"><div class="tile-fill" style="width:' + (vocabPts[i] / MAX_PTS * 100) + '%"></div></div>' +
+      '<div class="tile-pts">' + (learned ? 'done' : vocabPts[i] + ' pts') + '</div>';
+    grid.appendChild(tile);
+  });
+}
+
+function renderSentencesGrid() {
+  var grid = document.getElementById('grid-sentences');
+  if (!grid) return;
+  grid.innerHTML = '';
+  VOCAB.forEach(function(item, i) {
+    if (item.type !== 'phrase') return;
+    var learned = vocabPts[i] >= MAX_PTS;
+    var tile = document.createElement('div');
+    tile.className = 'tile' + (learned ? ' learned' : '');
+    tile.id = 'stile-' + i;
+    var mainText = item.ukr.substring(0, 22) + (item.ukr.length > 22 ? '...' : '');
     tile.innerHTML =
       '<div class="tile-main" style="font-size:0.95rem">' + mainText + '</div>' +
       '<div class="tile-sub">' + item.eng.substring(0, 24) + (item.eng.length > 24 ? '...' : '') + '</div>' +
@@ -1453,7 +1619,8 @@ function renderVocabGrid() {
 }
 
 function updateVocabTile(i) {
-  var tile = document.getElementById('vctile-' + i);
+  var tileId = VOCAB[i].type === 'verb' ? 'wtile-' + i : 'stile-' + i;
+  var tile = document.getElementById(tileId);
   if (!tile) return;
   var was = tile.classList.contains('learned');
   var now = vocabPts[i] >= MAX_PTS;
@@ -1518,7 +1685,7 @@ function switchTab(name, btn) {
 /* ══════════════════════════════════════════
    SAVE / LOAD
 ══════════════════════════════════════════ */
-var STORAGE_KEY = 'ua_learn_v6';
+var STORAGE_KEY = 'ua_learn_v8';
 
 function saveProgress() {
   try {
@@ -1546,7 +1713,10 @@ function loadProgress() {
 document.addEventListener('keydown', function(e) {
   if (activeTab === 'progress') return;
   var tab      = activeTab;
-  var answered = tab === 'letters' ? letterAnswered : tab === 'vocab' ? vocabAnswered : verbAnswered;
+  var answered = tab === 'letters' ? letterAnswered
+               : tab === 'words'   ? wordsAnswered
+               : tab === 'sentences' ? sentencesAnswered
+               : verbAnswered;
 
   if ((e.code === 'Space' || e.code === 'Enter') && answered) {
     e.preventDefault();
@@ -1567,11 +1737,13 @@ document.addEventListener('keydown', function(e) {
 ══════════════════════════════════════════ */
 loadProgress();
 renderLetterGrid();
-renderVocabGrid();
+renderWordsGrid();
+renderSentencesGrid();
 renderVerbGrid();
 updateOverall();
 renderLetterQuestion();
-renderVocabQuestion();
+renderWordsQuestion();
+renderSentencesQuestion();
 renderVerbQuestion();
 </script>
 </body>
