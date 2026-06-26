@@ -195,9 +195,9 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('letters',     this)">Letters</button>
-  <button class="tab-btn"        onclick="switchTab('words',        this)">Words</button>
+  <button class="tab-btn"        onclick="switchTab('words',        this)">Verbs</button>
   <button class="tab-btn"        onclick="switchTab('sentences',    this)">Sentences</button>
-  <button class="tab-btn"        onclick="switchTab('conjugation',  this)">Conjugation</button>
+  <button class="tab-btn"        onclick="switchTab('nouns',        this)">Nouns</button>
   <button class="tab-btn"        onclick="switchTab('progress',     this)">Progress</button>
 </div>
 
@@ -243,8 +243,8 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   </div>
   <div class="completion" id="words-done">
     <div style="font-size:3rem">&#128218;</div>
-    <h2>Words mastered!</h2>
-    <p>All 31 words learned.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;!</p>
+    <h2>Verbs mastered!</h2>
+    <p>All 31 verbs learned.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;!</p>
     <button class="reset-btn" onclick="resetMode('words')">Start over</button>
   </div>
 </div>
@@ -273,35 +273,27 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   </div>
 </div>
 
-<!-- ══ CONJUGATION TAB ══ -->
-<div class="tab-panel" id="panel-conjugation">
-  <div class="quiz-wrap" id="verbs-quiz-wrap">
-    <div class="q-type-badge" id="verbs-badge">pronunciation</div>
-    <div class="prompt-verb">
-      <div class="verb-inf" id="verbs-inf"></div>
-      <div class="verb-eng" id="verbs-eng"></div>
-    </div>
-    <div class="pronoun-row" id="verbs-pronoun-row" style="display:none">
-      <span class="pronoun-ukr" id="verbs-pronoun-ukr"></span>
-      <span class="pronoun-sep">&middot;</span>
-      <span class="pronoun-eng" id="verbs-pronoun-eng"></span>
-    </div>
+<!-- ══ NOUNS TAB ══ -->
+<div class="tab-panel" id="panel-nouns">
+  <div class="quiz-wrap" id="nouns-quiz-wrap">
+    <div class="q-type-badge" id="nouns-badge">noun</div>
+    <div class="prompt-verb" id="nouns-prompt" style="padding:8px 0"></div>
     <div class="pts-row">
-      <div class="pts-bar"><div class="pts-fill" id="verbs-pts-fill" style="width:0%"></div></div>
-      <div class="pts-text" id="verbs-pts-text">0 / 10 pts</div>
+      <div class="pts-bar"><div class="pts-fill" id="nouns-pts-fill" style="width:0%"></div></div>
+      <div class="pts-text" id="nouns-pts-text">0 / 10 pts</div>
     </div>
-    <div class="options-grid" id="verbs-options"></div>
+    <div class="options-grid" id="nouns-options"></div>
     <div class="feedback-row">
-      <div class="feedback-msg" id="verbs-fb-msg"></div>
-      <div class="feedback-sub" id="verbs-fb-sub"></div>
+      <div class="feedback-msg" id="nouns-fb-msg"></div>
+      <div class="feedback-sub" id="nouns-fb-sub"></div>
     </div>
-    <button class="next-btn" id="verbs-next" onclick="nextQ('conjugation')">Next &#8594;</button>
+    <button class="next-btn" id="nouns-next" onclick="nextQ('nouns')">Next &#8594;</button>
   </div>
-  <div class="completion" id="verbs-done">
+  <div class="completion" id="nouns-done">
     <div style="font-size:3rem">&#127881;</div>
-    <h2>All conjugations mastered!</h2>
-    <p>315 items — pronunciation &amp; all conjugations.<br>&#1052;&#1086;&#1083;&#1086;&#1076;&#1077;&#1094;&#1100;!</p>
-    <button class="reset-btn" onclick="resetMode('conjugation')">Start over</button>
+    <h2>Nouns &amp; questions mastered!</h2>
+    <p>All items learned.<br>&#1052;&#1086;&#1083;&#1086;&#1076;&#1077;&#1094;&#1100;!</p>
+    <button class="reset-btn" onclick="resetMode('nouns')">Start over</button>
   </div>
 </div>
 
@@ -312,7 +304,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
     <div class="letter-grid" id="grid-letters"></div>
   </div>
   <div class="prog-section">
-    <h2>Words &mdash; <span id="prog-words-count">0</span> / 31</h2>
+    <h2>Verbs &mdash; <span id="prog-words-count">0</span> / 31</h2>
     <div class="vocab-grid" id="grid-words"></div>
   </div>
   <div class="prog-section">
@@ -320,8 +312,8 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
     <div class="vocab-grid" id="grid-sentences"></div>
   </div>
   <div class="prog-section">
-    <h2>Conjugation &mdash; <span id="prog-verbs-count">0</span> / 45 mastered</h2>
-    <div class="verb-grid" id="grid-verbs"></div>
+    <h2>Nouns &amp; Questions &mdash; <span id="prog-nouns-count">0</span> / <span id="prog-nouns-total">0</span></h2>
+    <div class="vocab-grid" id="grid-nouns"></div>
   </div>
 </div>
 
@@ -366,541 +358,92 @@ var LETTERS = [
 ];
 
 /* ══════════════════════════════════════════
-   VERBS DATA
+   NOUNS DATA  (type: 'noun' or 'question')
 ══════════════════════════════════════════ */
-var VERBS = [
-  {
-    inf: 'мати', pron: 'MA-ty', eng: 'to have',
-    conj: [
-      { form: 'маю',           cpron: 'MA-yu',           pronoun: 'я',        peng: 'I' },
-      { form: 'маєш',          cpron: 'MA-yesh',         pronoun: 'ти',       peng: 'you' },
-      { form: 'має',           cpron: 'MA-ye',           pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'маємо',         cpron: 'MA-ye-mo',        pronoun: 'ми',       peng: 'we' },
-      { form: 'маєте',         cpron: 'MA-ye-te',        pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'мають',         cpron: 'MA-yut',          pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'знати', pron: 'ZNA-ty', eng: 'to know',
-    conj: [
-      { form: 'знаю',          cpron: 'ZNA-yu',          pronoun: 'я',        peng: 'I' },
-      { form: 'знаєш',         cpron: 'ZNA-yesh',        pronoun: 'ти',       peng: 'you' },
-      { form: 'знає',          cpron: 'ZNA-ye',          pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'знаємо',        cpron: 'ZNA-ye-mo',       pronoun: 'ми',       peng: 'we' },
-      { form: 'знаєте',        cpron: 'ZNA-ye-te',       pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'знають',        cpron: 'ZNA-yut',         pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'думати', pron: 'DU-ma-ty', eng: 'to think',
-    conj: [
-      { form: 'думаю',         cpron: 'DU-ma-yu',        pronoun: 'я',        peng: 'I' },
-      { form: 'думаєш',        cpron: 'DU-ma-yesh',      pronoun: 'ти',       peng: 'you' },
-      { form: 'думає',         cpron: 'DU-ma-ye',        pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'думаємо',       cpron: 'DU-ma-ye-mo',     pronoun: 'ми',       peng: 'we' },
-      { form: 'думаєте',       cpron: 'DU-ma-ye-te',     pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'думають',       cpron: 'DU-ma-yut',       pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'читати', pron: 'chy-TA-ty', eng: 'to read',
-    conj: [
-      { form: 'читаю',         cpron: 'chy-TA-yu',       pronoun: 'я',        peng: 'I' },
-      { form: 'читаєш',        cpron: 'chy-TA-yesh',     pronoun: 'ти',       peng: 'you' },
-      { form: 'читає',         cpron: 'chy-TA-ye',       pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'читаємо',       cpron: 'chy-TA-ye-mo',    pronoun: 'ми',       peng: 'we' },
-      { form: 'читаєте',       cpron: 'chy-TA-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'читають',       cpron: 'chy-TA-yut',      pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'слухати', pron: 'SLU-kha-ty', eng: 'to listen',
-    conj: [
-      { form: 'слухаю',        cpron: 'SLU-kha-yu',      pronoun: 'я',        peng: 'I' },
-      { form: 'слухаєш',       cpron: 'SLU-kha-yesh',    pronoun: 'ти',       peng: 'you' },
-      { form: 'слухає',        cpron: 'SLU-kha-ye',      pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'слухаємо',      cpron: 'SLU-kha-ye-mo',   pronoun: 'ми',       peng: 'we' },
-      { form: 'слухаєте',      cpron: 'SLU-kha-ye-te',   pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'слухають',      cpron: 'SLU-kha-yut',     pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'відпочивати', pron: 'vid-po-chy-VA-ty', eng: 'to rest',
-    conj: [
-      { form: 'відпочиваю',    cpron: 'vid-po-chy-VA-yu',    pronoun: 'я',        peng: 'I' },
-      { form: 'відпочиваєш',   cpron: 'vid-po-chy-VA-yesh',  pronoun: 'ти',       peng: 'you' },
-      { form: 'відпочиває',    cpron: 'vid-po-chy-VA-ye',    pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'відпочиваємо',  cpron: 'vid-po-chy-VA-ye-mo', pronoun: 'ми',       peng: 'we' },
-      { form: 'відпочиваєте',  cpron: 'vid-po-chy-VA-ye-te', pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'відпочивають',  cpron: 'vid-po-chy-VA-yut',   pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'працювати', pron: 'pra-tsyu-VA-ty', eng: 'to work',
-    conj: [
-      { form: 'працюю',        cpron: 'pra-TSYU-yu',     pronoun: 'я',        peng: 'I' },
-      { form: 'працюєш',       cpron: 'pra-TSYU-yesh',   pronoun: 'ти',       peng: 'you' },
-      { form: 'працює',        cpron: 'pra-TSYU-ye',     pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'працюємо',      cpron: 'pra-TSYU-ye-mo',  pronoun: 'ми',       peng: 'we' },
-      { form: 'працюєте',      cpron: 'pra-TSYU-ye-te',  pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'працюють',      cpron: 'pra-TSYU-yut',    pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'обідати', pron: 'o-BI-da-ty', eng: 'to have lunch',
-    conj: [
-      { form: 'обідаю',        cpron: 'o-bi-DA-yu',      pronoun: 'я',        peng: 'I' },
-      { form: 'обідаєш',       cpron: 'o-bi-DA-yesh',    pronoun: 'ти',       peng: 'you' },
-      { form: 'обідає',        cpron: 'o-bi-DA-ye',      pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'обідаємо',      cpron: 'o-bi-DA-ye-mo',   pronoun: 'ми',       peng: 'we' },
-      { form: 'обідаєте',      cpron: 'o-bi-DA-ye-te',   pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'обідають',      cpron: 'o-bi-DA-yut',     pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'грати', pron: 'HRA-ty', eng: 'to play',
-    conj: [
-      { form: 'граю',          cpron: 'HRA-yu',          pronoun: 'я',        peng: 'I' },
-      { form: 'граєш',         cpron: 'HRA-yesh',        pronoun: 'ти',       peng: 'you' },
-      { form: 'грає',          cpron: 'HRA-ye',          pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'граємо',        cpron: 'HRA-ye-mo',       pronoun: 'ми',       peng: 'we' },
-      { form: 'граєте',        cpron: 'HRA-ye-te',       pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'грають',        cpron: 'HRA-yut',         pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'вчити', pron: 'VCHy-ty', eng: 'to learn',
-    conj: [
-      { form: 'вчу',           cpron: 'vchu',            pronoun: 'я',        peng: 'I' },
-      { form: 'вчиш',          cpron: 'vchysh',          pronoun: 'ти',       peng: 'you' },
-      { form: 'вчить',         cpron: 'vchyt',           pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'вчимо',         cpron: 'VCHy-mo',         pronoun: 'ми',       peng: 'we' },
-      { form: 'вчите',         cpron: 'VCHy-te',         pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'вчать',         cpron: 'vchAt',           pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'їхати', pron: 'YI-kha-ty', eng: 'to travel',
-    conj: [
-      { form: 'їду',           cpron: 'YI-du',           pronoun: 'я',        peng: 'I' },
-      { form: 'їдеш',          cpron: 'YI-desh',         pronoun: 'ти',       peng: 'you' },
-      { form: 'їде',           cpron: 'YI-de',           pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'їдемо',         cpron: 'YI-de-mo',        pronoun: 'ми',       peng: 'we' },
-      { form: 'їдете',         cpron: 'YI-de-te',        pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'їдуть',         cpron: 'YI-dut',          pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'дивитися', pron: 'dy-VY-ty-sya', eng: 'to watch',
-    conj: [
-      { form: 'дивлюся',       cpron: 'dyv-LYU-sya',     pronoun: 'я',        peng: 'I' },
-      { form: 'дивишся',       cpron: 'DY-vysh-sya',     pronoun: 'ти',       peng: 'you' },
-      { form: 'дивиться',      cpron: 'DY-vyt-sya',      pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'дивимося',      cpron: 'DY-vy-mo-sya',    pronoun: 'ми',       peng: 'we' },
-      { form: 'дивитеся',      cpron: 'DY-vy-te-sya',    pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'дивляться',     cpron: 'DYV-lya-tsya',    pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'допомагати', pron: 'do-po-ma-HA-ty', eng: 'to help',
-    conj: [
-      { form: 'допомагаю',     cpron: 'do-po-ma-HA-yu',     pronoun: 'я',        peng: 'I' },
-      { form: 'допомагаєш',    cpron: 'do-po-ma-HA-yesh',   pronoun: 'ти',       peng: 'you' },
-      { form: 'допомагає',     cpron: 'do-po-ma-HA-ye',     pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'допомагаємо',   cpron: 'do-po-ma-HA-ye-mo',  pronoun: 'ми',       peng: 'we' },
-      { form: 'допомагаєте',   cpron: 'do-po-ma-HA-ye-te',  pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'допомагають',   cpron: 'do-po-ma-HA-yut',    pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'розслаблятися', pron: 'roz-slab-LYA-ty-sya', eng: 'to relax',
-    conj: [
-      { form: 'розслабляюся',  cpron: 'roz-slab-LYA-yu-sya',    pronoun: 'я',        peng: 'I' },
-      { form: 'розслабляєшся', cpron: 'roz-slab-LYA-yesh-sya',  pronoun: 'ти',       peng: 'you' },
-      { form: 'розслабляється', cpron: 'roz-slab-LYA-ye-tsya',  pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'розслабляємося', cpron: 'roz-slab-LYA-ye-mo-sya', pronoun: 'ми',      peng: 'we' },
-      { form: 'розслабляєтеся', cpron: 'roz-slab-LYA-ye-te-sya', pronoun: 'ви',      peng: 'you (pl.)' },
-      { form: 'розслабляються', cpron: 'roz-slab-LYA-yut-sya',   pronoun: 'вони',    peng: 'they' }
-    ]
-  },
-  {
-    inf: 'любити', pron: 'lyu-BY-ty', eng: 'to love',
-    conj: [
-      { form: 'люблю',         cpron: 'lyu-BLYU',        pronoun: 'я',        peng: 'I' },
-      { form: 'любиш',         cpron: 'LYU-bysh',        pronoun: 'ти',       peng: 'you' },
-      { form: 'любить',        cpron: 'LYU-byt',         pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'любимо',        cpron: 'LYU-by-mo',       pronoun: 'ми',       peng: 'we' },
-      { form: 'любите',        cpron: 'LYU-by-te',       pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'люблять',       cpron: 'LYUB-lyat',       pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'брати', pron: 'BRA-ty', eng: 'to take',
-    conj: [
-      { form: 'беру',          cpron: 'be-RU',           pronoun: 'я',        peng: 'I' },
-      { form: 'береш',         cpron: 'be-RESH',         pronoun: 'ти',       peng: 'you' },
-      { form: 'бере',          cpron: 'be-RE',           pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'беремо',        cpron: 'be-RE-mo',        pronoun: 'ми',       peng: 'we' },
-      { form: 'берете',        cpron: 'be-RE-te',        pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'беруть',        cpron: 'be-RUT',          pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'пробувати', pron: 'pro-BU-va-ty', eng: 'to try',
-    conj: [
-      { form: 'пробую',        cpron: 'PRO-bu-yu',       pronoun: 'я',        peng: 'I' },
-      { form: 'пробуєш',       cpron: 'pro-BU-yesh',     pronoun: 'ти',       peng: 'you' },
-      { form: 'пробує',        cpron: 'pro-BU-ye',       pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'пробуємо',      cpron: 'pro-BU-ye-mo',    pronoun: 'ми',       peng: 'we' },
-      { form: 'пробуєте',      cpron: 'pro-BU-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'пробують',      cpron: 'pro-BU-yut',      pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'робити', pron: 'ro-BY-ty', eng: 'to do',
-    conj: [
-      { form: 'роблю',         cpron: 'ROB-lyu',         pronoun: 'я',        peng: 'I' },
-      { form: 'робиш',         cpron: 'RO-bysh',         pronoun: 'ти',       peng: 'you' },
-      { form: 'робить',        cpron: 'RO-byt',          pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'робимо',        cpron: 'RO-by-mo',        pronoun: 'ми',       peng: 'we' },
-      { form: 'робите',        cpron: 'RO-by-te',        pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'роблять',       cpron: 'ROB-lyat',        pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'готувати', pron: 'ho-tu-VA-ty', eng: 'to cook',
-    conj: [
-      { form: 'готую',         cpron: 'ho-TU-yu',        pronoun: 'я',        peng: 'I' },
-      { form: 'готуєш',        cpron: 'ho-TU-yesh',      pronoun: 'ти',       peng: 'you' },
-      { form: 'готує',         cpron: 'ho-TU-ye',        pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'готуємо',       cpron: 'ho-TU-ye-mo',     pronoun: 'ми',       peng: 'we' },
-      { form: 'готуєте',       cpron: 'ho-TU-ye-te',     pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'готують',       cpron: 'ho-TU-yut',       pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'гуляти', pron: 'hu-LYA-ty', eng: 'to walk / stroll',
-    conj: [
-      { form: 'гуляю',         cpron: 'hu-LYA-yu',       pronoun: 'я',        peng: 'I' },
-      { form: 'гуляєш',        cpron: 'hu-LYA-yesh',     pronoun: 'ти',       peng: 'you' },
-      { form: 'гуляє',         cpron: 'hu-LYA-ye',       pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'гуляємо',       cpron: 'hu-LYA-ye-mo',    pronoun: 'ми',       peng: 'we' },
-      { form: 'гуляєте',       cpron: 'hu-LYA-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'гуляють',       cpron: 'hu-LYA-yut',      pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'співати', pron: 'spi-VA-ty', eng: 'to sing',
-    conj: [
-      { form: 'співаю',        cpron: 'spi-VA-yu',       pronoun: 'я',        peng: 'I' },
-      { form: 'співаєш',       cpron: 'spi-VA-yesh',     pronoun: 'ти',       peng: 'you' },
-      { form: 'співає',        cpron: 'spi-VA-ye',       pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'співаємо',      cpron: 'spi-VA-ye-mo',    pronoun: 'ми',       peng: 'we' },
-      { form: 'співаєте',      cpron: 'spi-VA-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'співають',      cpron: 'spi-VA-yut',      pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'танцювати', pron: 'tan-tsyu-VA-ty', eng: 'to dance',
-    conj: [
-      { form: 'танцюю',        cpron: 'tan-TSYU-yu',     pronoun: 'я',        peng: 'I' },
-      { form: 'танцюєш',       cpron: 'tan-TSYU-yesh',   pronoun: 'ти',       peng: 'you' },
-      { form: 'танцює',        cpron: 'tan-TSYU-ye',     pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'танцюємо',      cpron: 'tan-TSYU-ye-mo',  pronoun: 'ми',       peng: 'we' },
-      { form: 'танцюєте',      cpron: 'tan-TSYU-ye-te',  pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'танцюють',      cpron: 'tan-TSYU-yut',    pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'питати', pron: 'py-TA-ty', eng: 'to ask',
-    conj: [
-      { form: 'питаю',         cpron: 'py-TA-yu',        pronoun: 'я',        peng: 'I' },
-      { form: 'питаєш',        cpron: 'py-TA-yesh',      pronoun: 'ти',       peng: 'you' },
-      { form: 'питає',         cpron: 'py-TA-ye',        pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'питаємо',       cpron: 'py-TA-ye-mo',     pronoun: 'ми',       peng: 'we' },
-      { form: 'питаєте',       cpron: 'py-TA-ye-te',     pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'питають',       cpron: 'py-TA-yut',       pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'повторювати', pron: 'pov-to-ryu-VA-ty', eng: 'to repeat',
-    conj: [
-      { form: 'повторюю',      cpron: 'pov-TO-ryu-yu',   pronoun: 'я',        peng: 'I' },
-      { form: 'повторюєш',     cpron: 'pov-TO-ryu-yesh', pronoun: 'ти',       peng: 'you' },
-      { form: 'повторює',      cpron: 'pov-TO-ryu-ye',   pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'повторюємо',    cpron: 'pov-TO-ryu-ye-mo',pronoun: 'ми',       peng: 'we' },
-      { form: 'повторюєте',    cpron: 'pov-TO-ryu-ye-te',pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'повторюють',    cpron: 'pov-TO-ryu-yut',  pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'пояснювати', pron: 'po-yas-nyu-VA-ty', eng: 'to explain',
-    conj: [
-      { form: 'пояснюю',       cpron: 'po-yas-NYU-yu',   pronoun: 'я',        peng: 'I' },
-      { form: 'пояснюєш',      cpron: 'po-yas-NYU-yesh', pronoun: 'ти',       peng: 'you' },
-      { form: 'пояснює',       cpron: 'po-yas-NYU-ye',   pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'пояснюємо',     cpron: 'po-yas-NYU-ye-mo',pronoun: 'ми',       peng: 'we' },
-      { form: 'пояснюєте',     cpron: 'po-yas-NYU-ye-te',pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'пояснюють',     cpron: 'po-yas-NYU-yut',  pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'працювати', pron: 'pra-tsyu-VA-ty', eng: 'to work',
-    conj: [
-      { form: 'працюю',        cpron: 'pra-TSYU-yu',     pronoun: 'я',        peng: 'I' },
-      { form: 'працюєш',       cpron: 'pra-TSYU-yesh',   pronoun: 'ти',       peng: 'you' },
-      { form: 'працює',        cpron: 'pra-TSYU-ye',     pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'працюємо',      cpron: 'pra-TSYU-ye-mo',  pronoun: 'ми',       peng: 'we' },
-      { form: 'працюєте',      cpron: 'pra-TSYU-ye-te',  pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'працюють',      cpron: 'pra-TSYU-yut',    pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'розмовляти', pron: 'roz-mov-LYA-ty', eng: 'to talk',
-    conj: [
-      { form: 'розмовляю',     cpron: 'roz-mov-LYA-yu',  pronoun: 'я',        peng: 'I' },
-      { form: 'розмовляєш',    cpron: 'roz-mov-LYA-yesh',pronoun: 'ти',       peng: 'you' },
-      { form: 'розмовляє',     cpron: 'roz-mov-LYA-ye',  pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'розмовляємо',   cpron: 'roz-mov-LYA-ye-mo',pronoun: 'ми',      peng: 'we' },
-      { form: 'розмовляєте',   cpron: 'roz-mov-LYA-ye-te',pronoun: 'ви',      peng: 'you (pl.)' },
-      { form: 'розмовляють',   cpron: 'roz-mov-LYA-yut', pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'розповідати', pron: 'roz-po-vi-DA-ty', eng: 'to tell / narrate',
-    conj: [
-      { form: 'розповідаю',    cpron: 'roz-po-vi-DA-yu',  pronoun: 'я',        peng: 'I' },
-      { form: 'розповідаєш',   cpron: 'roz-po-vi-DA-yesh',pronoun: 'ти',       peng: 'you' },
-      { form: 'розповідає',    cpron: 'roz-po-vi-DA-ye',  pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'розповідаємо',  cpron: 'roz-po-vi-DA-ye-mo',pronoun: 'ми',      peng: 'we' },
-      { form: 'розповідаєте',  cpron: 'roz-po-vi-DA-ye-te',pronoun: 'ви',      peng: 'you (pl.)' },
-      { form: 'розповідають',  cpron: 'roz-po-vi-DA-yut', pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'снідати', pron: 'sni-DA-ty', eng: 'to have breakfast',
-    conj: [
-      { form: 'снідаю',        cpron: 'sni-DA-yu',        pronoun: 'я',        peng: 'I' },
-      { form: 'снідаєш',       cpron: 'sni-DA-yesh',      pronoun: 'ти',       peng: 'you' },
-      { form: 'снідає',        cpron: 'sni-DA-ye',        pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'снідаємо',      cpron: 'sni-DA-ye-mo',     pronoun: 'ми',       peng: 'we' },
-      { form: 'снідаєте',      cpron: 'sni-DA-ye-te',     pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'снідають',      cpron: 'sni-DA-yut',       pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'учити', pron: 'u-CHY-ty', eng: 'to teach',
-    conj: [
-      { form: 'учу',           cpron: 'u-CHYU',           pronoun: 'я',        peng: 'I' },
-      { form: 'учиш',          cpron: 'u-CHYSH',          pronoun: 'ти',       peng: 'you' },
-      { form: 'учить',         cpron: 'u-CHYT',           pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'учимо',         cpron: 'u-CHY-mo',         pronoun: 'ми',       peng: 'we' },
-      { form: 'учите',         cpron: 'u-CHY-te',         pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'учать',         cpron: 'u-CHAT',           pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'учитися', pron: 'u-CHY-ty-sya', eng: 'to study / learn',
-    conj: [
-      { form: 'учуся',         cpron: 'u-CHYU-sya',       pronoun: 'я',        peng: 'I' },
-      { form: 'учишся',        cpron: 'u-CHYSH-sya',      pronoun: 'ти',       peng: 'you' },
-      { form: 'учиться',       cpron: 'u-CHYT-sya',       pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'учимося',       cpron: 'u-CHY-mo-sya',     pronoun: 'ми',       peng: 'we' },
-      { form: 'учитеся',       cpron: 'u-CHY-te-sya',     pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'учаться',       cpron: 'u-CHA-tsya',       pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'вечеряти', pron: 've-che-RYA-ty', eng: 'to have dinner',
-    conj: [
-      { form: 'вечеряю',       cpron: 've-che-RYA-yu',    pronoun: 'я',        peng: 'I' },
-      { form: 'вечеряєш',      cpron: 've-che-RYA-yesh',  pronoun: 'ти',       peng: 'you' },
-      { form: 'вечеряє',       cpron: 've-che-RYA-ye',    pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'вечеряємо',     cpron: 've-che-RYA-ye-mo', pronoun: 'ми',       peng: 'we' },
-      { form: 'вечеряєте',     cpron: 've-che-RYA-ye-te', pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'вечеряють',     cpron: 've-che-RYA-yut',   pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'вивчати', pron: 'vyv-CHA-ty', eng: 'to study',
-    conj: [
-      { form: 'вивчаю',        cpron: 'vyv-CHA-yu',       pronoun: 'я',        peng: 'I' },
-      { form: 'вивчаєш',       cpron: 'vyv-CHA-yesh',     pronoun: 'ти',       peng: 'you' },
-      { form: 'вивчає',        cpron: 'vyv-CHA-ye',       pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'вивчаємо',      cpron: 'vyv-CHA-ye-mo',    pronoun: 'ми',       peng: 'we' },
-      { form: 'вивчаєте',      cpron: 'vyv-CHA-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'вивчають',      cpron: 'vyv-CHA-yut',      pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'виконувати', pron: 'vy-KO-nu-va-ty', eng: 'to perform / carry out',
-    conj: [
-      { form: 'виконую',       cpron: 'vy-KO-nu-yu',      pronoun: 'я',        peng: 'I' },
-      { form: 'виконуєш',      cpron: 'vy-KO-nu-yesh',    pronoun: 'ти',       peng: 'you' },
-      { form: 'виконує',       cpron: 'vy-KO-nu-ye',      pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'виконуємо',     cpron: 'vy-KO-nu-ye-mo',   pronoun: 'ми',       peng: 'we' },
-      { form: 'виконуєте',     cpron: 'vy-KO-nu-ye-te',   pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'виконують',     cpron: 'vy-KO-nu-yut',     pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'відповідати', pron: 'vid-po-vi-DA-ty', eng: 'to answer',
-    conj: [
-      { form: 'відповідаю',    cpron: 'vid-po-vi-DA-yu',  pronoun: 'я',        peng: 'I' },
-      { form: 'відповідаєш',   cpron: 'vid-po-vi-DA-yesh',pronoun: 'ти',       peng: 'you' },
-      { form: 'відповідає',    cpron: 'vid-po-vi-DA-ye',  pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'відповідаємо',  cpron: 'vid-po-vi-DA-ye-mo',pronoun: 'ми',      peng: 'we' },
-      { form: 'відповідаєте',  cpron: 'vid-po-vi-DA-ye-te',pronoun: 'ви',      peng: 'you (pl.)' },
-      { form: 'відповідають',  cpron: 'vid-po-vi-DA-yut', pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'відпочивати', pron: 'vid-po-chy-VA-ty', eng: 'to rest',
-    conj: [
-      { form: 'відпочиваю',    cpron: 'vid-po-chy-VA-yu',  pronoun: 'я',        peng: 'I' },
-      { form: 'відпочиваєш',   cpron: 'vid-po-chy-VA-yesh',pronoun: 'ти',       peng: 'you' },
-      { form: 'відпочиває',    cpron: 'vid-po-chy-VA-ye',  pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'відпочиваємо',  cpron: 'vid-po-chy-VA-ye-mo',pronoun: 'ми',      peng: 'we' },
-      { form: 'відпочиваєте',  cpron: 'vid-po-chy-VA-ye-te',pronoun: 'ви',      peng: 'you (pl.)' },
-      { form: 'відпочивають',  cpron: 'vid-po-chy-VA-yut', pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'грати', pron: 'HRA-ty', eng: 'to play',
-    conj: [
-      { form: 'граю',          cpron: 'HRA-yu',            pronoun: 'я',        peng: 'I' },
-      { form: 'граєш',         cpron: 'HRA-yesh',          pronoun: 'ти',       peng: 'you' },
-      { form: 'грає',          cpron: 'HRA-ye',            pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'граємо',        cpron: 'HRA-ye-mo',         pronoun: 'ми',       peng: 'we' },
-      { form: 'граєте',        cpron: 'HRA-ye-te',         pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'грають',        cpron: 'HRA-yut',           pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'займатися', pron: 'zay-MA-ty-sya', eng: 'to do / to practice',
-    conj: [
-      { form: 'займаюся',      cpron: 'zay-MA-yu-sya',     pronoun: 'я',        peng: 'I' },
-      { form: 'займаєшся',     cpron: 'zay-MA-yesh-sya',   pronoun: 'ти',       peng: 'you' },
-      { form: 'займається',    cpron: 'zay-MA-ye-tsya',    pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'займаємося',    cpron: 'zay-MA-ye-mo-sya',  pronoun: 'ми',       peng: 'we' },
-      { form: 'займаєтеся',    cpron: 'zay-MA-ye-te-sya',  pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'займаються',    cpron: 'zay-MA-yu-tsya',    pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'запитувати', pron: 'za-PY-tu-va-ty', eng: 'to ask / inquire',
-    conj: [
-      { form: 'запитую',       cpron: 'za-PY-tu-yu',       pronoun: 'я',        peng: 'I' },
-      { form: 'запитуєш',      cpron: 'za-PY-tu-yesh',     pronoun: 'ти',       peng: 'you' },
-      { form: 'запитує',       cpron: 'za-PY-tu-ye',       pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'запитуємо',     cpron: 'za-PY-tu-ye-mo',    pronoun: 'ми',       peng: 'we' },
-      { form: 'запитуєте',     cpron: 'za-PY-tu-ye-te',    pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'запитують',     cpron: 'za-PY-tu-yut',      pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'нести', pron: 'ne-STY', eng: 'to carry',
-    conj: [
-      { form: 'несу',          cpron: 'ne-SU',             pronoun: 'я',        peng: 'I' },
-      { form: 'несеш',         cpron: 'ne-SESH',           pronoun: 'ти',       peng: 'you' },
-      { form: 'несе',          cpron: 'ne-SE',             pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'несемо',        cpron: 'ne-se-MO',          pronoun: 'ми',       peng: 'we' },
-      { form: 'несете',        cpron: 'ne-SE-te',          pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'несуть',        cpron: 'ne-SUT',            pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'обідати', pron: 'o-bi-DA-ty', eng: 'to have lunch',
-    conj: [
-      { form: 'обідаю',        cpron: 'o-bi-DA-yu',        pronoun: 'я',        peng: 'I' },
-      { form: 'обідаєш',       cpron: 'o-bi-DA-yesh',      pronoun: 'ти',       peng: 'you' },
-      { form: 'обідає',        cpron: 'o-bi-DA-ye',        pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'обідаємо',      cpron: 'o-bi-DA-ye-mo',     pronoun: 'ми',       peng: 'we' },
-      { form: 'обідаєте',      cpron: 'o-bi-DA-ye-te',     pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'обідають',      cpron: 'o-bi-DA-yut',       pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'перевіряти', pron: 'pe-re-vi-RYA-ty', eng: 'to check',
-    conj: [
-      { form: 'перевіряю',     cpron: 'pe-re-vi-RYA-yu',   pronoun: 'я',        peng: 'I' },
-      { form: 'перевіряєш',    cpron: 'pe-re-vi-RYA-yesh', pronoun: 'ти',       peng: 'you' },
-      { form: 'перевіряє',     cpron: 'pe-re-vi-RYA-ye',   pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'перевіряємо',   cpron: 'pe-re-vi-RYA-ye-mo',pronoun: 'ми',       peng: 'we' },
-      { form: 'перевіряєте',   cpron: 'pe-re-vi-RYA-ye-te',pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'перевіряють',   cpron: 'pe-re-vi-RYA-yut',  pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'могти', pron: 'moh-TY', eng: 'to be able to',
-    conj: [
-      { form: 'можу',          cpron: 'MO-zhu',            pronoun: 'я',        peng: 'I' },
-      { form: 'можеш',         cpron: 'MO-zhesh',          pronoun: 'ти',       peng: 'you' },
-      { form: 'може',          cpron: 'MO-zhe',            pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'можемо',        cpron: 'MO-zhe-mo',         pronoun: 'ми',       peng: 'we' },
-      { form: 'можете',        cpron: 'MO-zhe-te',         pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'можуть',        cpron: 'MO-zhut',           pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'вміти', pron: 'VMI-ty', eng: 'to know how to',
-    conj: [
-      { form: 'вмію',          cpron: 'VMI-yu',            pronoun: 'я',        peng: 'I' },
-      { form: 'вмієш',         cpron: 'VMI-yesh',          pronoun: 'ти',       peng: 'you' },
-      { form: 'вміє',          cpron: 'VMI-ye',            pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'вміємо',        cpron: 'VMI-ye-mo',         pronoun: 'ми',       peng: 'we' },
-      { form: 'вмієте',        cpron: 'VMI-ye-te',         pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'вміють',        cpron: 'VMI-yut',           pronoun: 'вони',     peng: 'they' }
-    ]
-  },
-  {
-    inf: 'цікавитися', pron: 'tsi-KA-vy-ty-sya', eng: 'to be interested in',
-    conj: [
-      { form: 'цікавлюся',     cpron: 'tsi-KAV-lyu-sya',   pronoun: 'я',        peng: 'I' },
-      { form: 'цікавишся',     cpron: 'tsi-KA-vysh-sya',   pronoun: 'ти',       peng: 'you' },
-      { form: 'цікавиться',    cpron: 'tsi-KA-vy-tsya',    pronoun: 'він/вона', peng: 'he / she' },
-      { form: 'цікавимося',    cpron: 'tsi-KA-vy-mo-sya',  pronoun: 'ми',       peng: 'we' },
-      { form: 'цікавитеся',    cpron: 'tsi-KA-vy-te-sya',  pronoun: 'ви',       peng: 'you (pl.)' },
-      { form: 'цікавляться',   cpron: 'tsi-KAV-lya-tsya',  pronoun: 'вони',     peng: 'they' }
-    ]
-  }
+var NOUNS = [
+  /* ── Question words ── */
+  { ukr: 'що?',           eng: 'what?',                 pron: 'shcho',              type: 'question' },
+  { ukr: 'хто?',          eng: 'who?',                  pron: 'khto',               type: 'question' },
+  { ukr: 'де?',           eng: 'where?',                pron: 'de',                 type: 'question' },
+  { ukr: 'коли?',         eng: 'when?',                 pron: 'KO-ly',              type: 'question' },
+  { ukr: 'як?',           eng: 'how?',                  pron: 'yak',                type: 'question' },
+  { ukr: 'чому?',         eng: 'why?',                  pron: 'cho-MU',             type: 'question' },
+  { ukr: 'скільки?',      eng: 'how many / much?',      pron: 'SKIL-ky',            type: 'question' },
+  { ukr: 'який?',         eng: 'what kind / which?',    pron: 'ya-KYY',             type: 'question' },
+  { ukr: 'звідки?',       eng: 'where from?',           pron: 'ZVID-ky',            type: 'question' },
+  { ukr: 'куди?',         eng: 'where to?',             pron: 'ku-DY',              type: 'question' },
+  { ukr: 'про що?',       eng: 'about what?',           pron: 'pro shcho',          type: 'question' },
+  { ukr: 'з ким?',        eng: 'with whom?',            pron: 'z kym',              type: 'question' },
+  /* ── Everyday nouns ── */
+  { ukr: 'парк',          eng: 'park',                  pron: 'park',               type: 'noun' },
+  { ukr: 'робота',        eng: 'work / job',            pron: 'ro-BO-ta',           type: 'noun' },
+  { ukr: 'друг',          eng: 'friend (m.)',            pron: 'druh',               type: 'noun' },
+  { ukr: 'подруга',       eng: 'friend (f.)',            pron: 'pod-RU-ha',          type: 'noun' },
+  { ukr: 'зустріч',       eng: 'meeting',               pron: 'ZUS-trich',          type: 'noun' },
+  { ukr: 'ранок',         eng: 'morning',               pron: 'RA-nok',             type: 'noun' },
+  { ukr: 'вечір',         eng: 'evening',               pron: 'VE-chir',            type: 'noun' },
+  { ukr: 'день',          eng: 'day',                   pron: 'den',                type: 'noun' },
+  { ukr: 'план',          eng: 'plan',                  pron: 'plan',               type: 'noun' },
+  { ukr: 'фільм',         eng: 'film / movie',          pron: 'film',               type: 'noun' },
+  { ukr: 'серіал',        eng: 'TV series',             pron: 'se-ri-AL',           type: 'noun' },
+  { ukr: 'мова',          eng: 'language',              pron: 'MO-va',              type: 'noun' },
+  { ukr: 'урок',          eng: 'lesson',                pron: 'u-ROK',              type: 'noun' },
+  { ukr: 'слово',         eng: 'word',                  pron: 'SLO-vo',             type: 'noun' },
+  { ukr: 'музика',        eng: 'music',                 pron: 'MU-zy-ka',           type: 'noun' },
+  { ukr: 'новини',        eng: 'news',                  pron: 'no-VY-ny',           type: 'noun' },
+  { ukr: 'текст',         eng: 'text',                  pron: 'tekst',              type: 'noun' },
+  { ukr: 'журнал',        eng: 'magazine / journal',    pron: 'zhur-NAL',           type: 'noun' },
+  { ukr: 'студент',       eng: 'student (m.)',           pron: 'stu-DENT',           type: 'noun' },
+  { ukr: 'викладач',      eng: 'teacher / lecturer',    pron: 'vy-kla-DACH',        type: 'noun' },
+  { ukr: 'завдання',      eng: 'task / assignment',     pron: 'zav-DAN-nya',        type: 'noun' },
+  { ukr: 'диктант',       eng: 'dictation',             pron: 'dyk-TANT',           type: 'noun' },
+  { ukr: 'кіно',          eng: 'cinema / movie',        pron: 'ki-NO',              type: 'noun' },
+  { ukr: 'місце',         eng: 'place / seat',          pron: 'MIS-tse',            type: 'noun' },
+  { ukr: 'повідомлення',  eng: 'message',               pron: 'po-vi-dom-LEN-nya',  type: 'noun' },
+  { ukr: 'клієнт',        eng: 'client',                pron: 'kli-YENT',           type: 'noun' },
+  { ukr: 'правила',       eng: 'rules',                 pron: 'PRA-vy-la',          type: 'noun' },
+  { ukr: 'помилка',       eng: 'mistake',               pron: 'po-MYL-ka',          type: 'noun' },
+  { ukr: 'університет',   eng: 'university',            pron: 'u-ni-ver-sy-TET',    type: 'noun' },
+  { ukr: 'дім',           eng: 'house / home',          pron: 'dim',                type: 'noun' },
+  { ukr: 'місто',         eng: 'city / town',           pron: 'MIS-to',             type: 'noun' },
+  { ukr: 'країна',        eng: 'country',               pron: 'kra-YI-na',          type: 'noun' },
 ];
 
 /* ══════════════════════════════════════════
-   VOCABULARY DATA  (11 verbs + 13 phrases)
+   VOCABULARY DATA  (31 verbs + 13 phrases)
 ══════════════════════════════════════════ */
 var VOCAB = [
-  { ukr: 'мати',                               eng: 'to have',                                 pron: 'MA-ty',                                          type: 'verb' },
-  { ukr: 'знати',                              eng: 'to know',                                 pron: 'ZNA-ty',                                         type: 'verb' },
-  { ukr: 'думати',                             eng: 'to think',                                pron: 'DU-ma-ty',                                       type: 'verb' },
-  { ukr: 'читати',                             eng: 'to read',                                 pron: 'chy-TA-ty',                                      type: 'verb' },
-  { ukr: 'слухати',                            eng: 'to listen',                               pron: 'SLU-kha-ty',                                     type: 'verb' },
-  { ukr: 'відпочивати',                        eng: 'to rest',                                 pron: 'vid-po-chy-VA-ty',                               type: 'verb' },
-  { ukr: 'працювати',                          eng: 'to work',                                 pron: 'pra-tsyu-VA-ty',                                 type: 'verb' },
-  { ukr: 'обідати',                            eng: 'to have lunch',                           pron: 'o-BI-da-ty',                                     type: 'verb' },
-  { ukr: 'грати',                              eng: 'to play',                                 pron: 'HRA-ty',                                         type: 'verb' },
-  { ukr: 'вчити',                              eng: 'to learn',                                pron: 'VCHy-ty',                                        type: 'verb' },
-  { ukr: 'їхати',                              eng: 'to travel',                               pron: 'YI-kha-ty',                                      type: 'verb' },
-  { ukr: 'говорити',                           eng: 'to speak',                                pron: 'ho-VO-ry-ty',                                    type: 'verb' },
-  { ukr: 'писати',                             eng: 'to write',                                pron: 'py-SA-ty',                                       type: 'verb' },
-  { ukr: 'розуміти',                           eng: 'to understand',                           pron: 'ro-zu-MI-ty',                                    type: 'verb' },
-  { ukr: 'питати',                             eng: 'to ask',                                  pron: 'py-TA-ty',                                       type: 'verb' },
-  { ukr: 'запитувати',                         eng: 'to ask / inquire',                        pron: 'za-PY-tu-va-ty',                                 type: 'verb' },
-  { ukr: 'відповідати',                        eng: 'to answer',                               pron: 'vid-po-vi-DA-ty',                                type: 'verb' },
-  { ukr: 'снідати',                            eng: 'to have breakfast',                       pron: 'sni-DA-ty',                                      type: 'verb' },
-  { ukr: 'вечеряти',                           eng: 'to have dinner',                          pron: 've-che-RYA-ty',                                  type: 'verb' },
-  { ukr: 'гуляти',                             eng: 'to walk / hang out',                      pron: 'hu-LYA-ty',                                      type: 'verb' },
-  { ukr: 'дивитися',                           eng: 'to watch',                                pron: 'dy-VY-ty-sya',                                   type: 'verb' },
-  { ukr: 'перевіряти',                         eng: 'to check',                                pron: 'pe-re-vi-RYA-ty',                                type: 'verb' },
-  { ukr: 'займатися',                          eng: 'to do / to practice',                     pron: 'zay-MA-ty-sya',                                  type: 'verb' },
-  { ukr: 'вивчати',                            eng: 'to study',                                pron: 'vyv-CHA-ty',                                     type: 'verb' },
-  { ukr: 'повторювати',                        eng: 'to repeat',                               pron: 'pov-to-ryu-VA-ty',                               type: 'verb' },
-  { ukr: 'пояснювати',                         eng: 'to explain',                              pron: 'po-yas-nyu-VA-ty',                               type: 'verb' },
-  { ukr: 'учитися',                            eng: 'to study / learn',                        pron: 'u-CHY-ty-sya',                                   type: 'verb' },
-  { ukr: 'розмовляти',                         eng: 'to talk',                                 pron: 'roz-mov-LYA-ty',                                 type: 'verb' },
-  { ukr: 'розповідати',                        eng: 'to tell / narrate',                       pron: 'roz-po-vi-DA-ty',                                type: 'verb' },
-  { ukr: 'виконувати',                         eng: 'to perform / carry out',                  pron: 'vy-KO-nu-va-ty',                                 type: 'verb' },
-  { ukr: 'нести',                              eng: 'to carry',                                pron: 'ne-STY',                                         type: 'verb' },
+  { ukr: 'мати',           eng: 'to have',                                 pron: 'MA-ty',                                          type: 'verb' },
+  { ukr: 'знати',          eng: 'to know',                                 pron: 'ZNA-ty',                                         type: 'verb' },
+  { ukr: 'думати',         eng: 'to think',                                pron: 'DU-ma-ty',                                       type: 'verb' },
+  { ukr: 'читати',         eng: 'to read',                                 pron: 'chy-TA-ty',                                      type: 'verb' },
+  { ukr: 'слухати',        eng: 'to listen',                               pron: 'SLU-kha-ty',                                     type: 'verb' },
+  { ukr: 'відпочивати',    eng: 'to rest',                                 pron: 'vid-po-chy-VA-ty',                               type: 'verb' },
+  { ukr: 'працювати',      eng: 'to work',                                 pron: 'pra-tsyu-VA-ty',                                 type: 'verb' },
+  { ukr: 'обідати',        eng: 'to have lunch',                           pron: 'o-BI-da-ty',                                     type: 'verb' },
+  { ukr: 'грати',          eng: 'to play',                                 pron: 'HRA-ty',                                         type: 'verb' },
+  { ukr: 'вчити',          eng: 'to learn',                                pron: 'VCHy-ty',                                        type: 'verb' },
+  { ukr: 'їхати',          eng: 'to travel',                               pron: 'YI-kha-ty',                                      type: 'verb' },
+  { ukr: 'говорити',       eng: 'to speak',                                pron: 'ho-VO-ry-ty',                                    type: 'verb' },
+  { ukr: 'писати',         eng: 'to write',                                pron: 'py-SA-ty',                                       type: 'verb' },
+  { ukr: 'розуміти',       eng: 'to understand',                           pron: 'ro-zu-MI-ty',                                    type: 'verb' },
+  { ukr: 'питати',         eng: 'to ask',                                  pron: 'py-TA-ty',                                       type: 'verb' },
+  { ukr: 'запитувати',     eng: 'to ask / inquire',                        pron: 'za-PY-tu-va-ty',                                 type: 'verb' },
+  { ukr: 'відповідати',    eng: 'to answer',                               pron: 'vid-po-vi-DA-ty',                                type: 'verb' },
+  { ukr: 'снідати',        eng: 'to have breakfast',                       pron: 'sni-DA-ty',                                      type: 'verb' },
+  { ukr: 'вечеряти',       eng: 'to have dinner',                          pron: 've-che-RYA-ty',                                  type: 'verb' },
+  { ukr: 'гуляти',         eng: 'to walk / hang out',                      pron: 'hu-LYA-ty',                                      type: 'verb' },
+  { ukr: 'дивитися',       eng: 'to watch',                                pron: 'dy-VY-ty-sya',                                   type: 'verb' },
+  { ukr: 'перевіряти',     eng: 'to check',                                pron: 'pe-re-vi-RYA-ty',                                type: 'verb' },
+  { ukr: 'займатися',      eng: 'to do / to practice',                     pron: 'zay-MA-ty-sya',                                  type: 'verb' },
+  { ukr: 'вивчати',        eng: 'to study',                                pron: 'vyv-CHA-ty',                                     type: 'verb' },
+  { ukr: 'повторювати',    eng: 'to repeat',                               pron: 'pov-to-ryu-VA-ty',                               type: 'verb' },
+  { ukr: 'пояснювати',     eng: 'to explain',                              pron: 'po-yas-nyu-VA-ty',                               type: 'verb' },
+  { ukr: 'учитися',        eng: 'to study / learn',                        pron: 'u-CHY-ty-sya',                                   type: 'verb' },
+  { ukr: 'розмовляти',     eng: 'to talk',                                 pron: 'roz-mov-LYA-ty',                                 type: 'verb' },
+  { ukr: 'розповідати',    eng: 'to tell / narrate',                       pron: 'roz-po-vi-DA-ty',                                type: 'verb' },
+  { ukr: 'виконувати',     eng: 'to perform / carry out',                  pron: 'vy-KO-nu-va-ty',                                 type: 'verb' },
+  { ukr: 'нести',          eng: 'to carry',                                pron: 'ne-STY',                                         type: 'verb' },
   { ukr: 'Я працюю в офісі.',                  eng: 'I work in an office.',                    pron: 'ya pra-TSYU-yu v O-fi-si',                       type: 'phrase' },
   { ukr: 'Ми слухаємо музику вдома.',          eng: 'We listen to music at home.',             pron: 'my slu-KHA-ye-mo MU-zy-ku vdo-MA',               type: 'phrase' },
   { ukr: 'Він не працює.',                     eng: 'He does not work.',                       pron: 'veen ne pra-TSYU-ye',                            type: 'phrase' },
@@ -916,16 +459,6 @@ var VOCAB = [
   { ukr: 'Ти думаєш, що завтра буде сонячно?', eng: 'Do you think it will be sunny tomorrow?', pron: 'ty DU-ma-yesh shcho ZAV-tra BU-de SO-nyach-no', type: 'phrase' }
 ];
 
-/* Build flat items array: for each verb → 1 pron item + 6 conj items */
-var VERB_ITEMS = [];
-VERBS.forEach(function(verb, vi) {
-  VERB_ITEMS.push({ type: 'pron', vi: vi });
-  verb.conj.forEach(function(c, ci) {
-    VERB_ITEMS.push({ type: 'conj', vi: vi, ci: ci });
-  });
-});
-/* VERB_ITEMS.length === 77 */
-
 /* ══════════════════════════════════════════
    STATE
 ══════════════════════════════════════════ */
@@ -938,11 +471,11 @@ var activeTab  = 'letters';
 
 var letterPts  = LETTERS.map(function() { return 0; });
 var vocabPts   = VOCAB.map(function() { return 0; });   /* indexed by VOCAB idx; split into words/sentences queues */
-var verbPts    = VERB_ITEMS.map(function() { return 0; });
+var nounPts    = NOUNS.map(function() { return 0; });
 
-var letterQueue = [], wordsQueue = [], sentencesQueue = [], verbQueue = [];
-var letterCurrent = null, wordsCurrent = null, sentencesCurrent = null, verbCurrent = null;
-var letterAnswered = false, wordsAnswered = false, sentencesAnswered = false, verbAnswered = false;
+var letterQueue = [], wordsQueue = [], sentencesQueue = [], nounsQueue = [];
+var letterCurrent = null, wordsCurrent = null, sentencesCurrent = null, nounsCurrent = null;
+var letterAnswered = false, wordsAnswered = false, sentencesAnswered = false, nounsAnswered = false;
 
 /* ══════════════════════════════════════════
    HELPERS
@@ -994,12 +527,12 @@ function pickNextSentence() {
   return sentencesQueue.shift();
 }
 
-function refillVerbQueue() {
+function refillNounsQueue() {
   var pool = [];
-  for (var i = 0; i < VERB_ITEMS.length; i++) {
-    if (verbPts[i] < MAX_PTS) pool.push(i);
+  for (var i = 0; i < NOUNS.length; i++) {
+    if (nounPts[i] < MAX_PTS) pool.push(i);
   }
-  verbQueue = shuffle(pool);
+  nounsQueue = shuffle(pool);
 }
 
 function pickNextLetter() {
@@ -1009,11 +542,11 @@ function pickNextLetter() {
   return letterQueue.shift();
 }
 
-function pickNextVerb() {
-  verbQueue = verbQueue.filter(function(i) { return verbPts[i] < MAX_PTS; });
-  if (verbQueue.length === 0) refillVerbQueue();
-  if (verbQueue.length === 0) return null;
-  return verbQueue.shift();
+function pickNextNoun() {
+  nounsQueue = nounsQueue.filter(function(i) { return nounPts[i] < MAX_PTS; });
+  if (nounsQueue.length === 0) refillNounsQueue();
+  if (nounsQueue.length === 0) return null;
+  return nounsQueue.shift();
 }
 
 /* ══════════════════════════════════════════
@@ -1248,150 +781,88 @@ function handleSentencesAnswer(chosenIdx) {
 }
 
 /* ══════════════════════════════════════════
-   VERBS QUIZ
+   NOUNS QUIZ
 ══════════════════════════════════════════ */
-function renderVerbQuestion() {
-  verbAnswered = false;
-  verbCurrent  = pickNextVerb();
-  if (verbCurrent === null) { showCompletion('verbs'); return; }
+function renderNounsQuestion() {
+  nounsAnswered = false;
+  nounsCurrent  = pickNextNoun();
+  if (nounsCurrent === null) { showCompletion('nouns'); return; }
 
-  var item = VERB_ITEMS[verbCurrent];
-  var verb = VERBS[item.vi];
-  var pts  = verbPts[verbCurrent];
+  var item = NOUNS[nounsCurrent];
+  var pts  = nounPts[nounsCurrent];
 
-  document.getElementById('verbs-inf').textContent          = verb.inf;
-  document.getElementById('verbs-eng').textContent          = verb.eng;
-  document.getElementById('verbs-pts-fill').style.width     = (pts / MAX_PTS * 100) + '%';
-  document.getElementById('verbs-pts-text').textContent     = pts + ' / ' + MAX_PTS + ' pts';
-  clearFeedback('verbs');
+  document.getElementById('nouns-badge').textContent = item.type === 'question' ? 'question word' : 'noun';
+  document.getElementById('nouns-pts-fill').style.width  = (pts / MAX_PTS * 100) + '%';
+  document.getElementById('nouns-pts-text').textContent  = pts + ' / ' + MAX_PTS + ' pts';
+  clearFeedback('nouns');
 
-  var pronRow = document.getElementById('verbs-pronoun-row');
-  var badge   = document.getElementById('verbs-badge');
+  document.getElementById('nouns-prompt').innerHTML =
+    '<div class="vocab-prompt-clickable" onclick="revealPron(\'nouns\')">' +
+      '<div class="verb-inf" style="font-size:1.6rem">' + item.ukr + '</div>' +
+      '<div class="vocab-pron-reveal" id="nouns-pron-reveal">' + item.pron + '</div>' +
+      '<div class="vocab-tap-hint">tap to see pronunciation</div>' +
+    '</div>';
 
-  if (item.type === 'pron') {
-    badge.textContent    = 'pronunciation';
-    pronRow.style.display = 'none';
-    renderVerbPronOptions(item.vi);
-  } else {
-    badge.textContent = 'conjugation';
-    var c = verb.conj[item.ci];
-    document.getElementById('verbs-pronoun-ukr').textContent = c.pronoun;
-    document.getElementById('verbs-pronoun-eng').textContent = c.peng;
-    pronRow.style.display = 'flex';
-    renderVerbConjOptions(item.vi, item.ci);
-  }
-}
+  /* Distractors: same type */
+  var others = shuffle(NOUNS.map(function(_, i) { return i; })
+    .filter(function(i) { return i !== nounsCurrent && NOUNS[i].type === item.type; })).slice(0, 3);
+  var optIs  = shuffle([nounsCurrent].concat(others));
 
-function renderVerbPronOptions(correctVI) {
-  var others = shuffle(VERBS.map(function(_, vi) { return vi; })
-    .filter(function(vi) { return vi !== correctVI; })).slice(0, 3);
-  var optVIs = shuffle([correctVI].concat(others));
-
-  var grid = document.getElementById('verbs-options');
+  var grid = document.getElementById('nouns-options');
   grid.innerHTML = '';
-  optVIs.forEach(function(vi, pos) {
+  optIs.forEach(function(idx, pos) {
     var btn = document.createElement('button');
     btn.className = 'opt-btn';
-    btn.setAttribute('data-vi', vi);
+    btn.setAttribute('data-idx', idx);
     btn.innerHTML =
       '<span class="key-hint">' + KEY_LABELS[pos] + '</span>' +
-      '<span style="font-size:0.97rem">' + VERBS[vi].pron + '</span>';
-    btn.addEventListener('click', function() { handleVerbPronAnswer(vi, correctVI); });
+      '<span style="font-size:0.92rem">' + NOUNS[idx].eng + '</span>';
+    btn.addEventListener('click', function() { handleNounsAnswer(idx); });
     grid.appendChild(btn);
   });
 }
 
-function renderVerbConjOptions(correctVI, ci) {
-  /* Distractors are other conjugation slots of the SAME verb */
-  var otherCIs = shuffle([0, 1, 2, 3, 4, 5].filter(function(c) { return c !== ci; })).slice(0, 3);
-  var optCIs   = shuffle([ci].concat(otherCIs));
+function handleNounsAnswer(chosenIdx) {
+  if (nounsAnswered) return;
+  nounsAnswered = true;
 
-  var grid = document.getElementById('verbs-options');
-  grid.innerHTML = '';
-  optCIs.forEach(function(optCI, pos) {
-    var btn  = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.setAttribute('data-ci', optCI);
-    var conj = VERBS[correctVI].conj[optCI];
-    btn.innerHTML =
-      '<span class="key-hint">' + KEY_LABELS[pos] + '</span>' +
-      '<span style="font-size:1.1rem;font-weight:700">' + conj.form + '</span>' +
-      '<span style="font-size:0.68rem;color:#3a5a72;display:block;margin-top:2px">' + conj.cpron + '</span>';
-    btn.addEventListener('click', function() { handleVerbConjAnswer(optCI, correctVI, ci); });
-    grid.appendChild(btn);
+  var correct = (chosenIdx === nounsCurrent);
+  var prevPts = nounPts[nounsCurrent];
+  nounPts[nounsCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts  = nounPts[nounsCurrent];
+  var item    = NOUNS[nounsCurrent];
+
+  document.querySelectorAll('#nouns-options .opt-btn').forEach(function(b) {
+    b.classList.add('locked');
+    var idx = parseInt(b.getAttribute('data-idx'), 10);
+    if (idx === nounsCurrent)                      b.classList.add('correct');
+    if (idx === chosenIdx && idx !== nounsCurrent) b.classList.add('wrong');
   });
-}
 
-function handleVerbPronAnswer(chosenVI, correctVI) {
-  if (verbAnswered) return;
-  verbAnswered = true;
-
-  var correct = (chosenVI === correctVI);
-  var prevPts = verbPts[verbCurrent];
-  verbPts[verbCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
-  var newPts  = verbPts[verbCurrent];
-  var verb    = VERBS[correctVI];
-
-  highlightBtnsByVI('verbs-options', chosenVI, correctVI);
-  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'verbs-quiz-wrap');
+  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'nouns-quiz-wrap');
 
   var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
   if (correct) {
-    showFeedback('verbs', true,
+    showFeedback('nouns', true,
       justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
-      justLearned ? verb.inf + ' pronunciation learned!' : newPts + ' / ' + MAX_PTS + ' pts  -  ' + verb.pron);
+      justLearned ? item.ukr + ' fully learned!' : newPts + ' / ' + MAX_PTS + ' pts');
   } else {
-    showFeedback('verbs', false,
-      (newPts < prevPts) ? '-1 pt' : 'Miss!',
-      'Correct: ' + verb.pron);
+    showFeedback('nouns', false, (newPts < prevPts) ? '-1 pt' : 'Miss!', 'Correct: ' + item.eng);
   }
 
-  document.getElementById('verbs-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
-  document.getElementById('verbs-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
-  updateVerbTile(correctVI);
+  document.getElementById('nouns-pts-fill').style.width  = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById('nouns-pts-text').textContent  = newPts + ' / ' + MAX_PTS + ' pts';
+  updateNounsTile(nounsCurrent);
   updateOverall();
   saveProgress();
-  document.getElementById('verbs-next').className = 'next-btn show';
-}
-
-function handleVerbConjAnswer(chosenCI, correctVI, ci) {
-  if (verbAnswered) return;
-  verbAnswered = true;
-
-  var correct = (chosenCI === ci);
-  var prevPts = verbPts[verbCurrent];
-  verbPts[verbCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
-  var newPts  = verbPts[verbCurrent];
-  var verb    = VERBS[correctVI];
-  var c       = verb.conj[ci];
-
-  highlightBtnsByCI('verbs-options', chosenCI, ci);
-  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'verbs-quiz-wrap');
-
-  var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
-  if (correct) {
-    showFeedback('verbs', true,
-      justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
-      justLearned ? c.pronoun + ' ' + c.form + ' fully learned!' : newPts + ' / ' + MAX_PTS + ' pts  -  ' + c.pronoun + ' ' + c.form + '  (' + c.cpron + ')');
-  } else {
-    showFeedback('verbs', false,
-      (newPts < prevPts) ? '-1 pt' : 'Miss!',
-      'Correct: ' + c.form + '  (' + c.cpron + ')');
-  }
-
-  document.getElementById('verbs-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
-  document.getElementById('verbs-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
-  updateVerbTile(correctVI);
-  updateOverall();
-  saveProgress();
-  document.getElementById('verbs-next').className = 'next-btn show';
+  document.getElementById('nouns-next').className = 'next-btn show';
 }
 
 function nextQ(mode) {
   if (mode === 'letters')         renderLetterQuestion();
   else if (mode === 'words')      renderWordsQuestion();
   else if (mode === 'sentences')  renderSentencesQuestion();
-  else                            renderVerbQuestion();
+  else                            renderNounsQuestion();
 }
 
 /* ══════════════════════════════════════════
@@ -1488,12 +959,12 @@ function resetMode(mode) {
     renderSentencesGrid();
     renderSentencesQuestion();
   } else {
-    verbPts   = VERB_ITEMS.map(function() { return 0; });
-    verbQueue = [];
-    document.getElementById('verbs-quiz-wrap').style.display = 'block';
-    document.getElementById('verbs-done').style.display      = 'none';
-    renderVerbGrid();
-    renderVerbQuestion();
+    nounPts   = NOUNS.map(function() { return 0; });
+    nounsQueue = [];
+    document.getElementById('nouns-quiz-wrap').style.display = 'block';
+    document.getElementById('nouns-done').style.display      = 'none';
+    renderNounsGrid();
+    renderNounsQuestion();
   }
   updateOverall();
   saveProgress();
@@ -1504,17 +975,19 @@ function resetMode(mode) {
 ══════════════════════════════════════════ */
 function updateOverall() {
   var learnedL = letterPts.filter(function(p) { return p >= MAX_PTS; }).length;
-  var learnedV = verbPts.filter(function(p) { return p >= MAX_PTS; }).length;
+  var learnedV = 0; /* unused, kept for no-op */
   var learnedW = vocabPts.filter(function(p, i) { return p >= MAX_PTS && VOCAB[i].type === 'verb'; }).length;
   var learnedS = vocabPts.filter(function(p, i) { return p >= MAX_PTS && VOCAB[i].type === 'phrase'; }).length;
   var totalW   = VOCAB.filter(function(v) { return v.type === 'verb'; }).length;
   var totalS   = VOCAB.filter(function(v) { return v.type === 'phrase'; }).length;
 
-  if (activeTab === 'conjugation') {
-    document.getElementById('overall-label').textContent  = 'CONJUGATION ITEMS LEARNED';
-    document.getElementById('learned-count').textContent  = learnedV;
-    document.getElementById('learned-total').textContent  = VERB_ITEMS.length;
-    document.getElementById('overall-fill').style.width   = (learnedV / VERB_ITEMS.length * 100) + '%';
+  var learnedN = nounPts.filter(function(p) { return p >= MAX_PTS; }).length;
+
+  if (activeTab === 'nouns') {
+    document.getElementById('overall-label').textContent  = 'NOUNS & QUESTIONS LEARNED';
+    document.getElementById('learned-count').textContent  = learnedN;
+    document.getElementById('learned-total').textContent  = NOUNS.length;
+    document.getElementById('overall-fill').style.width   = (learnedN / NOUNS.length * 100) + '%';
   } else if (activeTab === 'words') {
     document.getElementById('overall-label').textContent  = 'WORDS LEARNED';
     document.getElementById('learned-count').textContent  = learnedW;
@@ -1535,17 +1008,8 @@ function updateOverall() {
   document.getElementById('prog-letters-count').textContent   = learnedL;
   document.getElementById('prog-words-count').textContent      = learnedW;
   document.getElementById('prog-sentences-count').textContent  = learnedS;
-
-  /* Conjugation mastery = verbs where all 7 items are at MAX_PTS */
-  var masteredVerbs = 0;
-  VERBS.forEach(function(verb, vi) {
-    var allDone = VERB_ITEMS.every(function(item, ii) {
-      if (item.vi !== vi) return true;
-      return verbPts[ii] >= MAX_PTS;
-    });
-    if (allDone) masteredVerbs++;
-  });
-  document.getElementById('prog-verbs-count').textContent = masteredVerbs;
+  document.getElementById('prog-nouns-count').textContent      = learnedN;
+  document.getElementById('prog-nouns-total').textContent      = NOUNS.length;
 }
 
 /* ══════════════════════════════════════════
@@ -1630,44 +1094,33 @@ function updateVocabTile(i) {
   if (!was && now) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
 }
 
-function renderVerbGrid() {
-  var grid = document.getElementById('grid-verbs');
+function renderNounsGrid() {
+  var grid = document.getElementById('grid-nouns');
+  if (!grid) return;
   grid.innerHTML = '';
-  VERBS.forEach(function(verb, vi) {
-    /* Count learned items for this verb */
-    var itemCount = 0, learnedCount = 0;
-    VERB_ITEMS.forEach(function(item, ii) {
-      if (item.vi === vi) { itemCount++; if (verbPts[ii] >= MAX_PTS) learnedCount++; }
-    });
-    var pct     = learnedCount / itemCount * 100;
-    var mastered = learnedCount === itemCount;
-
+  NOUNS.forEach(function(item, i) {
+    var learned = nounPts[i] >= MAX_PTS;
     var tile = document.createElement('div');
-    tile.className = 'tile' + (mastered ? ' learned' : '');
-    tile.id = 'vtile-' + vi;
+    tile.className = 'tile' + (learned ? ' learned' : '');
+    tile.id = 'ntile-' + i;
     tile.innerHTML =
-      '<div class="tile-main" style="font-size:1rem">' + verb.inf + '</div>' +
-      '<div class="tile-sub">' + verb.eng + '</div>' +
-      '<div class="tile-bar"><div class="tile-fill" style="width:' + pct + '%"></div></div>' +
-      '<div class="tile-pts">' + (mastered ? 'mastered' : learnedCount + ' / ' + itemCount) + '</div>';
+      '<div class="tile-main" style="font-size:0.95rem">' + item.ukr + '</div>' +
+      '<div class="tile-sub">' + item.eng.substring(0, 24) + (item.eng.length > 24 ? '...' : '') + '</div>' +
+      '<div class="tile-bar"><div class="tile-fill" style="width:' + (nounPts[i] / MAX_PTS * 100) + '%"></div></div>' +
+      '<div class="tile-pts">' + (learned ? 'done' : nounPts[i] + ' pts') + '</div>';
     grid.appendChild(tile);
   });
 }
 
-function updateVerbTile(vi) {
-  var tile = document.getElementById('vtile-' + vi);
+function updateNounsTile(i) {
+  var tile = document.getElementById('ntile-' + i);
   if (!tile) return;
-  var itemCount = 0, learnedCount = 0;
-  VERB_ITEMS.forEach(function(item, ii) {
-    if (item.vi === vi) { itemCount++; if (verbPts[ii] >= MAX_PTS) learnedCount++; }
-  });
-  var pct      = learnedCount / itemCount * 100;
-  var mastered = learnedCount === itemCount;
-  var was      = tile.classList.contains('learned');
-  tile.className = 'tile' + (mastered ? ' learned' : '');
-  tile.querySelector('.tile-fill').style.width = pct + '%';
-  tile.querySelector('.tile-pts').textContent  = mastered ? 'mastered' : learnedCount + ' / ' + itemCount;
-  if (!was && mastered) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
+  var was = tile.classList.contains('learned');
+  var now = nounPts[i] >= MAX_PTS;
+  tile.className = 'tile' + (now ? ' learned' : '');
+  tile.querySelector('.tile-fill').style.width = (nounPts[i] / MAX_PTS * 100) + '%';
+  tile.querySelector('.tile-pts').textContent  = now ? 'done' : nounPts[i] + ' pts';
+  if (!was && now) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
 }
 
 /* ══════════════════════════════════════════
@@ -1685,11 +1138,11 @@ function switchTab(name, btn) {
 /* ══════════════════════════════════════════
    SAVE / LOAD
 ══════════════════════════════════════════ */
-var STORAGE_KEY = 'ua_learn_v8';
+var STORAGE_KEY = 'ua_learn_v9';
 
 function saveProgress() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ lp: letterPts, vc: vocabPts, vp: verbPts }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ lp: letterPts, vc: vocabPts, np: nounPts }));
   } catch(e) {}
 }
 
@@ -1702,8 +1155,8 @@ function loadProgress() {
       letterPts = d.lp.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
     if (d.vc && d.vc.length === VOCAB.length)
       vocabPts = d.vc.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
-    if (d.vp && d.vp.length === VERB_ITEMS.length)
-      verbPts = d.vp.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
+    if (d.np && d.np.length === NOUNS.length)
+      nounPts = d.np.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
   } catch(e) {}
 }
 
@@ -1714,9 +1167,9 @@ document.addEventListener('keydown', function(e) {
   if (activeTab === 'progress') return;
   var tab      = activeTab;
   var answered = tab === 'letters' ? letterAnswered
-               : tab === 'words'   ? wordsAnswered
+               : tab === 'words'     ? wordsAnswered
                : tab === 'sentences' ? sentencesAnswered
-               : verbAnswered;
+               : nounsAnswered;
 
   if ((e.code === 'Space' || e.code === 'Enter') && answered) {
     e.preventDefault();
@@ -1739,12 +1192,12 @@ loadProgress();
 renderLetterGrid();
 renderWordsGrid();
 renderSentencesGrid();
-renderVerbGrid();
+renderNounsGrid();
 updateOverall();
 renderLetterQuestion();
 renderWordsQuestion();
 renderSentencesQuestion();
-renderVerbQuestion();
+renderNounsQuestion();
 </script>
 </body>
 </html>
