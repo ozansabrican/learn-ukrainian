@@ -244,7 +244,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   <div class="completion" id="words-done">
     <div style="font-size:3rem">&#128218;</div>
     <h2>Verbs mastered!</h2>
-    <p>All 31 verbs learned.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;!</p>
+    <p>All 61 verbs learned.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;!</p>
     <button class="reset-btn" onclick="resetMode('words')">Start over</button>
   </div>
 </div>
@@ -304,7 +304,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
     <div class="letter-grid" id="grid-letters"></div>
   </div>
   <div class="prog-section">
-    <h2>Verbs &mdash; <span id="prog-words-count">0</span> / 31</h2>
+    <h2>Verbs &mdash; <span id="prog-words-count">0</span> / 61</h2>
     <div class="vocab-grid" id="grid-words"></div>
   </div>
   <div class="prog-section">
@@ -444,6 +444,36 @@ var VOCAB = [
   { ukr: 'розповідати',    eng: 'to tell / narrate',                       pron: 'roz-po-vi-DA-ty',                                type: 'verb' },
   { ukr: 'виконувати',     eng: 'to perform / carry out',                  pron: 'vy-KO-nu-va-ty',                                 type: 'verb' },
   { ukr: 'нести',          eng: 'to carry',                                pron: 'ne-STY',                                         type: 'verb' },
+  { ukr: 'бути',           eng: 'to be',                                   pron: 'BU-ty',                                          type: 'verb' },
+  { ukr: 'робити',         eng: 'to do',                                   pron: 'ro-BY-ty',                                       type: 'verb' },
+  { ukr: 'хотіти',         eng: 'to want',                                 pron: 'kho-TI-ty',                                      type: 'verb' },
+  { ukr: 'йти',            eng: 'to go',                                   pron: 'yty',                                            type: 'verb' },
+  { ukr: 'бачити',         eng: 'to see',                                  pron: 'BA-chy-ty',                                      type: 'verb' },
+  { ukr: 'взяти',          eng: 'to take',                                 pron: 'VZYa-ty',                                        type: 'verb' },
+  { ukr: 'прийти',         eng: 'to come',                                 pron: 'priy-TY',                                        type: 'verb' },
+  { ukr: 'давати',         eng: 'to give',                                 pron: 'da-VA-ty',                                       type: 'verb' },
+  { ukr: 'чути',           eng: 'to hear',                                 pron: 'CHU-ty',                                         type: 'verb' },
+  { ukr: 'відчувати',      eng: 'to feel',                                 pron: 'vid-chu-VA-ty',                                  type: 'verb' },
+  { ukr: 'допомогти',      eng: 'to help',                                 pron: 'do-po-moh-TY',                                   type: 'verb' },
+  { ukr: 'показати',       eng: 'to show',                                 pron: 'po-ka-ZA-ty',                                    type: 'verb' },
+  { ukr: 'вирішити',       eng: 'to decide',                               pron: 'vy-RI-shy-ty',                                   type: 'verb' },
+  { ukr: 'відкрити',       eng: 'to open',                                 pron: 'vid-KRY-ty',                                     type: 'verb' },
+  { ukr: 'закрити',        eng: 'to close',                                pron: 'za-KRY-ty',                                      type: 'verb' },
+  { ukr: 'забути',         eng: 'to forget',                               pron: 'za-BU-ty',                                       type: 'verb' },
+  { ukr: 'готувати',       eng: 'to cook',                                 pron: 'ho-tu-VA-ty',                                    type: 'verb' },
+  { ukr: 'плавати',        eng: 'to swim',                                 pron: 'PLA-va-ty',                                      type: 'verb' },
+  { ukr: 'пити',           eng: 'to drink',                                pron: 'PY-ty',                                          type: 'verb' },
+  { ukr: 'купувати',       eng: 'to buy',                                  pron: 'ku-pu-VA-ty',                                    type: 'verb' },
+  { ukr: 'танцювати',      eng: 'to dance',                                pron: 'tan-tsyu-VA-ty',                                 type: 'verb' },
+  { ukr: 'співати',        eng: 'to sing',                                 pron: 'spi-VA-ty',                                      type: 'verb' },
+  { ukr: 'сміятися',       eng: 'to laugh',                                pron: 'smi-YA-ty-sya',                                  type: 'verb' },
+  { ukr: 'спати',          eng: 'to sleep',                                pron: 'SPA-ty',                                         type: 'verb' },
+  { ukr: 'бігти',          eng: 'to run',                                  pron: 'BIH-ty',                                         type: 'verb' },
+  { ukr: 'платити',        eng: 'to pay',                                  pron: 'pla-TY-ty',                                      type: 'verb' },
+  { ukr: 'зустріти',       eng: 'to meet',                                 pron: 'zus-TRI-ty',                                     type: 'verb' },
+  { ukr: 'шукати',         eng: 'to look for / search',                    pron: 'shu-KA-ty',                                      type: 'verb' },
+  { ukr: 'носити',         eng: 'to wear / carry',                         pron: 'no-SY-ty',                                       type: 'verb' },
+  { ukr: 'залишати',       eng: 'to leave',                                pron: 'za-ly-SHA-ty',                                   type: 'verb' },
   { ukr: 'Я працюю в офісі.',                  eng: 'I work in an office.',                    pron: 'ya pra-TSYU-yu v O-fi-si',                       type: 'phrase' },
   { ukr: 'Ми слухаємо музику вдома.',          eng: 'We listen to music at home.',             pron: 'my slu-KHA-ye-mo MU-zy-ku vdo-MA',               type: 'phrase' },
   { ukr: 'Він не працює.',                     eng: 'He does not work.',                       pron: 'veen ne pra-TSYU-ye',                            type: 'phrase' },
@@ -1138,7 +1168,7 @@ function switchTab(name, btn) {
 /* ══════════════════════════════════════════
    SAVE / LOAD
 ══════════════════════════════════════════ */
-var STORAGE_KEY = 'ua_learn_v9';
+var STORAGE_KEY = 'ua_learn_v10';
 
 function saveProgress() {
   try {
