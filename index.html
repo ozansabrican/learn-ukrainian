@@ -22,6 +22,11 @@ header { text-align: center; margin-bottom: 20px; }
 header h1 { font-size: 1.5rem; font-weight: 700; color: #f5c518; }
 header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 
+/* ── Language switch ── */
+.lang-switch { display: inline-flex; gap: 4px; margin-top: 12px; background: #0c151f; border-radius: 10px; padding: 4px; }
+.lang-btn { padding: 7px 16px; border-radius: 8px; border: none; background: transparent; color: #4a6275; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.lang-btn.active { background: #162230; color: #f5c518; }
+
 /* ── Overall bar ── */
 .overall-wrap { width: 100%; max-width: 520px; margin-bottom: 18px; }
 .overall-row  { display: flex; justify-content: space-between; margin-bottom: 6px; }
@@ -181,8 +186,12 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 <body>
 
 <header>
-  <h1>&#127482;&#127462; Ukrainian</h1>
+  <h1 id="app-title">&#127482;&#127462; Ukrainian</h1>
   <p>+2 correct &middot; &minus;1 wrong &middot; 10 pts = learned</p>
+  <div class="lang-switch">
+    <button class="lang-btn active" id="lang-ua" onclick="switchLang('ua', this)">&#127482;&#127462; Ukrainian</button>
+    <button class="lang-btn"        id="lang-de" onclick="switchLang('de', this)">&#127465;&#127466; German</button>
+  </div>
 </header>
 
 <div class="overall-wrap">
@@ -193,12 +202,18 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   <div class="overall-bar"><div class="overall-fill" id="overall-fill" style="width:0%"></div></div>
 </div>
 
-<div class="tabs">
+<div class="tabs" id="tabs-ua">
   <button class="tab-btn active" onclick="switchTab('letters',     this)">Letters</button>
   <button class="tab-btn"        onclick="switchTab('words',        this)">Verbs</button>
   <button class="tab-btn"        onclick="switchTab('sentences',    this)">Sentences</button>
   <button class="tab-btn"        onclick="switchTab('nouns',        this)">Nouns</button>
   <button class="tab-btn"        onclick="switchTab('progress',     this)">Progress</button>
+</div>
+
+<div class="tabs" id="tabs-de" style="display:none">
+  <button class="tab-btn active" onclick="switchTab('gverbs',   this)">Verbs</button>
+  <button class="tab-btn"        onclick="switchTab('gnouns',   this)">Nouns</button>
+  <button class="tab-btn"        onclick="switchTab('gprogress',this)">Progress</button>
 </div>
 
 <!-- ══ LETTERS TAB ══ -->
@@ -314,6 +329,66 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   <div class="prog-section">
     <h2>Nouns &amp; Questions &mdash; <span id="prog-nouns-count">0</span> / <span id="prog-nouns-total">0</span></h2>
     <div class="vocab-grid" id="grid-nouns"></div>
+  </div>
+</div>
+
+<!-- ══ GERMAN VERBS TAB ══ -->
+<div class="tab-panel" id="panel-gverbs">
+  <div class="quiz-wrap" id="gverbs-quiz-wrap">
+    <div class="q-type-badge">verb</div>
+    <div class="prompt-verb" id="gverbs-prompt" style="padding:8px 0"></div>
+    <div class="pts-row">
+      <div class="pts-bar"><div class="pts-fill" id="gverbs-pts-fill" style="width:0%"></div></div>
+      <div class="pts-text" id="gverbs-pts-text">0 / 10 pts</div>
+    </div>
+    <div class="options-grid" id="gverbs-options"></div>
+    <div class="feedback-row">
+      <div class="feedback-msg" id="gverbs-fb-msg"></div>
+      <div class="feedback-sub" id="gverbs-fb-sub"></div>
+    </div>
+    <button class="next-btn" id="gverbs-next" onclick="nextQ('gverbs')">Next &#8594;</button>
+  </div>
+  <div class="completion" id="gverbs-done">
+    <div style="font-size:3rem">&#127881;</div>
+    <h2>Verbs mastered!</h2>
+    <p>All German verbs learned.<br>Alles gelernt!</p>
+    <button class="reset-btn" onclick="resetMode('gverbs')">Start over</button>
+  </div>
+</div>
+
+<!-- ══ GERMAN NOUNS TAB ══ -->
+<div class="tab-panel" id="panel-gnouns">
+  <div class="quiz-wrap" id="gnouns-quiz-wrap">
+    <div class="q-type-badge">noun</div>
+    <div class="prompt-verb" id="gnouns-prompt" style="padding:8px 0"></div>
+    <div class="pts-row">
+      <div class="pts-bar"><div class="pts-fill" id="gnouns-pts-fill" style="width:0%"></div></div>
+      <div class="pts-text" id="gnouns-pts-text">0 / 10 pts</div>
+    </div>
+    <div class="options-grid" id="gnouns-options"></div>
+    <div class="feedback-row">
+      <div class="feedback-msg" id="gnouns-fb-msg"></div>
+      <div class="feedback-sub" id="gnouns-fb-sub"></div>
+    </div>
+    <button class="next-btn" id="gnouns-next" onclick="nextQ('gnouns')">Next &#8594;</button>
+  </div>
+  <div class="completion" id="gnouns-done">
+    <div style="font-size:3rem">&#127881;</div>
+    <h2>Nouns mastered!</h2>
+    <p>All German nouns learned.<br>Alles gelernt!</p>
+    <button class="reset-btn" onclick="resetMode('gnouns')">Start over</button>
+  </div>
+</div>
+
+<!-- ══ GERMAN PROGRESS TAB ══ -->
+<div class="tab-panel" id="panel-gprogress">
+  <div class="prog-section">
+    <h2>Verbs &mdash; <span id="prog-gverbs-count">0</span> / <span id="prog-gverbs-total">0</span></h2>
+    <div class="vocab-grid" id="grid-gverbs"></div>
+  </div>
+  <div class="prog-section">
+    <h2>Nouns &mdash; <span id="prog-gnouns-count">0</span> / <span id="prog-gnouns-total">0</span></h2>
+    <div class="vocab-grid" id="grid-gnouns"></div>
   </div>
 </div>
 
@@ -656,6 +731,1038 @@ var VOCAB = [
 ];
 
 /* ══════════════════════════════════════════
+   GERMAN VERBS  (300 most common)
+══════════════════════════════════════════ */
+var DE_VERBS = [
+  { de: 'sein',          eng: 'to be' },
+  { de: 'haben',         eng: 'to have' },
+  { de: 'werden',        eng: 'to become / will' },
+  { de: 'können',        eng: 'can / to be able to' },
+  { de: 'müssen',        eng: 'must / to have to' },
+  { de: 'sollen',        eng: 'should / ought to' },
+  { de: 'wollen',        eng: 'to want' },
+  { de: 'dürfen',        eng: 'may / to be allowed to' },
+  { de: 'mögen',         eng: 'to like' },
+  { de: 'machen',        eng: 'to do / make' },
+  { de: 'sagen',         eng: 'to say' },
+  { de: 'geben',         eng: 'to give' },
+  { de: 'kommen',        eng: 'to come' },
+  { de: 'gehen',         eng: 'to go / walk' },
+  { de: 'wissen',        eng: 'to know (a fact)' },
+  { de: 'sehen',         eng: 'to see' },
+  { de: 'lassen',        eng: 'to let / leave' },
+  { de: 'stehen',        eng: 'to stand' },
+  { de: 'finden',        eng: 'to find' },
+  { de: 'bleiben',       eng: 'to stay / remain' },
+  { de: 'liegen',        eng: 'to lie / be located' },
+  { de: 'heißen',        eng: 'to be called' },
+  { de: 'denken',        eng: 'to think' },
+  { de: 'nehmen',        eng: 'to take' },
+  { de: 'tun',           eng: 'to do' },
+  { de: 'glauben',       eng: 'to believe' },
+  { de: 'halten',        eng: 'to hold / stop' },
+  { de: 'nennen',        eng: 'to name / call' },
+  { de: 'zeigen',        eng: 'to show' },
+  { de: 'führen',        eng: 'to lead' },
+  { de: 'sprechen',      eng: 'to speak' },
+  { de: 'bringen',       eng: 'to bring' },
+  { de: 'leben',         eng: 'to live' },
+  { de: 'fahren',        eng: 'to drive / go' },
+  { de: 'meinen',        eng: 'to mean / think' },
+  { de: 'fragen',        eng: 'to ask' },
+  { de: 'kennen',        eng: 'to know (be familiar with)' },
+  { de: 'gelten',        eng: 'to be valid / count' },
+  { de: 'stellen',       eng: 'to put / place' },
+  { de: 'spielen',       eng: 'to play' },
+  { de: 'arbeiten',      eng: 'to work' },
+  { de: 'brauchen',      eng: 'to need' },
+  { de: 'folgen',        eng: 'to follow' },
+  { de: 'lernen',        eng: 'to learn' },
+  { de: 'bestehen',      eng: 'to pass / consist of / insist' },
+  { de: 'verstehen',     eng: 'to understand' },
+  { de: 'setzen',        eng: 'to set / put' },
+  { de: 'bekommen',      eng: 'to get / receive' },
+  { de: 'beginnen',      eng: 'to begin' },
+  { de: 'erzählen',      eng: 'to tell / narrate' },
+  { de: 'versuchen',     eng: 'to try' },
+  { de: 'schreiben',     eng: 'to write' },
+  { de: 'laufen',        eng: 'to run / walk' },
+  { de: 'erklären',      eng: 'to explain' },
+  { de: 'gewinnen',      eng: 'to win / gain' },
+  { de: 'tragen',        eng: 'to carry / wear' },
+  { de: 'scheinen',      eng: 'to seem / shine' },
+  { de: 'entstehen',     eng: 'to arise / emerge' },
+  { de: 'warten',        eng: 'to wait' },
+  { de: 'hören',         eng: 'to hear / listen' },
+  { de: 'verlieren',     eng: 'to lose' },
+  { de: 'erreichen',     eng: 'to reach / achieve' },
+  { de: 'schaffen',      eng: 'to manage / create' },
+  { de: 'lesen',         eng: 'to read' },
+  { de: 'verbringen',    eng: 'to spend (time)' },
+  { de: 'handeln',       eng: 'to act / trade' },
+  { de: 'erhalten',      eng: 'to receive / maintain' },
+  { de: 'bilden',        eng: 'to form / educate' },
+  { de: 'öffnen',        eng: 'to open' },
+  { de: 'zählen',        eng: 'to count' },
+  { de: 'benutzen',      eng: 'to use' },
+  { de: 'bieten',        eng: 'to offer' },
+  { de: 'enthalten',     eng: 'to contain' },
+  { de: 'erscheinen',    eng: 'to appear' },
+  { de: 'antworten',     eng: 'to answer' },
+  { de: 'schließen',     eng: 'to close / conclude' },
+  { de: 'wachsen',       eng: 'to grow' },
+  { de: 'fühlen',        eng: 'to feel' },
+  { de: 'lachen',        eng: 'to laugh' },
+  { de: 'kaufen',        eng: 'to buy' },
+  { de: 'suchen',        eng: 'to search / look for' },
+  { de: 'begegnen',      eng: 'to encounter / meet' },
+  { de: 'kämpfen',       eng: 'to fight' },
+  { de: 'schauen',       eng: 'to look' },
+  { de: 'verlassen',     eng: 'to leave / abandon' },
+  { de: 'darstellen',    eng: 'to represent / depict' },
+  { de: 'essen',         eng: 'to eat' },
+  { de: 'trinken',       eng: 'to drink' },
+  { de: 'vergehen',      eng: 'to pass / elapse (time)' },
+  { de: 'gehören',       eng: 'to belong' },
+  { de: 'schlagen',      eng: 'to hit / beat' },
+  { de: 'entscheiden',   eng: 'to decide' },
+  { de: 'verändern',     eng: 'to change / alter' },
+  { de: 'gefallen',      eng: 'to please / be liked' },
+  { de: 'fallen',        eng: 'to fall' },
+  { de: 'erkennen',      eng: 'to recognize' },
+  { de: 'entwickeln',    eng: 'to develop' },
+  { de: 'beobachten',    eng: 'to observe' },
+  { de: 'betreffen',     eng: 'to concern / affect' },
+  { de: 'untersuchen',   eng: 'to investigate / examine' },
+  { de: 'vorstellen',    eng: 'to introduce / imagine' },
+  { de: 'erwarten',      eng: 'to expect' },
+  { de: 'wirken',        eng: 'to have an effect / seem' },
+  { de: 'reichen',       eng: 'to be enough / pass' },
+  { de: 'beschreiben',   eng: 'to describe' },
+  { de: 'klingen',       eng: 'to sound' },
+  { de: 'treffen',       eng: 'to meet / hit' },
+  { de: 'teilen',        eng: 'to share / divide' },
+  { de: 'vertreten',     eng: 'to represent / stand in for' },
+  { de: 'sich erinnern', eng: 'to remember' },
+  { de: 'schicken',      eng: 'to send' },
+  { de: 'senden',        eng: 'to send / broadcast' },
+  { de: 'legen',         eng: 'to lay / put' },
+  { de: 'sitzen',        eng: 'to sit' },
+  { de: 'verkaufen',     eng: 'to sell' },
+  { de: 'achten',        eng: 'to pay attention / respect' },
+  { de: 'bezeichnen',    eng: 'to designate / call' },
+  { de: 'entfernen',     eng: 'to remove' },
+  { de: 'sich freuen',   eng: 'to be glad / look forward' },
+  { de: 'gründen',       eng: 'to found / establish' },
+  { de: 'melden',        eng: 'to report / register' },
+  { de: 'verbinden',     eng: 'to connect / combine' },
+  { de: 'mitteilen',     eng: 'to inform / communicate' },
+  { de: 'wünschen',      eng: 'to wish' },
+  { de: 'unternehmen',   eng: 'to undertake' },
+  { de: 'sich befinden', eng: 'to be located' },
+  { de: 'bemerken',      eng: 'to notice / remark' },
+  { de: 'erlauben',      eng: 'to allow' },
+  { de: 'verfügen',      eng: 'to have at one’s disposal' },
+  { de: 'beziehen',      eng: 'to relate to / obtain' },
+  { de: 'gebrauchen',    eng: 'to use / make use of' },
+  { de: 'vergleichen',   eng: 'to compare' },
+  { de: 'bestimmen',     eng: 'to determine' },
+  { de: 'äußern',        eng: 'to express' },
+  { de: 'verschwinden',  eng: 'to disappear' },
+  { de: 'aufnehmen',     eng: 'to record / take up / absorb' },
+  { de: 'teilnehmen',    eng: 'to participate' },
+  { de: 'bedeuten',      eng: 'to mean' },
+  { de: 'verpassen',     eng: 'to miss (a train, chance)' },
+  { de: 'vergessen',     eng: 'to forget' },
+  { de: 'wählen',        eng: 'to choose / vote / dial' },
+  { de: 'retten',        eng: 'to save / rescue' },
+  { de: 'sorgen',        eng: 'to provide / worry' },
+  { de: 'üben',          eng: 'to practice' },
+  { de: 'sammeln',       eng: 'to collect / gather' },
+  { de: 'reisen',        eng: 'to travel' },
+  { de: 'besuchen',      eng: 'to visit' },
+  { de: 'schlafen',      eng: 'to sleep' },
+  { de: 'träumen',       eng: 'to dream' },
+  { de: 'wohnen',        eng: 'to live / reside' },
+  { de: 'bezahlen',      eng: 'to pay' },
+  { de: 'kosten',        eng: 'to cost' },
+  { de: 'sparen',        eng: 'to save (money)' },
+  { de: 'verdienen',     eng: 'to earn / deserve' },
+  { de: 'ausgeben',      eng: 'to spend (money)' },
+  { de: 'leihen',        eng: 'to lend / borrow' },
+  { de: 'schenken',      eng: 'to give (a gift)' },
+  { de: 'mieten',        eng: 'to rent' },
+  { de: 'verlangen',     eng: 'to demand / request' },
+  { de: 'anbieten',      eng: 'to offer' },
+  { de: 'bestellen',     eng: 'to order' },
+  { de: 'liefern',       eng: 'to deliver' },
+  { de: 'empfehlen',     eng: 'to recommend' },
+  { de: 'probieren',     eng: 'to try / taste' },
+  { de: 'schmecken',     eng: 'to taste (good)' },
+  { de: 'riechen',       eng: 'to smell' },
+  { de: 'kochen',        eng: 'to cook' },
+  { de: 'backen',        eng: 'to bake' },
+  { de: 'waschen',       eng: 'to wash' },
+  { de: 'putzen',        eng: 'to clean' },
+  { de: 'aufräumen',     eng: 'to tidy up' },
+  { de: 'reparieren',    eng: 'to repair' },
+  { de: 'bauen',         eng: 'to build' },
+  { de: 'malen',         eng: 'to paint' },
+  { de: 'zeichnen',      eng: 'to draw' },
+  { de: 'singen',        eng: 'to sing' },
+  { de: 'tanzen',        eng: 'to dance' },
+  { de: 'klettern',      eng: 'to climb' },
+  { de: 'springen',      eng: 'to jump' },
+  { de: 'werfen',        eng: 'to throw' },
+  { de: 'fangen',        eng: 'to catch' },
+  { de: 'ziehen',        eng: 'to pull / move' },
+  { de: 'drücken',       eng: 'to press / push' },
+  { de: 'heben',         eng: 'to lift / raise' },
+  { de: 'sinken',        eng: 'to sink' },
+  { de: 'steigen',       eng: 'to climb / rise' },
+  { de: 'fliegen',       eng: 'to fly' },
+  { de: 'schwimmen',     eng: 'to swim' },
+  { de: 'segeln',        eng: 'to sail' },
+  { de: 'rennen',        eng: 'to run (fast)' },
+  { de: 'stürzen',       eng: 'to fall / plunge / rush' },
+  { de: 'gleiten',       eng: 'to glide / slide' },
+  { de: 'rutschen',      eng: 'to slip / slide' },
+  { de: 'schieben',      eng: 'to push / shove' },
+  { de: 'rollen',        eng: 'to roll' },
+  { de: 'verbieten',     eng: 'to forbid' },
+  { de: 'zwingen',       eng: 'to force' },
+  { de: 'drohen',        eng: 'to threaten' },
+  { de: 'warnen',        eng: 'to warn' },
+  { de: 'schützen',      eng: 'to protect' },
+  { de: 'verteidigen',   eng: 'to defend' },
+  { de: 'angreifen',     eng: 'to attack' },
+  { de: 'besiegen',      eng: 'to defeat' },
+  { de: 'verletzen',     eng: 'to injure / hurt' },
+  { de: 'heilen',        eng: 'to heal / cure' },
+  { de: 'leiden',        eng: 'to suffer' },
+  { de: 'sterben',       eng: 'to die' },
+  { de: 'töten',         eng: 'to kill' },
+  { de: 'weinen',        eng: 'to cry' },
+  { de: 'schweigen',     eng: 'to be silent' },
+  { de: 'flüstern',      eng: 'to whisper' },
+  { de: 'schreien',      eng: 'to scream / shout' },
+  { de: 'rufen',         eng: 'to call / shout' },
+  { de: 'grüßen',        eng: 'to greet' },
+  { de: 'einladen',      eng: 'to invite' },
+  { de: 'begrüßen',      eng: 'to welcome / greet' },
+  { de: 'vorschlagen',   eng: 'to suggest / propose' },
+  { de: 'zustimmen',     eng: 'to agree' },
+  { de: 'ablehnen',      eng: 'to reject / decline' },
+  { de: 'verweigern',    eng: 'to refuse' },
+  { de: 'gestehen',      eng: 'to confess' },
+  { de: 'lügen',         eng: 'to lie (tell untruth)' },
+  { de: 'betrügen',      eng: 'to cheat / deceive' },
+  { de: 'verraten',      eng: 'to betray / reveal' },
+  { de: 'versprechen',   eng: 'to promise' },
+  { de: 'schwören',      eng: 'to swear / vow' },
+  { de: 'behaupten',     eng: 'to claim / assert' },
+  { de: 'beweisen',      eng: 'to prove' },
+  { de: 'bezweifeln',    eng: 'to doubt' },
+  { de: 'vermuten',      eng: 'to suspect / assume' },
+  { de: 'schätzen',      eng: 'to estimate / appreciate' },
+  { de: 'berechnen',     eng: 'to calculate' },
+  { de: 'messen',        eng: 'to measure' },
+  { de: 'wiegen',        eng: 'to weigh' },
+  { de: 'prüfen',        eng: 'to check / test' },
+  { de: 'kontrollieren', eng: 'to control / check' },
+  { de: 'beurteilen',    eng: 'to judge / assess' },
+  { de: 'loben',         eng: 'to praise' },
+  { de: 'kritisieren',   eng: 'to criticize' },
+  { de: 'belohnen',      eng: 'to reward' },
+  { de: 'bestrafen',     eng: 'to punish' },
+  { de: 'verhindern',    eng: 'to prevent' },
+  { de: 'ermöglichen',   eng: 'to enable / make possible' },
+  { de: 'gestatten',     eng: 'to permit' },
+  { de: 'verursachen',   eng: 'to cause' },
+  { de: 'beeinflussen',  eng: 'to influence' },
+  { de: 'überzeugen',    eng: 'to convince' },
+  { de: 'überreden',     eng: 'to persuade' },
+  { de: 'verwirren',     eng: 'to confuse' },
+  { de: 'erschrecken',   eng: 'to frighten / be startled' },
+  { de: 'sich beruhigen',eng: 'to calm down' },
+  { de: 'sich ärgern',   eng: 'to be annoyed' },
+  { de: 'sich aufregen', eng: 'to get worked up' },
+  { de: 'sich langweilen',eng: 'to be bored' },
+  { de: 'sich wundern',  eng: 'to be surprised' },
+  { de: 'sich schämen',  eng: 'to be ashamed' },
+  { de: 'sich verlieben',eng: 'to fall in love' },
+  { de: 'heiraten',      eng: 'to marry' },
+  { de: 'begleiten',     eng: 'to accompany' },
+  { de: 'sich verabreden',eng: 'to arrange to meet' },
+  { de: 'erledigen',     eng: 'to take care of / finish' },
+  { de: 'vorbereiten',   eng: 'to prepare' },
+  { de: 'organisieren',  eng: 'to organize' },
+  { de: 'planen',        eng: 'to plan' },
+  { de: 'verschieben',   eng: 'to postpone / move' },
+  { de: 'abholen',       eng: 'to pick up' },
+  { de: 'mitnehmen',     eng: 'to take along' },
+  { de: 'zurückkehren',  eng: 'to return' },
+  { de: 'ankommen',      eng: 'to arrive' },
+  { de: 'abfahren',      eng: 'to depart' },
+  { de: 'umsteigen',     eng: 'to change (trains)' },
+  { de: 'übernachten',   eng: 'to stay overnight' },
+  { de: 'buchen',        eng: 'to book' },
+  { de: 'packen',        eng: 'to pack / grab' },
+  { de: 'auspacken',     eng: 'to unpack' },
+  { de: 'verstecken',    eng: 'to hide' },
+  { de: 'entdecken',     eng: 'to discover' },
+  { de: 'erfinden',      eng: 'to invent' },
+  { de: 'verbessern',    eng: 'to improve' },
+  { de: 'erweitern',     eng: 'to expand' },
+  { de: 'verringern',    eng: 'to reduce' },
+  { de: 'erhöhen',       eng: 'to increase / raise' },
+  { de: 'wiederholen',   eng: 'to repeat' },
+  { de: 'vermeiden',     eng: 'to avoid' },
+  { de: 'verzichten',    eng: 'to do without / renounce' },
+  { de: 'sich beeilen',  eng: 'to hurry' },
+  { de: 'gelingen',      eng: 'to succeed / work out' },
+  { de: 'scheitern',     eng: 'to fail' },
+  { de: 'aufhören',      eng: 'to stop / quit' },
+  { de: 'anfangen',      eng: 'to begin / start' },
+  { de: 'aufgeben',      eng: 'to give up / mail' },
+  { de: 'zunehmen',      eng: 'to increase / gain weight' },
+  { de: 'abnehmen',      eng: 'to decrease / lose weight' },
+  { de: 'zerstören',     eng: 'to destroy' },
+  { de: 'beschäftigen',  eng: 'to occupy / employ' },
+  { de: 'verwalten',     eng: 'to manage / administer' },
+  { de: 'ausführen',     eng: 'to carry out / execute' },
+  { de: 'durchführen',   eng: 'to carry out / conduct' },
+  { de: 'stattfinden',   eng: 'to take place' },
+  { de: 'sich unterhalten', eng: 'to converse / enjoy oneself' }
+];
+
+/* ══════════════════════════════════════════
+   GERMAN NOUNS  (700 common, with article + plural)
+══════════════════════════════════════════ */
+var DE_NOUNS = [
+  /* People & family */
+  { art: 'der', de: 'Mann',        pl: 'Männer',      eng: 'man / husband' },
+  { art: 'die', de: 'Frau',        pl: 'Frauen',      eng: 'woman / wife' },
+  { art: 'das', de: 'Kind',        pl: 'Kinder',      eng: 'child' },
+  { art: 'der', de: 'Junge',       pl: 'Jungen',      eng: 'boy' },
+  { art: 'das', de: 'Mädchen',     pl: 'Mädchen',     eng: 'girl' },
+  { art: 'der', de: 'Vater',       pl: 'Väter',       eng: 'father' },
+  { art: 'die', de: 'Mutter',      pl: 'Mütter',      eng: 'mother' },
+  { art: 'die', de: 'Eltern',      pl: 'Eltern',      eng: 'parents' },
+  { art: 'der', de: 'Sohn',        pl: 'Söhne',       eng: 'son' },
+  { art: 'die', de: 'Tochter',     pl: 'Töchter',     eng: 'daughter' },
+  { art: 'der', de: 'Bruder',      pl: 'Brüder',      eng: 'brother' },
+  { art: 'die', de: 'Schwester',   pl: 'Schwestern',  eng: 'sister' },
+  { art: 'die', de: 'Geschwister', pl: 'Geschwister', eng: 'siblings' },
+  { art: 'der', de: 'Großvater',   pl: 'Großväter',   eng: 'grandfather' },
+  { art: 'die', de: 'Großmutter',  pl: 'Großmütter',  eng: 'grandmother' },
+  { art: 'die', de: 'Großeltern',  pl: 'Großeltern',  eng: 'grandparents' },
+  { art: 'der', de: 'Enkel',       pl: 'Enkel',       eng: 'grandson / grandchild' },
+  { art: 'der', de: 'Onkel',       pl: 'Onkel',       eng: 'uncle' },
+  { art: 'die', de: 'Tante',       pl: 'Tanten',      eng: 'aunt' },
+  { art: 'der', de: 'Cousin',      pl: 'Cousins',     eng: 'cousin (m.)' },
+  { art: 'die', de: 'Cousine',     pl: 'Cousinen',    eng: 'cousin (f.)' },
+  { art: 'der', de: 'Neffe',       pl: 'Neffen',      eng: 'nephew' },
+  { art: 'die', de: 'Nichte',      pl: 'Nichten',     eng: 'niece' },
+  { art: 'der', de: 'Mensch',      pl: 'Menschen',    eng: 'human / person' },
+  { art: 'die', de: 'Person',      pl: 'Personen',    eng: 'person' },
+  { art: 'die', de: 'Leute',       pl: 'Leute',       eng: 'people' },
+  { art: 'der', de: 'Freund',      pl: 'Freunde',     eng: 'friend (m.)' },
+  { art: 'die', de: 'Freundin',    pl: 'Freundinnen', eng: 'friend (f.)' },
+  { art: 'der', de: 'Nachbar',     pl: 'Nachbarn',    eng: 'neighbor' },
+  { art: 'der', de: 'Gast',        pl: 'Gäste',       eng: 'guest' },
+  { art: 'der', de: 'Kollege',     pl: 'Kollegen',    eng: 'colleague (m.)' },
+  { art: 'die', de: 'Kollegin',    pl: 'Kolleginnen', eng: 'colleague (f.)' },
+  { art: 'der', de: 'Chef',        pl: 'Chefs',       eng: 'boss' },
+  { art: 'der', de: 'Partner',     pl: 'Partner',     eng: 'partner' },
+  { art: 'der', de: 'Ehemann',     pl: 'Ehemänner',   eng: 'husband' },
+  { art: 'die', de: 'Ehefrau',     pl: 'Ehefrauen',   eng: 'wife' },
+  { art: 'das', de: 'Baby',        pl: 'Babys',       eng: 'baby' },
+  { art: 'der', de: 'Erwachsene',  pl: 'Erwachsenen', eng: 'adult' },
+  { art: 'der', de: 'Jugendliche', pl: 'Jugendlichen',eng: 'teenager / youth' },
+  { art: 'der', de: 'Herr',        pl: 'Herren',      eng: 'gentleman / Mr.' },
+  { art: 'die', de: 'Dame',        pl: 'Damen',       eng: 'lady' },
+  /* Professions */
+  { art: 'der', de: 'Lehrer',      pl: 'Lehrer',      eng: 'teacher (m.)' },
+  { art: 'die', de: 'Lehrerin',    pl: 'Lehrerinnen', eng: 'teacher (f.)' },
+  { art: 'der', de: 'Arzt',        pl: 'Ärzte',       eng: 'doctor (m.)' },
+  { art: 'die', de: 'Ärztin',      pl: 'Ärztinnen',   eng: 'doctor (f.)' },
+  { art: 'der', de: 'Student',     pl: 'Studenten',   eng: 'student (m.)' },
+  { art: 'die', de: 'Studentin',   pl: 'Studentinnen',eng: 'student (f.)' },
+  { art: 'der', de: 'Schüler',     pl: 'Schüler',     eng: 'pupil' },
+  { art: 'der', de: 'Anwalt',      pl: 'Anwälte',     eng: 'lawyer' },
+  { art: 'der', de: 'Ingenieur',   pl: 'Ingenieure',  eng: 'engineer' },
+  { art: 'der', de: 'Polizist',    pl: 'Polizisten',  eng: 'police officer' },
+  { art: 'der', de: 'Verkäufer',   pl: 'Verkäufer',   eng: 'salesperson' },
+  { art: 'der', de: 'Kellner',     pl: 'Kellner',     eng: 'waiter' },
+  { art: 'der', de: 'Koch',        pl: 'Köche',       eng: 'cook / chef' },
+  { art: 'der', de: 'Bäcker',      pl: 'Bäcker',      eng: 'baker' },
+  { art: 'der', de: 'Fahrer',      pl: 'Fahrer',      eng: 'driver' },
+  { art: 'der', de: 'Pilot',       pl: 'Piloten',     eng: 'pilot' },
+  { art: 'der', de: 'Bauer',       pl: 'Bauern',      eng: 'farmer' },
+  { art: 'der', de: 'Künstler',    pl: 'Künstler',    eng: 'artist' },
+  { art: 'der', de: 'Schauspieler',pl: 'Schauspieler',eng: 'actor' },
+  { art: 'der', de: 'Sänger',      pl: 'Sänger',      eng: 'singer' },
+  { art: 'der', de: 'Autor',       pl: 'Autoren',     eng: 'author' },
+  { art: 'der', de: 'Journalist',  pl: 'Journalisten',eng: 'journalist' },
+  { art: 'der', de: 'Wissenschaftler', pl: 'Wissenschaftler', eng: 'scientist' },
+  { art: 'der', de: 'Direktor',    pl: 'Direktoren',  eng: 'director' },
+  { art: 'der', de: 'Präsident',   pl: 'Präsidenten', eng: 'president' },
+  { art: 'der', de: 'Minister',    pl: 'Minister',    eng: 'minister' },
+  { art: 'der', de: 'König',       pl: 'Könige',      eng: 'king' },
+  { art: 'die', de: 'Königin',     pl: 'Königinnen',  eng: 'queen' },
+  { art: 'der', de: 'Soldat',      pl: 'Soldaten',    eng: 'soldier' },
+  /* Body */
+  { art: 'der', de: 'Körper',      pl: 'Körper',      eng: 'body' },
+  { art: 'der', de: 'Kopf',        pl: 'Köpfe',       eng: 'head' },
+  { art: 'das', de: 'Haar',        pl: 'Haare',       eng: 'hair' },
+  { art: 'das', de: 'Gesicht',     pl: 'Gesichter',   eng: 'face' },
+  { art: 'das', de: 'Auge',        pl: 'Augen',       eng: 'eye' },
+  { art: 'die', de: 'Nase',        pl: 'Nasen',       eng: 'nose' },
+  { art: 'der', de: 'Mund',        pl: 'Münder',      eng: 'mouth' },
+  { art: 'das', de: 'Ohr',         pl: 'Ohren',       eng: 'ear' },
+  { art: 'der', de: 'Zahn',        pl: 'Zähne',       eng: 'tooth' },
+  { art: 'die', de: 'Zunge',       pl: 'Zungen',      eng: 'tongue' },
+  { art: 'der', de: 'Hals',        pl: 'Hälse',       eng: 'neck / throat' },
+  { art: 'die', de: 'Schulter',    pl: 'Schultern',   eng: 'shoulder' },
+  { art: 'der', de: 'Arm',         pl: 'Arme',        eng: 'arm' },
+  { art: 'die', de: 'Hand',        pl: 'Hände',       eng: 'hand' },
+  { art: 'der', de: 'Finger',      pl: 'Finger',      eng: 'finger' },
+  { art: 'das', de: 'Bein',        pl: 'Beine',       eng: 'leg' },
+  { art: 'der', de: 'Fuß',         pl: 'Füße',        eng: 'foot' },
+  { art: 'das', de: 'Knie',        pl: 'Knie',        eng: 'knee' },
+  { art: 'der', de: 'Rücken',      pl: 'Rücken',      eng: 'back' },
+  { art: 'der', de: 'Bauch',       pl: 'Bäuche',      eng: 'belly / stomach' },
+  { art: 'das', de: 'Herz',        pl: 'Herzen',      eng: 'heart' },
+  { art: 'das', de: 'Blut',        pl: '—',           eng: 'blood' },
+  { art: 'die', de: 'Haut',        pl: 'Häute',       eng: 'skin' },
+  { art: 'der', de: 'Knochen',     pl: 'Knochen',     eng: 'bone' },
+  { art: 'das', de: 'Gehirn',      pl: 'Gehirne',     eng: 'brain' },
+  { art: 'der', de: 'Muskel',      pl: 'Muskeln',     eng: 'muscle' },
+  /* House & furniture */
+  { art: 'das', de: 'Haus',        pl: 'Häuser',      eng: 'house' },
+  { art: 'die', de: 'Wohnung',     pl: 'Wohnungen',   eng: 'apartment' },
+  { art: 'das', de: 'Zimmer',      pl: 'Zimmer',      eng: 'room' },
+  { art: 'die', de: 'Küche',       pl: 'Küchen',      eng: 'kitchen' },
+  { art: 'das', de: 'Bad',         pl: 'Bäder',       eng: 'bathroom' },
+  { art: 'das', de: 'Schlafzimmer',pl: 'Schlafzimmer',eng: 'bedroom' },
+  { art: 'das', de: 'Wohnzimmer',  pl: 'Wohnzimmer',  eng: 'living room' },
+  { art: 'der', de: 'Flur',        pl: 'Flure',       eng: 'hallway' },
+  { art: 'der', de: 'Keller',      pl: 'Keller',      eng: 'cellar / basement' },
+  { art: 'der', de: 'Balkon',      pl: 'Balkone',     eng: 'balcony' },
+  { art: 'das', de: 'Dach',        pl: 'Dächer',      eng: 'roof' },
+  { art: 'die', de: 'Wand',        pl: 'Wände',       eng: 'wall' },
+  { art: 'der', de: 'Boden',       pl: 'Böden',       eng: 'floor / ground' },
+  { art: 'die', de: 'Decke',       pl: 'Decken',      eng: 'ceiling / blanket' },
+  { art: 'die', de: 'Tür',         pl: 'Türen',       eng: 'door' },
+  { art: 'das', de: 'Fenster',     pl: 'Fenster',     eng: 'window' },
+  { art: 'die', de: 'Treppe',      pl: 'Treppen',     eng: 'stairs' },
+  { art: 'der', de: 'Tisch',       pl: 'Tische',      eng: 'table' },
+  { art: 'der', de: 'Stuhl',       pl: 'Stühle',      eng: 'chair' },
+  { art: 'das', de: 'Sofa',        pl: 'Sofas',       eng: 'sofa' },
+  { art: 'das', de: 'Bett',        pl: 'Betten',      eng: 'bed' },
+  { art: 'der', de: 'Schrank',     pl: 'Schränke',    eng: 'cupboard / wardrobe' },
+  { art: 'das', de: 'Regal',       pl: 'Regale',      eng: 'shelf' },
+  { art: 'die', de: 'Lampe',       pl: 'Lampen',      eng: 'lamp' },
+  { art: 'der', de: 'Spiegel',     pl: 'Spiegel',     eng: 'mirror' },
+  { art: 'der', de: 'Teppich',     pl: 'Teppiche',    eng: 'carpet' },
+  { art: 'das', de: 'Bild',        pl: 'Bilder',      eng: 'picture' },
+  { art: 'die', de: 'Uhr',         pl: 'Uhren',       eng: 'clock / watch' },
+  { art: 'der', de: 'Schlüssel',   pl: 'Schlüssel',   eng: 'key' },
+  { art: 'die', de: 'Möbel',       pl: 'Möbel',       eng: 'furniture' },
+  { art: 'der', de: 'Herd',        pl: 'Herde',       eng: 'stove' },
+  { art: 'der', de: 'Ofen',        pl: 'Öfen',        eng: 'oven' },
+  { art: 'der', de: 'Kühlschrank', pl: 'Kühlschränke',eng: 'fridge' },
+  { art: 'der', de: 'Teller',      pl: 'Teller',      eng: 'plate' },
+  { art: 'die', de: 'Tasse',       pl: 'Tassen',      eng: 'cup' },
+  { art: 'das', de: 'Glas',        pl: 'Gläser',      eng: 'glass' },
+  { art: 'die', de: 'Flasche',     pl: 'Flaschen',    eng: 'bottle' },
+  { art: 'der', de: 'Löffel',      pl: 'Löffel',      eng: 'spoon' },
+  { art: 'die', de: 'Gabel',       pl: 'Gabeln',      eng: 'fork' },
+  { art: 'das', de: 'Messer',      pl: 'Messer',      eng: 'knife' },
+  { art: 'der', de: 'Topf',        pl: 'Töpfe',       eng: 'pot' },
+  { art: 'die', de: 'Pfanne',      pl: 'Pfannen',     eng: 'pan' },
+  /* Food & drink */
+  { art: 'das', de: 'Essen',       pl: 'Essen',       eng: 'food / meal' },
+  { art: 'das', de: 'Brot',        pl: 'Brote',       eng: 'bread' },
+  { art: 'das', de: 'Brötchen',    pl: 'Brötchen',    eng: 'bread roll' },
+  { art: 'die', de: 'Butter',      pl: '—',           eng: 'butter' },
+  { art: 'der', de: 'Käse',        pl: 'Käse',        eng: 'cheese' },
+  { art: 'das', de: 'Ei',          pl: 'Eier',        eng: 'egg' },
+  { art: 'das', de: 'Fleisch',     pl: '—',           eng: 'meat' },
+  { art: 'der', de: 'Fisch',       pl: 'Fische',      eng: 'fish' },
+  { art: 'die', de: 'Wurst',       pl: 'Würste',      eng: 'sausage' },
+  { art: 'der', de: 'Schinken',    pl: 'Schinken',    eng: 'ham' },
+  { art: 'das', de: 'Gemüse',      pl: '—',           eng: 'vegetables' },
+  { art: 'das', de: 'Obst',        pl: '—',           eng: 'fruit' },
+  { art: 'der', de: 'Apfel',       pl: 'Äpfel',       eng: 'apple' },
+  { art: 'die', de: 'Banane',      pl: 'Bananen',     eng: 'banana' },
+  { art: 'die', de: 'Orange',      pl: 'Orangen',     eng: 'orange' },
+  { art: 'die', de: 'Zitrone',     pl: 'Zitronen',    eng: 'lemon' },
+  { art: 'die', de: 'Erdbeere',    pl: 'Erdbeeren',   eng: 'strawberry' },
+  { art: 'die', de: 'Kartoffel',   pl: 'Kartoffeln',  eng: 'potato' },
+  { art: 'die', de: 'Tomate',      pl: 'Tomaten',     eng: 'tomato' },
+  { art: 'die', de: 'Zwiebel',     pl: 'Zwiebeln',    eng: 'onion' },
+  { art: 'die', de: 'Karotte',     pl: 'Karotten',    eng: 'carrot' },
+  { art: 'der', de: 'Salat',       pl: 'Salate',      eng: 'salad / lettuce' },
+  { art: 'der', de: 'Reis',        pl: '—',           eng: 'rice' },
+  { art: 'die', de: 'Nudel',       pl: 'Nudeln',      eng: 'noodle / pasta' },
+  { art: 'die', de: 'Suppe',       pl: 'Suppen',      eng: 'soup' },
+  { art: 'der', de: 'Zucker',      pl: '—',           eng: 'sugar' },
+  { art: 'das', de: 'Salz',        pl: '—',           eng: 'salt' },
+  { art: 'der', de: 'Pfeffer',     pl: '—',           eng: 'pepper' },
+  { art: 'das', de: 'Öl',          pl: 'Öle',         eng: 'oil' },
+  { art: 'der', de: 'Kuchen',      pl: 'Kuchen',      eng: 'cake' },
+  { art: 'die', de: 'Schokolade',  pl: 'Schokoladen', eng: 'chocolate' },
+  { art: 'das', de: 'Eis',         pl: '—',           eng: 'ice / ice cream' },
+  { art: 'der', de: 'Honig',       pl: '—',           eng: 'honey' },
+  { art: 'die', de: 'Marmelade',   pl: 'Marmeladen',  eng: 'jam' },
+  { art: 'der', de: 'Joghurt',     pl: 'Joghurts',    eng: 'yogurt' },
+  { art: 'die', de: 'Milch',       pl: '—',           eng: 'milk' },
+  { art: 'das', de: 'Wasser',      pl: '—',           eng: 'water' },
+  { art: 'der', de: 'Kaffee',      pl: '—',           eng: 'coffee' },
+  { art: 'der', de: 'Tee',         pl: 'Tees',        eng: 'tea' },
+  { art: 'der', de: 'Saft',        pl: 'Säfte',       eng: 'juice' },
+  { art: 'das', de: 'Bier',        pl: 'Biere',       eng: 'beer' },
+  { art: 'der', de: 'Wein',        pl: 'Weine',       eng: 'wine' },
+  { art: 'das', de: 'Frühstück',   pl: 'Frühstücke',  eng: 'breakfast' },
+  { art: 'das', de: 'Mittagessen', pl: 'Mittagessen', eng: 'lunch' },
+  { art: 'das', de: 'Abendessen',  pl: 'Abendessen',  eng: 'dinner' },
+  /* Clothing */
+  { art: 'die', de: 'Kleidung',    pl: '—',           eng: 'clothing' },
+  { art: 'das', de: 'Kleid',       pl: 'Kleider',     eng: 'dress' },
+  { art: 'das', de: 'Hemd',        pl: 'Hemden',      eng: 'shirt' },
+  { art: 'die', de: 'Hose',        pl: 'Hosen',       eng: 'trousers' },
+  { art: 'der', de: 'Rock',        pl: 'Röcke',       eng: 'skirt' },
+  { art: 'die', de: 'Jacke',       pl: 'Jacken',      eng: 'jacket' },
+  { art: 'der', de: 'Mantel',      pl: 'Mäntel',      eng: 'coat' },
+  { art: 'der', de: 'Pullover',    pl: 'Pullover',    eng: 'sweater' },
+  { art: 'der', de: 'Anzug',       pl: 'Anzüge',      eng: 'suit' },
+  { art: 'die', de: 'Bluse',       pl: 'Blusen',      eng: 'blouse' },
+  { art: 'die', de: 'Socke',       pl: 'Socken',      eng: 'sock' },
+  { art: 'der', de: 'Schuh',       pl: 'Schuhe',      eng: 'shoe' },
+  { art: 'der', de: 'Stiefel',     pl: 'Stiefel',     eng: 'boot' },
+  { art: 'der', de: 'Hut',         pl: 'Hüte',        eng: 'hat' },
+  { art: 'die', de: 'Mütze',       pl: 'Mützen',      eng: 'cap' },
+  { art: 'der', de: 'Handschuh',   pl: 'Handschuhe',  eng: 'glove' },
+  { art: 'der', de: 'Schal',       pl: 'Schals',      eng: 'scarf' },
+  { art: 'die', de: 'Brille',      pl: 'Brillen',     eng: 'glasses' },
+  { art: 'die', de: 'Tasche',      pl: 'Taschen',     eng: 'bag / pocket' },
+  { art: 'der', de: 'Gürtel',      pl: 'Gürtel',      eng: 'belt' },
+  { art: 'der', de: 'Knopf',       pl: 'Knöpfe',      eng: 'button' },
+  { art: 'der', de: 'Ring',        pl: 'Ringe',       eng: 'ring' },
+  /* Nature */
+  { art: 'die', de: 'Natur',       pl: '—',           eng: 'nature' },
+  { art: 'die', de: 'Welt',        pl: 'Welten',      eng: 'world' },
+  { art: 'die', de: 'Erde',        pl: '—',           eng: 'earth' },
+  { art: 'der', de: 'Himmel',      pl: 'Himmel',      eng: 'sky' },
+  { art: 'die', de: 'Sonne',       pl: 'Sonnen',      eng: 'sun' },
+  { art: 'der', de: 'Mond',        pl: 'Monde',       eng: 'moon' },
+  { art: 'der', de: 'Stern',       pl: 'Sterne',      eng: 'star' },
+  { art: 'die', de: 'Wolke',       pl: 'Wolken',      eng: 'cloud' },
+  { art: 'der', de: 'Wind',        pl: 'Winde',       eng: 'wind' },
+  { art: 'der', de: 'Regen',       pl: '—',           eng: 'rain' },
+  { art: 'der', de: 'Schnee',      pl: '—',           eng: 'snow' },
+  { art: 'der', de: 'Nebel',       pl: '—',           eng: 'fog' },
+  { art: 'der', de: 'Sturm',       pl: 'Stürme',      eng: 'storm' },
+  { art: 'der', de: 'Blitz',       pl: 'Blitze',      eng: 'lightning / flash' },
+  { art: 'das', de: 'Wetter',      pl: '—',           eng: 'weather' },
+  { art: 'die', de: 'Luft',        pl: 'Lüfte',       eng: 'air' },
+  { art: 'das', de: 'Feuer',       pl: 'Feuer',       eng: 'fire' },
+  { art: 'das', de: 'Licht',       pl: 'Lichter',     eng: 'light' },
+  { art: 'der', de: 'Schatten',    pl: 'Schatten',    eng: 'shadow' },
+  { art: 'der', de: 'Berg',        pl: 'Berge',       eng: 'mountain' },
+  { art: 'das', de: 'Tal',         pl: 'Täler',       eng: 'valley' },
+  { art: 'der', de: 'Hügel',       pl: 'Hügel',       eng: 'hill' },
+  { art: 'der', de: 'Fluss',       pl: 'Flüsse',      eng: 'river' },
+  { art: 'der', de: 'See',         pl: 'Seen',        eng: 'lake' },
+  { art: 'das', de: 'Meer',        pl: 'Meere',       eng: 'sea' },
+  { art: 'der', de: 'Strand',      pl: 'Strände',     eng: 'beach' },
+  { art: 'die', de: 'Küste',       pl: 'Küsten',      eng: 'coast' },
+  { art: 'die', de: 'Insel',       pl: 'Inseln',      eng: 'island' },
+  { art: 'der', de: 'Wald',        pl: 'Wälder',      eng: 'forest' },
+  { art: 'der', de: 'Baum',        pl: 'Bäume',       eng: 'tree' },
+  { art: 'der', de: 'Ast',         pl: 'Äste',        eng: 'branch' },
+  { art: 'das', de: 'Blatt',       pl: 'Blätter',     eng: 'leaf / sheet' },
+  { art: 'die', de: 'Blume',       pl: 'Blumen',      eng: 'flower' },
+  { art: 'das', de: 'Gras',        pl: 'Gräser',      eng: 'grass' },
+  { art: 'die', de: 'Wiese',       pl: 'Wiesen',      eng: 'meadow' },
+  { art: 'das', de: 'Feld',        pl: 'Felder',      eng: 'field' },
+  { art: 'der', de: 'Garten',      pl: 'Gärten',      eng: 'garden' },
+  { art: 'der', de: 'Stein',       pl: 'Steine',      eng: 'stone' },
+  { art: 'der', de: 'Sand',        pl: '—',           eng: 'sand' },
+  { art: 'die', de: 'Pflanze',     pl: 'Pflanzen',    eng: 'plant' },
+  { art: 'die', de: 'Wurzel',      pl: 'Wurzeln',     eng: 'root' },
+  { art: 'die', de: 'Landschaft',  pl: 'Landschaften',eng: 'landscape' },
+  /* Animals */
+  { art: 'das', de: 'Tier',        pl: 'Tiere',       eng: 'animal' },
+  { art: 'der', de: 'Hund',        pl: 'Hunde',       eng: 'dog' },
+  { art: 'die', de: 'Katze',       pl: 'Katzen',      eng: 'cat' },
+  { art: 'das', de: 'Pferd',       pl: 'Pferde',      eng: 'horse' },
+  { art: 'die', de: 'Kuh',         pl: 'Kühe',        eng: 'cow' },
+  { art: 'das', de: 'Schwein',     pl: 'Schweine',    eng: 'pig' },
+  { art: 'das', de: 'Schaf',       pl: 'Schafe',      eng: 'sheep' },
+  { art: 'die', de: 'Ziege',       pl: 'Ziegen',      eng: 'goat' },
+  { art: 'das', de: 'Huhn',        pl: 'Hühner',      eng: 'chicken' },
+  { art: 'die', de: 'Ente',        pl: 'Enten',       eng: 'duck' },
+  { art: 'der', de: 'Vogel',       pl: 'Vögel',       eng: 'bird' },
+  { art: 'die', de: 'Maus',        pl: 'Mäuse',       eng: 'mouse' },
+  { art: 'das', de: 'Kaninchen',   pl: 'Kaninchen',   eng: 'rabbit' },
+  { art: 'der', de: 'Fuchs',       pl: 'Füchse',      eng: 'fox' },
+  { art: 'der', de: 'Wolf',        pl: 'Wölfe',       eng: 'wolf' },
+  { art: 'der', de: 'Bär',         pl: 'Bären',       eng: 'bear' },
+  { art: 'der', de: 'Löwe',        pl: 'Löwen',       eng: 'lion' },
+  { art: 'der', de: 'Elefant',     pl: 'Elefanten',   eng: 'elephant' },
+  { art: 'der', de: 'Affe',        pl: 'Affen',       eng: 'monkey' },
+  { art: 'die', de: 'Schlange',    pl: 'Schlangen',   eng: 'snake' },
+  { art: 'der', de: 'Frosch',      pl: 'Frösche',     eng: 'frog' },
+  { art: 'die', de: 'Biene',       pl: 'Bienen',      eng: 'bee' },
+  { art: 'die', de: 'Fliege',      pl: 'Fliegen',     eng: 'fly' },
+  { art: 'der', de: 'Schmetterling',pl:'Schmetterlinge',eng:'butterfly' },
+  { art: 'die', de: 'Spinne',      pl: 'Spinnen',     eng: 'spider' },
+  { art: 'der', de: 'Wurm',        pl: 'Würmer',      eng: 'worm' },
+  { art: 'das', de: 'Insekt',      pl: 'Insekten',    eng: 'insect' },
+  { art: 'der', de: 'Flügel',      pl: 'Flügel',      eng: 'wing' },
+  { art: 'der', de: 'Schwanz',     pl: 'Schwänze',    eng: 'tail' },
+  { art: 'die', de: 'Feder',       pl: 'Federn',      eng: 'feather' },
+  /* Time */
+  { art: 'die', de: 'Zeit',        pl: 'Zeiten',      eng: 'time' },
+  { art: 'das', de: 'Jahr',        pl: 'Jahre',       eng: 'year' },
+  { art: 'der', de: 'Monat',       pl: 'Monate',      eng: 'month' },
+  { art: 'die', de: 'Woche',       pl: 'Wochen',      eng: 'week' },
+  { art: 'der', de: 'Tag',         pl: 'Tage',        eng: 'day' },
+  { art: 'die', de: 'Stunde',      pl: 'Stunden',     eng: 'hour' },
+  { art: 'die', de: 'Minute',      pl: 'Minuten',     eng: 'minute' },
+  { art: 'die', de: 'Sekunde',     pl: 'Sekunden',    eng: 'second' },
+  { art: 'der', de: 'Morgen',      pl: 'Morgen',      eng: 'morning' },
+  { art: 'der', de: 'Vormittag',   pl: 'Vormittage',  eng: 'late morning' },
+  { art: 'der', de: 'Mittag',      pl: 'Mittage',     eng: 'noon' },
+  { art: 'der', de: 'Nachmittag',  pl: 'Nachmittage', eng: 'afternoon' },
+  { art: 'der', de: 'Abend',       pl: 'Abende',      eng: 'evening' },
+  { art: 'die', de: 'Nacht',       pl: 'Nächte',      eng: 'night' },
+  { art: 'die', de: 'Mitternacht', pl: '—',           eng: 'midnight' },
+  { art: 'das', de: 'Wochenende',  pl: 'Wochenenden', eng: 'weekend' },
+  { art: 'der', de: 'Feiertag',    pl: 'Feiertage',   eng: 'public holiday' },
+  { art: 'der', de: 'Urlaub',      pl: 'Urlaube',     eng: 'vacation' },
+  { art: 'die', de: 'Ferien',      pl: 'Ferien',      eng: 'school holidays' },
+  { art: 'der', de: 'Geburtstag',  pl: 'Geburtstage', eng: 'birthday' },
+  { art: 'die', de: 'Jahreszeit',  pl: 'Jahreszeiten',eng: 'season' },
+  { art: 'der', de: 'Frühling',    pl: 'Frühlinge',   eng: 'spring' },
+  { art: 'der', de: 'Sommer',      pl: 'Sommer',      eng: 'summer' },
+  { art: 'der', de: 'Herbst',      pl: 'Herbste',     eng: 'autumn' },
+  { art: 'der', de: 'Winter',      pl: 'Winter',      eng: 'winter' },
+  { art: 'die', de: 'Zukunft',     pl: '—',           eng: 'future' },
+  { art: 'die', de: 'Gegenwart',   pl: '—',           eng: 'present' },
+  { art: 'die', de: 'Vergangenheit',pl: '—',          eng: 'past' },
+  { art: 'der', de: 'Augenblick',  pl: 'Augenblicke', eng: 'moment' },
+  { art: 'das', de: 'Datum',       pl: 'Daten',       eng: 'date' },
+  { art: 'der', de: 'Termin',      pl: 'Termine',     eng: 'appointment' },
+  { art: 'der', de: 'Kalender',    pl: 'Kalender',    eng: 'calendar' },
+  /* City & places */
+  { art: 'die', de: 'Stadt',       pl: 'Städte',      eng: 'city' },
+  { art: 'das', de: 'Dorf',        pl: 'Dörfer',      eng: 'village' },
+  { art: 'das', de: 'Land',        pl: 'Länder',      eng: 'country / land' },
+  { art: 'der', de: 'Staat',       pl: 'Staaten',     eng: 'state' },
+  { art: 'die', de: 'Hauptstadt',  pl: 'Hauptstädte', eng: 'capital' },
+  { art: 'die', de: 'Straße',      pl: 'Straßen',     eng: 'street' },
+  { art: 'der', de: 'Weg',         pl: 'Wege',        eng: 'way / path' },
+  { art: 'der', de: 'Platz',       pl: 'Plätze',      eng: 'square / place' },
+  { art: 'die', de: 'Brücke',      pl: 'Brücken',     eng: 'bridge' },
+  { art: 'die', de: 'Ecke',        pl: 'Ecken',       eng: 'corner' },
+  { art: 'das', de: 'Gebäude',     pl: 'Gebäude',     eng: 'building' },
+  { art: 'die', de: 'Kirche',      pl: 'Kirchen',     eng: 'church' },
+  { art: 'das', de: 'Schloss',     pl: 'Schlösser',   eng: 'castle / lock' },
+  { art: 'der', de: 'Turm',        pl: 'Türme',       eng: 'tower' },
+  { art: 'das', de: 'Museum',      pl: 'Museen',      eng: 'museum' },
+  { art: 'das', de: 'Theater',     pl: 'Theater',     eng: 'theater' },
+  { art: 'das', de: 'Kino',        pl: 'Kinos',       eng: 'cinema' },
+  { art: 'die', de: 'Bibliothek',  pl: 'Bibliotheken',eng: 'library' },
+  { art: 'das', de: 'Krankenhaus', pl: 'Krankenhäuser',eng: 'hospital' },
+  { art: 'die', de: 'Schule',      pl: 'Schulen',     eng: 'school' },
+  { art: 'die', de: 'Universität', pl: 'Universitäten',eng: 'university' },
+  { art: 'das', de: 'Geschäft',    pl: 'Geschäfte',   eng: 'shop / business' },
+  { art: 'der', de: 'Laden',       pl: 'Läden',       eng: 'store' },
+  { art: 'der', de: 'Markt',       pl: 'Märkte',      eng: 'market' },
+  { art: 'das', de: 'Restaurant',  pl: 'Restaurants', eng: 'restaurant' },
+  { art: 'das', de: 'Café',        pl: 'Cafés',       eng: 'café' },
+  { art: 'das', de: 'Hotel',       pl: 'Hotels',      eng: 'hotel' },
+  { art: 'die', de: 'Bank',        pl: 'Banken',      eng: 'bank' },
+  { art: 'die', de: 'Post',        pl: '—',           eng: 'post office / mail' },
+  { art: 'die', de: 'Apotheke',    pl: 'Apotheken',   eng: 'pharmacy' },
+  { art: 'der', de: 'Park',        pl: 'Parks',       eng: 'park' },
+  { art: 'der', de: 'Bahnhof',     pl: 'Bahnhöfe',    eng: 'train station' },
+  { art: 'der', de: 'Flughafen',   pl: 'Flughäfen',   eng: 'airport' },
+  { art: 'der', de: 'Hafen',       pl: 'Häfen',       eng: 'harbor / port' },
+  { art: 'die', de: 'Fabrik',      pl: 'Fabriken',    eng: 'factory' },
+  { art: 'das', de: 'Büro',        pl: 'Büros',       eng: 'office' },
+  { art: 'das', de: 'Amt',         pl: 'Ämter',       eng: 'public office / authority' },
+  { art: 'der', de: 'Zoo',         pl: 'Zoos',        eng: 'zoo' },
+  { art: 'das', de: 'Stadion',     pl: 'Stadien',     eng: 'stadium' },
+  { art: 'die', de: 'Toilette',    pl: 'Toiletten',   eng: 'toilet' },
+  /* Transport & travel */
+  { art: 'das', de: 'Auto',        pl: 'Autos',       eng: 'car' },
+  { art: 'der', de: 'Wagen',       pl: 'Wagen',       eng: 'car / vehicle' },
+  { art: 'der', de: 'Bus',         pl: 'Busse',       eng: 'bus' },
+  { art: 'der', de: 'Zug',         pl: 'Züge',        eng: 'train' },
+  { art: 'die', de: 'Bahn',        pl: 'Bahnen',      eng: 'railway / train' },
+  { art: 'die', de: 'Straßenbahn', pl: 'Straßenbahnen',eng: 'tram' },
+  { art: 'das', de: 'Flugzeug',    pl: 'Flugzeuge',   eng: 'airplane' },
+  { art: 'das', de: 'Schiff',      pl: 'Schiffe',     eng: 'ship' },
+  { art: 'das', de: 'Boot',        pl: 'Boote',       eng: 'boat' },
+  { art: 'das', de: 'Fahrrad',     pl: 'Fahrräder',   eng: 'bicycle' },
+  { art: 'das', de: 'Motorrad',    pl: 'Motorräder',  eng: 'motorcycle' },
+  { art: 'der', de: 'Lastwagen',   pl: 'Lastwagen',   eng: 'truck' },
+  { art: 'das', de: 'Taxi',        pl: 'Taxis',       eng: 'taxi' },
+  { art: 'die', de: 'U-Bahn',      pl: 'U-Bahnen',    eng: 'subway' },
+  { art: 'das', de: 'Rad',         pl: 'Räder',       eng: 'wheel' },
+  { art: 'der', de: 'Motor',       pl: 'Motoren',     eng: 'engine / motor' },
+  { art: 'der', de: 'Reifen',      pl: 'Reifen',      eng: 'tire' },
+  { art: 'der', de: 'Sitz',        pl: 'Sitze',       eng: 'seat' },
+  { art: 'die', de: 'Fahrkarte',   pl: 'Fahrkarten',  eng: 'ticket' },
+  { art: 'der', de: 'Fahrplan',    pl: 'Fahrpläne',   eng: 'timetable' },
+  { art: 'die', de: 'Reise',       pl: 'Reisen',      eng: 'journey / trip' },
+  { art: 'der', de: 'Ausflug',     pl: 'Ausflüge',    eng: 'excursion' },
+  { art: 'der', de: 'Koffer',      pl: 'Koffer',      eng: 'suitcase' },
+  { art: 'der', de: 'Rucksack',    pl: 'Rucksäcke',   eng: 'backpack' },
+  { art: 'die', de: 'Grenze',      pl: 'Grenzen',     eng: 'border' },
+  { art: 'der', de: 'Verkehr',     pl: '—',           eng: 'traffic' },
+  /* School, office & work */
+  { art: 'die', de: 'Arbeit',      pl: 'Arbeiten',    eng: 'work' },
+  { art: 'der', de: 'Beruf',       pl: 'Berufe',      eng: 'profession' },
+  { art: 'der', de: 'Job',         pl: 'Jobs',        eng: 'job' },
+  { art: 'die', de: 'Stelle',      pl: 'Stellen',     eng: 'position / spot' },
+  { art: 'die', de: 'Firma',       pl: 'Firmen',      eng: 'company' },
+  { art: 'das', de: 'Unternehmen', pl: 'Unternehmen', eng: 'enterprise' },
+  { art: 'das', de: 'Projekt',     pl: 'Projekte',    eng: 'project' },
+  { art: 'die', de: 'Aufgabe',     pl: 'Aufgaben',    eng: 'task' },
+  { art: 'die', de: 'Pause',       pl: 'Pausen',      eng: 'break' },
+  { art: 'die', de: 'Besprechung', pl: 'Besprechungen',eng: 'meeting' },
+  { art: 'das', de: 'Gehalt',      pl: 'Gehälter',    eng: 'salary' },
+  { art: 'der', de: 'Lohn',        pl: 'Löhne',       eng: 'wage' },
+  { art: 'der', de: 'Vertrag',     pl: 'Verträge',    eng: 'contract' },
+  { art: 'das', de: 'Papier',      pl: 'Papiere',     eng: 'paper' },
+  { art: 'das', de: 'Buch',        pl: 'Bücher',      eng: 'book' },
+  { art: 'das', de: 'Heft',        pl: 'Hefte',       eng: 'exercise book' },
+  { art: 'der', de: 'Stift',       pl: 'Stifte',      eng: 'pen' },
+  { art: 'der', de: 'Bleistift',   pl: 'Bleistifte',  eng: 'pencil' },
+  { art: 'der', de: 'Kugelschreiber',pl:'Kugelschreiber',eng:'ballpoint pen' },
+  { art: 'die', de: 'Seite',       pl: 'Seiten',      eng: 'page / side' },
+  { art: 'das', de: 'Wort',        pl: 'Wörter',      eng: 'word' },
+  { art: 'der', de: 'Satz',        pl: 'Sätze',       eng: 'sentence' },
+  { art: 'die', de: 'Frage',       pl: 'Fragen',      eng: 'question' },
+  { art: 'die', de: 'Antwort',     pl: 'Antworten',   eng: 'answer' },
+  { art: 'die', de: 'Prüfung',     pl: 'Prüfungen',   eng: 'exam' },
+  { art: 'die', de: 'Note',        pl: 'Noten',       eng: 'grade / note' },
+  { art: 'das', de: 'Fach',        pl: 'Fächer',      eng: 'subject / compartment' },
+  { art: 'die', de: 'Klasse',      pl: 'Klassen',     eng: 'class' },
+  { art: 'die', de: 'Lektion',     pl: 'Lektionen',   eng: 'lesson' },
+  { art: 'das', de: 'Beispiel',    pl: 'Beispiele',   eng: 'example' },
+  { art: 'der', de: 'Fehler',      pl: 'Fehler',      eng: 'mistake' },
+  { art: 'die', de: 'Regel',       pl: 'Regeln',      eng: 'rule' },
+  { art: 'das', de: 'Wissen',      pl: '—',           eng: 'knowledge' },
+  { art: 'die', de: 'Idee',        pl: 'Ideen',       eng: 'idea' },
+  { art: 'der', de: 'Plan',        pl: 'Pläne',       eng: 'plan' },
+  { art: 'das', de: 'Ziel',        pl: 'Ziele',       eng: 'goal' },
+  { art: 'das', de: 'Ergebnis',    pl: 'Ergebnisse',  eng: 'result' },
+  { art: 'die', de: 'Lösung',      pl: 'Lösungen',    eng: 'solution' },
+  { art: 'der', de: 'Text',        pl: 'Texte',       eng: 'text' },
+  { art: 'die', de: 'Übung',       pl: 'Übungen',     eng: 'exercise' },
+  { art: 'die', de: 'Ausbildung',  pl: 'Ausbildungen',eng: 'training / education' },
+  { art: 'der', de: 'Abschluss',   pl: 'Abschlüsse',  eng: 'degree / conclusion' },
+  /* Technology & communication */
+  { art: 'der', de: 'Computer',    pl: 'Computer',    eng: 'computer' },
+  { art: 'der', de: 'Laptop',      pl: 'Laptops',     eng: 'laptop' },
+  { art: 'das', de: 'Handy',       pl: 'Handys',      eng: 'cell phone' },
+  { art: 'das', de: 'Telefon',     pl: 'Telefone',    eng: 'telephone' },
+  { art: 'der', de: 'Bildschirm',  pl: 'Bildschirme', eng: 'screen' },
+  { art: 'die', de: 'Tastatur',    pl: 'Tastaturen',  eng: 'keyboard' },
+  { art: 'der', de: 'Drucker',     pl: 'Drucker',     eng: 'printer' },
+  { art: 'das', de: 'Internet',    pl: '—',           eng: 'internet' },
+  { art: 'die', de: 'E-Mail',      pl: 'E-Mails',     eng: 'email' },
+  { art: 'die', de: 'Nachricht',   pl: 'Nachrichten', eng: 'message / news' },
+  { art: 'das', de: 'Programm',    pl: 'Programme',   eng: 'program' },
+  { art: 'die', de: 'Datei',       pl: 'Dateien',     eng: 'file' },
+  { art: 'die', de: 'Kamera',      pl: 'Kameras',     eng: 'camera' },
+  { art: 'das', de: 'Foto',        pl: 'Fotos',       eng: 'photo' },
+  { art: 'der', de: 'Film',        pl: 'Filme',       eng: 'film / movie' },
+  { art: 'das', de: 'Fernsehen',   pl: '—',           eng: 'television (medium)' },
+  { art: 'der', de: 'Fernseher',   pl: 'Fernseher',   eng: 'TV set' },
+  { art: 'das', de: 'Radio',       pl: 'Radios',      eng: 'radio' },
+  { art: 'die', de: 'Musik',       pl: '—',           eng: 'music' },
+  { art: 'das', de: 'Lied',        pl: 'Lieder',      eng: 'song' },
+  { art: 'das', de: 'Spiel',       pl: 'Spiele',      eng: 'game' },
+  { art: 'die', de: 'Batterie',    pl: 'Batterien',   eng: 'battery' },
+  { art: 'der', de: 'Strom',       pl: '—',           eng: 'electricity / current' },
+  { art: 'die', de: 'Energie',     pl: 'Energien',    eng: 'energy' },
+  /* Money & shopping */
+  { art: 'das', de: 'Geld',        pl: '—',           eng: 'money' },
+  { art: 'der', de: 'Euro',        pl: 'Euro',        eng: 'euro' },
+  { art: 'der', de: 'Cent',        pl: 'Cent',        eng: 'cent' },
+  { art: 'die', de: 'Münze',       pl: 'Münzen',      eng: 'coin' },
+  { art: 'der', de: 'Schein',      pl: 'Scheine',     eng: 'banknote / certificate' },
+  { art: 'der', de: 'Preis',       pl: 'Preise',      eng: 'price' },
+  { art: 'die', de: 'Rechnung',    pl: 'Rechnungen',  eng: 'bill / invoice' },
+  { art: 'die', de: 'Quittung',    pl: 'Quittungen',  eng: 'receipt' },
+  { art: 'das', de: 'Konto',       pl: 'Konten',      eng: 'bank account' },
+  { art: 'die', de: 'Kreditkarte', pl: 'Kreditkarten',eng: 'credit card' },
+  { art: 'der', de: 'Einkauf',     pl: 'Einkäufe',    eng: 'shopping / purchase' },
+  { art: 'das', de: 'Angebot',     pl: 'Angebote',    eng: 'offer' },
+  { art: 'der', de: 'Rabatt',      pl: 'Rabatte',     eng: 'discount' },
+  { art: 'die', de: 'Ware',        pl: 'Waren',       eng: 'goods' },
+  { art: 'das', de: 'Produkt',     pl: 'Produkte',    eng: 'product' },
+  { art: 'die', de: 'Steuer',      pl: 'Steuern',     eng: 'tax' },
+  { art: 'das', de: 'Bargeld',     pl: '—',           eng: 'cash' },
+  /* Health */
+  { art: 'die', de: 'Gesundheit',  pl: '—',           eng: 'health' },
+  { art: 'die', de: 'Krankheit',   pl: 'Krankheiten', eng: 'illness' },
+  { art: 'der', de: 'Schmerz',     pl: 'Schmerzen',   eng: 'pain' },
+  { art: 'das', de: 'Fieber',      pl: '—',           eng: 'fever' },
+  { art: 'die', de: 'Erkältung',   pl: 'Erkältungen', eng: 'cold (illness)' },
+  { art: 'der', de: 'Husten',      pl: '—',           eng: 'cough' },
+  { art: 'die', de: 'Grippe',      pl: '—',           eng: 'flu' },
+  { art: 'die', de: 'Medizin',     pl: 'Medizinen',   eng: 'medicine' },
+  { art: 'das', de: 'Medikament',  pl: 'Medikamente', eng: 'medication' },
+  { art: 'die', de: 'Tablette',    pl: 'Tabletten',   eng: 'pill' },
+  { art: 'die', de: 'Spritze',     pl: 'Spritzen',    eng: 'injection' },
+  { art: 'der', de: 'Verband',     pl: 'Verbände',    eng: 'bandage' },
+  { art: 'die', de: 'Wunde',       pl: 'Wunden',      eng: 'wound' },
+  { art: 'der', de: 'Notfall',     pl: 'Notfälle',    eng: 'emergency' },
+  { art: 'der', de: 'Unfall',      pl: 'Unfälle',     eng: 'accident' },
+  { art: 'die', de: 'Behandlung',  pl: 'Behandlungen',eng: 'treatment' },
+  /* Abstract, society & feelings */
+  { art: 'das', de: 'Leben',       pl: '—',           eng: 'life' },
+  { art: 'der', de: 'Tod',         pl: '—',           eng: 'death' },
+  { art: 'die', de: 'Liebe',       pl: '—',           eng: 'love' },
+  { art: 'das', de: 'Glück',       pl: '—',           eng: 'luck / happiness' },
+  { art: 'das', de: 'Pech',        pl: '—',           eng: 'bad luck' },
+  { art: 'die', de: 'Freude',      pl: 'Freuden',     eng: 'joy' },
+  { art: 'die', de: 'Angst',       pl: 'Ängste',      eng: 'fear' },
+  { art: 'die', de: 'Sorge',       pl: 'Sorgen',      eng: 'worry' },
+  { art: 'die', de: 'Hoffnung',    pl: 'Hoffnungen',  eng: 'hope' },
+  { art: 'der', de: 'Traum',       pl: 'Träume',      eng: 'dream' },
+  { art: 'der', de: 'Wunsch',      pl: 'Wünsche',     eng: 'wish' },
+  { art: 'die', de: 'Wahrheit',    pl: 'Wahrheiten',  eng: 'truth' },
+  { art: 'die', de: 'Lüge',        pl: 'Lügen',       eng: 'lie' },
+  { art: 'die', de: 'Meinung',     pl: 'Meinungen',   eng: 'opinion' },
+  { art: 'der', de: 'Gedanke',     pl: 'Gedanken',    eng: 'thought' },
+  { art: 'das', de: 'Gefühl',      pl: 'Gefühle',     eng: 'feeling' },
+  { art: 'die', de: 'Seele',       pl: 'Seelen',      eng: 'soul' },
+  { art: 'der', de: 'Geist',       pl: 'Geister',     eng: 'spirit / mind' },
+  { art: 'der', de: 'Charakter',   pl: 'Charaktere',  eng: 'character' },
+  { art: 'die', de: 'Kraft',       pl: 'Kräfte',      eng: 'strength / force' },
+  { art: 'die', de: 'Macht',       pl: 'Mächte',      eng: 'power' },
+  { art: 'die', de: 'Freiheit',    pl: 'Freiheiten',  eng: 'freedom' },
+  { art: 'der', de: 'Frieden',     pl: '—',           eng: 'peace' },
+  { art: 'der', de: 'Krieg',       pl: 'Kriege',      eng: 'war' },
+  { art: 'die', de: 'Gefahr',      pl: 'Gefahren',    eng: 'danger' },
+  { art: 'die', de: 'Sicherheit',  pl: '—',           eng: 'safety / security' },
+  { art: 'das', de: 'Recht',       pl: 'Rechte',      eng: 'right / law' },
+  { art: 'das', de: 'Gesetz',      pl: 'Gesetze',     eng: 'law' },
+  { art: 'die', de: 'Regierung',   pl: 'Regierungen', eng: 'government' },
+  { art: 'die', de: 'Gesellschaft',pl: 'Gesellschaften',eng: 'society' },
+  { art: 'das', de: 'Volk',        pl: 'Völker',      eng: 'people / nation' },
+  { art: 'die', de: 'Geschichte',  pl: 'Geschichten', eng: 'history / story' },
+  { art: 'die', de: 'Kultur',      pl: 'Kulturen',    eng: 'culture' },
+  { art: 'die', de: 'Sprache',     pl: 'Sprachen',    eng: 'language' },
+  { art: 'die', de: 'Religion',    pl: 'Religionen',  eng: 'religion' },
+  { art: 'die', de: 'Kunst',       pl: 'Künste',      eng: 'art' },
+  { art: 'die', de: 'Wissenschaft',pl: 'Wissenschaften',eng: 'science' },
+  { art: 'die', de: 'Bildung',     pl: '—',           eng: 'education' },
+  { art: 'die', de: 'Politik',     pl: '—',           eng: 'politics' },
+  { art: 'die', de: 'Wirtschaft',  pl: '—',           eng: 'economy' },
+  { art: 'die', de: 'Umwelt',      pl: '—',           eng: 'environment' },
+  { art: 'die', de: 'Zeitung',     pl: 'Zeitungen',   eng: 'newspaper' },
+  { art: 'die', de: 'Zeitschrift', pl: 'Zeitschriften',eng: 'magazine' },
+  { art: 'das', de: 'Ereignis',    pl: 'Ereignisse',  eng: 'event' },
+  { art: 'die', de: 'Situation',   pl: 'Situationen', eng: 'situation' },
+  { art: 'das', de: 'Problem',     pl: 'Probleme',    eng: 'problem' },
+  { art: 'der', de: 'Grund',       pl: 'Gründe',      eng: 'reason' },
+  { art: 'die', de: 'Folge',       pl: 'Folgen',      eng: 'consequence' },
+  { art: 'der', de: 'Vorteil',     pl: 'Vorteile',    eng: 'advantage' },
+  { art: 'der', de: 'Nachteil',    pl: 'Nachteile',   eng: 'disadvantage' },
+  { art: 'die', de: 'Möglichkeit', pl: 'Möglichkeiten',eng: 'possibility' },
+  { art: 'die', de: 'Chance',      pl: 'Chancen',     eng: 'chance' },
+  { art: 'der', de: 'Zweck',       pl: 'Zwecke',      eng: 'purpose' },
+  { art: 'die', de: 'Bedeutung',   pl: 'Bedeutungen', eng: 'meaning' },
+  { art: 'der', de: 'Unterschied', pl: 'Unterschiede',eng: 'difference' },
+  { art: 'die', de: 'Beziehung',   pl: 'Beziehungen', eng: 'relationship' },
+  { art: 'die', de: 'Gruppe',      pl: 'Gruppen',     eng: 'group' },
+  { art: 'das', de: 'Team',        pl: 'Teams',       eng: 'team' },
+  { art: 'das', de: 'Mitglied',    pl: 'Mitglieder',  eng: 'member' },
+  { art: 'die', de: 'Familie',     pl: 'Familien',    eng: 'family' },
+  { art: 'die', de: 'Hochzeit',    pl: 'Hochzeiten',  eng: 'wedding' },
+  { art: 'das', de: 'Fest',        pl: 'Feste',       eng: 'celebration / festival' },
+  { art: 'die', de: 'Feier',       pl: 'Feiern',      eng: 'party / celebration' },
+  { art: 'das', de: 'Geschenk',    pl: 'Geschenke',   eng: 'gift' },
+  { art: 'die', de: 'Überraschung',pl: 'Überraschungen',eng: 'surprise' },
+  { art: 'der', de: 'Erfolg',      pl: 'Erfolge',     eng: 'success' },
+  { art: 'die', de: 'Erfahrung',   pl: 'Erfahrungen', eng: 'experience' },
+  { art: 'das', de: 'Interesse',   pl: 'Interessen',  eng: 'interest' },
+  { art: 'die', de: 'Aufmerksamkeit',pl: '—',         eng: 'attention' },
+  { art: 'der', de: 'Mut',         pl: '—',           eng: 'courage' },
+  /* Objects, tools & materials */
+  { art: 'das', de: 'Ding',        pl: 'Dinge',       eng: 'thing' },
+  { art: 'die', de: 'Sache',       pl: 'Sachen',      eng: 'thing / matter' },
+  { art: 'der', de: 'Gegenstand',  pl: 'Gegenstände', eng: 'object' },
+  { art: 'das', de: 'Stück',       pl: 'Stücke',      eng: 'piece' },
+  { art: 'der', de: 'Teil',        pl: 'Teile',       eng: 'part' },
+  { art: 'die', de: 'Hälfte',      pl: 'Hälften',     eng: 'half' },
+  { art: 'das', de: 'Paar',        pl: 'Paare',       eng: 'pair / couple' },
+  { art: 'die', de: 'Menge',       pl: 'Mengen',      eng: 'amount / crowd' },
+  { art: 'die', de: 'Zahl',        pl: 'Zahlen',      eng: 'number (figure)' },
+  { art: 'die', de: 'Nummer',      pl: 'Nummern',     eng: 'number' },
+  { art: 'der', de: 'Betrag',      pl: 'Beträge',     eng: 'amount (money)' },
+  { art: 'das', de: 'Gewicht',     pl: 'Gewichte',    eng: 'weight' },
+  { art: 'die', de: 'Größe',       pl: 'Größen',      eng: 'size' },
+  { art: 'die', de: 'Länge',       pl: 'Längen',      eng: 'length' },
+  { art: 'die', de: 'Breite',      pl: 'Breiten',     eng: 'width' },
+  { art: 'die', de: 'Höhe',        pl: 'Höhen',       eng: 'height' },
+  { art: 'die', de: 'Tiefe',       pl: 'Tiefen',      eng: 'depth' },
+  { art: 'die', de: 'Farbe',       pl: 'Farben',      eng: 'color' },
+  { art: 'die', de: 'Form',        pl: 'Formen',      eng: 'shape / form' },
+  { art: 'die', de: 'Linie',       pl: 'Linien',      eng: 'line' },
+  { art: 'der', de: 'Punkt',       pl: 'Punkte',      eng: 'point / dot' },
+  { art: 'der', de: 'Kreis',       pl: 'Kreise',      eng: 'circle' },
+  { art: 'die', de: 'Reihe',       pl: 'Reihen',      eng: 'row / series' },
+  { art: 'der', de: 'Anfang',      pl: 'Anfänge',     eng: 'beginning' },
+  { art: 'das', de: 'Ende',        pl: 'Enden',       eng: 'end' },
+  { art: 'die', de: 'Mitte',       pl: '—',           eng: 'middle' },
+  { art: 'der', de: 'Rand',        pl: 'Ränder',      eng: 'edge' },
+  { art: 'die', de: 'Kiste',       pl: 'Kisten',      eng: 'box / crate' },
+  { art: 'der', de: 'Karton',      pl: 'Kartons',     eng: 'cardboard box' },
+  { art: 'die', de: 'Schachtel',   pl: 'Schachteln',  eng: 'small box' },
+  { art: 'der', de: 'Sack',        pl: 'Säcke',       eng: 'sack' },
+  { art: 'das', de: 'Werkzeug',    pl: 'Werkzeuge',   eng: 'tool' },
+  { art: 'der', de: 'Hammer',      pl: 'Hämmer',      eng: 'hammer' },
+  { art: 'der', de: 'Nagel',       pl: 'Nägel',       eng: 'nail' },
+  { art: 'die', de: 'Schraube',    pl: 'Schrauben',   eng: 'screw' },
+  { art: 'die', de: 'Säge',        pl: 'Sägen',       eng: 'saw' },
+  { art: 'die', de: 'Leiter',      pl: 'Leitern',     eng: 'ladder' },
+  { art: 'der', de: 'Faden',       pl: 'Fäden',       eng: 'thread' },
+  { art: 'die', de: 'Nadel',       pl: 'Nadeln',      eng: 'needle' },
+  { art: 'der', de: 'Draht',       pl: 'Drähte',      eng: 'wire' },
+  { art: 'das', de: 'Seil',        pl: 'Seile',       eng: 'rope' },
+  { art: 'die', de: 'Kette',       pl: 'Ketten',      eng: 'chain' },
+  { art: 'der', de: 'Deckel',      pl: 'Deckel',      eng: 'lid' },
+  { art: 'der', de: 'Eimer',       pl: 'Eimer',       eng: 'bucket' },
+  { art: 'der', de: 'Besen',       pl: 'Besen',       eng: 'broom' },
+  { art: 'die', de: 'Bürste',      pl: 'Bürsten',     eng: 'brush' },
+  { art: 'die', de: 'Seife',       pl: 'Seifen',      eng: 'soap' },
+  { art: 'das', de: 'Handtuch',    pl: 'Handtücher',  eng: 'towel' },
+  { art: 'das', de: 'Kissen',      pl: 'Kissen',      eng: 'pillow / cushion' },
+  { art: 'das', de: 'Holz',        pl: 'Hölzer',      eng: 'wood' },
+  { art: 'das', de: 'Metall',      pl: 'Metalle',     eng: 'metal' },
+  { art: 'das', de: 'Eisen',       pl: '—',           eng: 'iron' },
+  { art: 'das', de: 'Gold',        pl: '—',           eng: 'gold' },
+  { art: 'das', de: 'Silber',      pl: '—',           eng: 'silver' },
+  { art: 'der', de: 'Kunststoff',  pl: 'Kunststoffe', eng: 'plastic' },
+  { art: 'das', de: 'Leder',       pl: '—',           eng: 'leather' },
+  { art: 'die', de: 'Wolle',       pl: '—',           eng: 'wool' },
+  { art: 'die', de: 'Baumwolle',   pl: '—',           eng: 'cotton' },
+  { art: 'der', de: 'Stoff',       pl: 'Stoffe',      eng: 'fabric / material' },
+  { art: 'der', de: 'Ziegel',      pl: 'Ziegel',      eng: 'brick' },
+  { art: 'der', de: 'Beton',       pl: '—',           eng: 'concrete' },
+  { art: 'die', de: 'Kohle',       pl: '—',           eng: 'coal' },
+  { art: 'das', de: 'Gas',         pl: 'Gase',        eng: 'gas' },
+  { art: 'der', de: 'Müll',        pl: '—',           eng: 'garbage' },
+  { art: 'der', de: 'Abfall',      pl: 'Abfälle',     eng: 'waste' },
+  { art: 'der', de: 'Staub',       pl: '—',           eng: 'dust' },
+  { art: 'der', de: 'Schmutz',     pl: '—',           eng: 'dirt' },
+  { art: 'die', de: 'Flamme',      pl: 'Flammen',     eng: 'flame' },
+  { art: 'der', de: 'Rauch',       pl: '—',           eng: 'smoke' },
+  { art: 'die', de: 'Asche',       pl: '—',           eng: 'ash' },
+  { art: 'der', de: 'Tropfen',     pl: 'Tropfen',     eng: 'drop' },
+  { art: 'die', de: 'Welle',       pl: 'Wellen',      eng: 'wave' },
+  { art: 'der', de: 'Schaum',      pl: '—',           eng: 'foam' },
+  { art: 'das', de: 'Loch',        pl: 'Löcher',      eng: 'hole' },
+  { art: 'der', de: 'Riss',        pl: 'Risse',       eng: 'crack / tear' },
+  { art: 'der', de: 'Fleck',       pl: 'Flecken',     eng: 'stain / spot' },
+  { art: 'der', de: 'Vorhang',     pl: 'Vorhänge',    eng: 'curtain' },
+  { art: 'die', de: 'Kerze',       pl: 'Kerzen',      eng: 'candle' },
+  /* Directions & location */
+  { art: 'der', de: 'Norden',      pl: '—',           eng: 'north' },
+  { art: 'der', de: 'Süden',       pl: '—',           eng: 'south' },
+  { art: 'der', de: 'Osten',       pl: '—',           eng: 'east' },
+  { art: 'der', de: 'Westen',      pl: '—',           eng: 'west' },
+  { art: 'die', de: 'Richtung',    pl: 'Richtungen',  eng: 'direction' },
+  { art: 'die', de: 'Lage',        pl: 'Lagen',       eng: 'position / situation' },
+  { art: 'der', de: 'Ort',         pl: 'Orte',        eng: 'place / location' },
+  { art: 'die', de: 'Gegend',      pl: 'Gegenden',    eng: 'area / region' },
+  { art: 'die', de: 'Umgebung',    pl: 'Umgebungen',  eng: 'surroundings' },
+  { art: 'das', de: 'Gebiet',      pl: 'Gebiete',     eng: 'area / territory' },
+  /* Sports & hobbies */
+  { art: 'der', de: 'Sport',       pl: '—',           eng: 'sport' },
+  { art: 'der', de: 'Fußball',     pl: 'Fußbälle',    eng: 'football / soccer' },
+  { art: 'der', de: 'Ball',        pl: 'Bälle',       eng: 'ball' },
+  { art: 'das', de: 'Tor',         pl: 'Tore',        eng: 'goal / gate' },
+  { art: 'die', de: 'Mannschaft',  pl: 'Mannschaften',eng: 'team (sports)' },
+  { art: 'der', de: 'Spieler',     pl: 'Spieler',     eng: 'player' },
+  { art: 'der', de: 'Sieg',        pl: 'Siege',       eng: 'victory' },
+  { art: 'die', de: 'Niederlage',  pl: 'Niederlagen', eng: 'defeat' },
+  { art: 'der', de: 'Wettbewerb',  pl: 'Wettbewerbe', eng: 'competition' },
+  { art: 'das', de: 'Turnier',     pl: 'Turniere',    eng: 'tournament' },
+  { art: 'der', de: 'Meister',     pl: 'Meister',     eng: 'champion / master' },
+  { art: 'der', de: 'Pokal',       pl: 'Pokale',      eng: 'trophy / cup' },
+  { art: 'das', de: 'Training',    pl: '—',           eng: 'training' },
+  { art: 'der', de: 'Trainer',     pl: 'Trainer',     eng: 'coach' },
+  { art: 'das', de: 'Schwimmbad',  pl: 'Schwimmbäder',eng: 'swimming pool' },
+  { art: 'der', de: 'Ski',         pl: 'Skier',       eng: 'ski' },
+  { art: 'das', de: 'Hobby',       pl: 'Hobbys',      eng: 'hobby' },
+  { art: 'die', de: 'Freizeit',    pl: '—',           eng: 'free time' },
+  { art: 'das', de: 'Abenteuer',   pl: 'Abenteuer',   eng: 'adventure' },
+  /* Everyday items & documents */
+  { art: 'der', de: 'Name',        pl: 'Namen',       eng: 'name' },
+  { art: 'die', de: 'Adresse',     pl: 'Adressen',    eng: 'address' },
+  { art: 'das', de: 'Zeichen',     pl: 'Zeichen',     eng: 'sign / symbol' },
+  { art: 'das', de: 'Symbol',      pl: 'Symbole',     eng: 'symbol' },
+  { art: 'die', de: 'Fahne',       pl: 'Fahnen',      eng: 'flag' },
+  { art: 'der', de: 'Ausweis',     pl: 'Ausweise',    eng: 'ID card' },
+  { art: 'der', de: 'Pass',        pl: 'Pässe',       eng: 'passport' },
+  { art: 'der', de: 'Stempel',     pl: 'Stempel',     eng: 'stamp / seal' },
+  { art: 'die', de: 'Briefmarke',  pl: 'Briefmarken', eng: 'postage stamp' },
+  { art: 'der', de: 'Brief',       pl: 'Briefe',      eng: 'letter' },
+  { art: 'das', de: 'Paket',       pl: 'Pakete',      eng: 'parcel' },
+  { art: 'die', de: 'Karte',       pl: 'Karten',      eng: 'card / map' },
+  { art: 'der', de: 'Zettel',      pl: 'Zettel',      eng: 'note / slip' },
+  { art: 'das', de: 'Formular',    pl: 'Formulare',   eng: 'form' },
+  { art: 'die', de: 'Liste',       pl: 'Listen',      eng: 'list' },
+  { art: 'die', de: 'Tabelle',     pl: 'Tabellen',    eng: 'table / chart' },
+  { art: 'der', de: 'Bericht',     pl: 'Berichte',    eng: 'report' },
+  { art: 'die', de: 'Notiz',       pl: 'Notizen',     eng: 'note' },
+  { art: 'das', de: 'Dokument',    pl: 'Dokumente',   eng: 'document' },
+  { art: 'der', de: 'Ordner',      pl: 'Ordner',      eng: 'folder / binder' },
+  { art: 'die', de: 'Mappe',       pl: 'Mappen',      eng: 'folder / portfolio' },
+  { art: 'der', de: 'Umschlag',    pl: 'Umschläge',   eng: 'envelope' },
+  { art: 'die', de: 'Schere',      pl: 'Scheren',     eng: 'scissors' },
+  { art: 'das', de: 'Lineal',      pl: 'Lineale',     eng: 'ruler' },
+  { art: 'der', de: 'Radiergummi', pl: 'Radiergummis',eng: 'eraser' },
+  { art: 'der', de: 'Pinsel',      pl: 'Pinsel',      eng: 'paintbrush' },
+  { art: 'die', de: 'Kreide',      pl: '—',           eng: 'chalk' },
+  { art: 'die', de: 'Tinte',       pl: 'Tinten',      eng: 'ink' },
+  { art: 'das', de: 'Werk',        pl: 'Werke',       eng: 'work (opus)' },
+  { art: 'das', de: 'Gemälde',     pl: 'Gemälde',     eng: 'painting' },
+  { art: 'die', de: 'Statue',      pl: 'Statuen',     eng: 'statue' },
+  { art: 'die', de: 'Vase',        pl: 'Vasen',       eng: 'vase' },
+  { art: 'das', de: 'Streichholz', pl: 'Streichhölzer',eng: 'match' },
+  { art: 'die', de: 'Zigarette',   pl: 'Zigaretten',  eng: 'cigarette' },
+  { art: 'die', de: 'Schublade',   pl: 'Schubladen',  eng: 'drawer' },
+  { art: 'das', de: 'Waschbecken', pl: 'Waschbecken', eng: 'sink' },
+  { art: 'die', de: 'Dusche',      pl: 'Duschen',     eng: 'shower' },
+  { art: 'die', de: 'Badewanne',   pl: 'Badewannen',  eng: 'bathtub' },
+  { art: 'der', de: 'Wasserhahn',  pl: 'Wasserhähne', eng: 'faucet / tap' },
+  { art: 'die', de: 'Heizung',     pl: 'Heizungen',   eng: 'heating' },
+  { art: 'der', de: 'Aufzug',      pl: 'Aufzüge',     eng: 'elevator' },
+  { art: 'die', de: 'Klingel',     pl: 'Klingeln',    eng: 'doorbell' },
+  { art: 'der', de: 'Wecker',      pl: 'Wecker',      eng: 'alarm clock' },
+  { art: 'die', de: 'Schüssel',    pl: 'Schüsseln',   eng: 'bowl' },
+  { art: 'die', de: 'Serviette',   pl: 'Servietten',  eng: 'napkin' },
+  { art: 'das', de: 'Tuch',        pl: 'Tücher',      eng: 'cloth' },
+  { art: 'die', de: 'Kanne',       pl: 'Kannen',      eng: 'pot / jug' },
+  { art: 'der', de: 'Korb',        pl: 'Körbe',       eng: 'basket' },
+  { art: 'der', de: 'Regenschirm', pl: 'Regenschirme',eng: 'umbrella' }
+];
+
+/* ══════════════════════════════════════════
    STATE
 ══════════════════════════════════════════ */
 var MAX_PTS    = 10;
@@ -664,14 +1771,17 @@ var WRONG_PT   = -1;
 var KEYS       = ['KeyQ', 'KeyW', 'KeyA', 'KeyS'];
 var KEY_LABELS = ['Q', 'W', 'A', 'S'];
 var activeTab  = 'letters';
+var activeLang = 'ua';
 
 var letterPts  = LETTERS.map(function() { return 0; });
 var vocabPts   = VOCAB.map(function() { return 0; });   /* indexed by VOCAB idx; split into words/sentences queues */
 var nounPts    = NOUNS.map(function() { return 0; });
+var gVerbPts   = DE_VERBS.map(function() { return 0; });
+var gNounPts   = DE_NOUNS.map(function() { return 0; });
 
-var letterQueue = [], wordsQueue = [], sentencesQueue = [], nounsQueue = [];
-var letterCurrent = null, wordsCurrent = null, sentencesCurrent = null, nounsCurrent = null;
-var letterAnswered = false, wordsAnswered = false, sentencesAnswered = false, nounsAnswered = false;
+var letterQueue = [], wordsQueue = [], sentencesQueue = [], nounsQueue = [], gverbsQueue = [], gnounsQueue = [];
+var letterCurrent = null, wordsCurrent = null, sentencesCurrent = null, nounsCurrent = null, gverbsCurrent = null, gnounsCurrent = null;
+var letterAnswered = false, wordsAnswered = false, sentencesAnswered = false, nounsAnswered = false, gverbsAnswered = false, gnounsAnswered = false;
 
 /* ══════════════════════════════════════════
    HELPERS
@@ -1054,10 +2164,187 @@ function handleNounsAnswer(chosenIdx) {
   document.getElementById('nouns-next').className = 'next-btn show';
 }
 
+/* ══════════════════════════════════════════
+   GERMAN VERBS QUIZ
+══════════════════════════════════════════ */
+function refillGVerbsQueue() {
+  var pool = [];
+  for (var i = 0; i < DE_VERBS.length; i++) { if (gVerbPts[i] < MAX_PTS) pool.push(i); }
+  gverbsQueue = shuffle(pool);
+}
+function pickNextGVerb() {
+  gverbsQueue = gverbsQueue.filter(function(i) { return gVerbPts[i] < MAX_PTS; });
+  if (gverbsQueue.length === 0) refillGVerbsQueue();
+  if (gverbsQueue.length === 0) return null;
+  return gverbsQueue.shift();
+}
+
+function renderGVerbsQuestion() {
+  gverbsAnswered = false;
+  gverbsCurrent  = pickNextGVerb();
+  if (gverbsCurrent === null) { showCompletion('gverbs'); return; }
+
+  var item = DE_VERBS[gverbsCurrent];
+  var pts  = gVerbPts[gverbsCurrent];
+
+  document.getElementById('gverbs-prompt').innerHTML =
+    '<div class="verb-inf">' + item.de + '</div>';
+  document.getElementById('gverbs-pts-fill').style.width = (pts / MAX_PTS * 100) + '%';
+  document.getElementById('gverbs-pts-text').textContent = pts + ' / ' + MAX_PTS + ' pts';
+  clearFeedback('gverbs');
+
+  var others = shuffle(DE_VERBS.map(function(_, i) { return i; })
+    .filter(function(i) { return i !== gverbsCurrent; })).slice(0, 3);
+  var optIs  = shuffle([gverbsCurrent].concat(others));
+
+  var grid = document.getElementById('gverbs-options');
+  grid.innerHTML = '';
+  optIs.forEach(function(idx, pos) {
+    var btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.setAttribute('data-idx', idx);
+    btn.innerHTML =
+      '<span class="key-hint">' + KEY_LABELS[pos] + '</span>' +
+      '<span style="font-size:0.92rem">' + DE_VERBS[idx].eng + '</span>';
+    btn.addEventListener('click', function() { handleGVerbsAnswer(idx); });
+    grid.appendChild(btn);
+  });
+}
+
+function handleGVerbsAnswer(chosenIdx) {
+  if (gverbsAnswered) return;
+  gverbsAnswered = true;
+
+  var correct = (chosenIdx === gverbsCurrent);
+  var prevPts = gVerbPts[gverbsCurrent];
+  gVerbPts[gverbsCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts  = gVerbPts[gverbsCurrent];
+  var item    = DE_VERBS[gverbsCurrent];
+
+  document.querySelectorAll('#gverbs-options .opt-btn').forEach(function(b) {
+    b.classList.add('locked');
+    var idx = parseInt(b.getAttribute('data-idx'), 10);
+    if (idx === gverbsCurrent)                      b.classList.add('correct');
+    if (idx === chosenIdx && idx !== gverbsCurrent) b.classList.add('wrong');
+  });
+
+  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'gverbs-quiz-wrap');
+
+  var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
+  if (correct) {
+    showFeedback('gverbs', true,
+      justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
+      justLearned ? item.de + ' fully learned!' : newPts + ' / ' + MAX_PTS + ' pts');
+  } else {
+    showFeedback('gverbs', false, (newPts < prevPts) ? '-1 pt' : 'Miss!', 'Correct: ' + item.eng);
+  }
+
+  document.getElementById('gverbs-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById('gverbs-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
+  updateGVerbsTile(gverbsCurrent);
+  updateOverall();
+  saveProgress();
+  document.getElementById('gverbs-next').className = 'next-btn show';
+}
+
+/* ══════════════════════════════════════════
+   GERMAN NOUNS QUIZ
+══════════════════════════════════════════ */
+function refillGNounsQueue() {
+  var pool = [];
+  for (var i = 0; i < DE_NOUNS.length; i++) { if (gNounPts[i] < MAX_PTS) pool.push(i); }
+  gnounsQueue = shuffle(pool);
+}
+function pickNextGNoun() {
+  gnounsQueue = gnounsQueue.filter(function(i) { return gNounPts[i] < MAX_PTS; });
+  if (gnounsQueue.length === 0) refillGNounsQueue();
+  if (gnounsQueue.length === 0) return null;
+  return gnounsQueue.shift();
+}
+
+function pluralText(item) {
+  return item.pl === '—' ? 'no plural / uncountable' : 'plural: die ' + item.pl;
+}
+
+function renderGNounsQuestion() {
+  gnounsAnswered = false;
+  gnounsCurrent  = pickNextGNoun();
+  if (gnounsCurrent === null) { showCompletion('gnouns'); return; }
+
+  var item = DE_NOUNS[gnounsCurrent];
+  var pts  = gNounPts[gnounsCurrent];
+
+  document.getElementById('gnouns-prompt').innerHTML =
+    '<div class="vocab-prompt-clickable" onclick="revealPron(\'gnouns\')">' +
+      '<div class="verb-inf" style="font-size:2.2rem">' + item.art + ' ' + item.de + '</div>' +
+      '<div class="vocab-pron-reveal" id="gnouns-pron-reveal">' + pluralText(item) + '</div>' +
+      '<div class="vocab-tap-hint">tap to see plural</div>' +
+    '</div>';
+
+  document.getElementById('gnouns-pts-fill').style.width = (pts / MAX_PTS * 100) + '%';
+  document.getElementById('gnouns-pts-text').textContent = pts + ' / ' + MAX_PTS + ' pts';
+  clearFeedback('gnouns');
+
+  var others = shuffle(DE_NOUNS.map(function(_, i) { return i; })
+    .filter(function(i) { return i !== gnounsCurrent; })).slice(0, 3);
+  var optIs  = shuffle([gnounsCurrent].concat(others));
+
+  var grid = document.getElementById('gnouns-options');
+  grid.innerHTML = '';
+  optIs.forEach(function(idx, pos) {
+    var btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.setAttribute('data-idx', idx);
+    btn.innerHTML =
+      '<span class="key-hint">' + KEY_LABELS[pos] + '</span>' +
+      '<span style="font-size:0.92rem">' + DE_NOUNS[idx].eng + '</span>';
+    btn.addEventListener('click', function() { handleGNounsAnswer(idx); });
+    grid.appendChild(btn);
+  });
+}
+
+function handleGNounsAnswer(chosenIdx) {
+  if (gnounsAnswered) return;
+  gnounsAnswered = true;
+
+  var correct = (chosenIdx === gnounsCurrent);
+  var prevPts = gNounPts[gnounsCurrent];
+  gNounPts[gnounsCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts  = gNounPts[gnounsCurrent];
+  var item    = DE_NOUNS[gnounsCurrent];
+
+  document.querySelectorAll('#gnouns-options .opt-btn').forEach(function(b) {
+    b.classList.add('locked');
+    var idx = parseInt(b.getAttribute('data-idx'), 10);
+    if (idx === gnounsCurrent)                      b.classList.add('correct');
+    if (idx === chosenIdx && idx !== gnounsCurrent) b.classList.add('wrong');
+  });
+
+  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'gnouns-quiz-wrap');
+
+  var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
+  if (correct) {
+    showFeedback('gnouns', true,
+      justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
+      justLearned ? item.art + ' ' + item.de + ' fully learned!' : newPts + ' / ' + MAX_PTS + ' pts');
+  } else {
+    showFeedback('gnouns', false, (newPts < prevPts) ? '-1 pt' : 'Miss!', 'Correct: ' + item.eng + '  (' + item.art + ' ' + item.de + ')');
+  }
+
+  document.getElementById('gnouns-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById('gnouns-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
+  updateGNounsTile(gnounsCurrent);
+  updateOverall();
+  saveProgress();
+  document.getElementById('gnouns-next').className = 'next-btn show';
+}
+
 function nextQ(mode) {
   if (mode === 'letters')         renderLetterQuestion();
   else if (mode === 'words')      renderWordsQuestion();
   else if (mode === 'sentences')  renderSentencesQuestion();
+  else if (mode === 'gverbs')     renderGVerbsQuestion();
+  else if (mode === 'gnouns')     renderGNounsQuestion();
   else                            renderNounsQuestion();
 }
 
@@ -1154,6 +2441,20 @@ function resetMode(mode) {
     document.getElementById('sentences-done').style.display      = 'none';
     renderSentencesGrid();
     renderSentencesQuestion();
+  } else if (mode === 'gverbs') {
+    gVerbPts = DE_VERBS.map(function() { return 0; });
+    gverbsQueue = [];
+    document.getElementById('gverbs-quiz-wrap').style.display = 'block';
+    document.getElementById('gverbs-done').style.display      = 'none';
+    renderGVerbsGrid();
+    renderGVerbsQuestion();
+  } else if (mode === 'gnouns') {
+    gNounPts = DE_NOUNS.map(function() { return 0; });
+    gnounsQueue = [];
+    document.getElementById('gnouns-quiz-wrap').style.display = 'block';
+    document.getElementById('gnouns-done').style.display      = 'none';
+    renderGNounsGrid();
+    renderGNounsQuestion();
   } else {
     nounPts   = NOUNS.map(function() { return 0; });
     nounsQueue = [];
@@ -1178,34 +2479,42 @@ function updateOverall() {
   var totalS   = VOCAB.filter(function(v) { return v.type === 'phrase'; }).length;
 
   var learnedN = nounPts.filter(function(p) { return p >= MAX_PTS; }).length;
+  var learnedGV = gVerbPts.filter(function(p) { return p >= MAX_PTS; }).length;
+  var learnedGN = gNounPts.filter(function(p) { return p >= MAX_PTS; }).length;
 
-  if (activeTab === 'nouns') {
-    document.getElementById('overall-label').textContent  = 'NOUNS & QUESTIONS LEARNED';
-    document.getElementById('learned-count').textContent  = learnedN;
-    document.getElementById('learned-total').textContent  = NOUNS.length;
-    document.getElementById('overall-fill').style.width   = (learnedN / NOUNS.length * 100) + '%';
-  } else if (activeTab === 'words') {
-    document.getElementById('overall-label').textContent  = 'WORDS LEARNED';
-    document.getElementById('learned-count').textContent  = learnedW;
-    document.getElementById('learned-total').textContent  = totalW;
-    document.getElementById('overall-fill').style.width   = (learnedW / totalW * 100) + '%';
-  } else if (activeTab === 'sentences') {
-    document.getElementById('overall-label').textContent  = 'SENTENCES LEARNED';
-    document.getElementById('learned-count').textContent  = learnedS;
-    document.getElementById('learned-total').textContent  = totalS;
-    document.getElementById('overall-fill').style.width   = (learnedS / totalS * 100) + '%';
-  } else {
-    document.getElementById('overall-label').textContent  = 'LETTERS LEARNED';
-    document.getElementById('learned-count').textContent  = learnedL;
-    document.getElementById('learned-total').textContent  = LETTERS.length;
-    document.getElementById('overall-fill').style.width   = (learnedL / LETTERS.length * 100) + '%';
+  function setOverall(label, count, total) {
+    document.getElementById('overall-label').textContent = label;
+    document.getElementById('learned-count').textContent = count;
+    document.getElementById('learned-total').textContent = total;
+    document.getElementById('overall-fill').style.width  = (total ? count / total * 100 : 0) + '%';
   }
 
-  document.getElementById('prog-letters-count').textContent   = learnedL;
+  if (activeTab === 'nouns') {
+    setOverall('NOUNS & QUESTIONS LEARNED', learnedN, NOUNS.length);
+  } else if (activeTab === 'words') {
+    setOverall('VERBS LEARNED', learnedW, totalW);
+  } else if (activeTab === 'sentences') {
+    setOverall('SENTENCES LEARNED', learnedS, totalS);
+  } else if (activeTab === 'gverbs') {
+    setOverall('GERMAN VERBS LEARNED', learnedGV, DE_VERBS.length);
+  } else if (activeTab === 'gnouns') {
+    setOverall('GERMAN NOUNS LEARNED', learnedGN, DE_NOUNS.length);
+  } else if (activeTab === 'progress' || activeTab === 'gprogress') {
+    if (activeLang === 'de') setOverall('GERMAN LEARNED', learnedGV + learnedGN, DE_VERBS.length + DE_NOUNS.length);
+    else setOverall('UKRAINIAN LEARNED', learnedL + learnedW + learnedS + learnedN, LETTERS.length + totalW + totalS + NOUNS.length);
+  } else {
+    setOverall('LETTERS LEARNED', learnedL, LETTERS.length);
+  }
+
+  document.getElementById('prog-letters-count').textContent    = learnedL;
   document.getElementById('prog-words-count').textContent      = learnedW;
   document.getElementById('prog-sentences-count').textContent  = learnedS;
   document.getElementById('prog-nouns-count').textContent      = learnedN;
   document.getElementById('prog-nouns-total').textContent      = NOUNS.length;
+  document.getElementById('prog-gverbs-count').textContent     = learnedGV;
+  document.getElementById('prog-gverbs-total').textContent     = DE_VERBS.length;
+  document.getElementById('prog-gnouns-count').textContent     = learnedGN;
+  document.getElementById('prog-gnouns-total').textContent     = DE_NOUNS.length;
 }
 
 /* ══════════════════════════════════════════
@@ -1319,26 +2628,107 @@ function updateNounsTile(i) {
   if (!was && now) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
 }
 
+function renderGVerbsGrid() {
+  var grid = document.getElementById('grid-gverbs');
+  if (!grid) return;
+  grid.innerHTML = '';
+  DE_VERBS.forEach(function(item, i) {
+    var learned = gVerbPts[i] >= MAX_PTS;
+    var tile = document.createElement('div');
+    tile.className = 'tile' + (learned ? ' learned' : '');
+    tile.id = 'gvtile-' + i;
+    tile.innerHTML =
+      '<div class="tile-main" style="font-size:0.95rem">' + item.de + '</div>' +
+      '<div class="tile-sub">' + item.eng.substring(0, 24) + (item.eng.length > 24 ? '...' : '') + '</div>' +
+      '<div class="tile-bar"><div class="tile-fill" style="width:' + (gVerbPts[i] / MAX_PTS * 100) + '%"></div></div>' +
+      '<div class="tile-pts">' + (learned ? 'done' : gVerbPts[i] + ' pts') + '</div>';
+    grid.appendChild(tile);
+  });
+}
+function updateGVerbsTile(i) {
+  var tile = document.getElementById('gvtile-' + i);
+  if (!tile) return;
+  var was = tile.classList.contains('learned');
+  var now = gVerbPts[i] >= MAX_PTS;
+  tile.className = 'tile' + (now ? ' learned' : '');
+  tile.querySelector('.tile-fill').style.width = (gVerbPts[i] / MAX_PTS * 100) + '%';
+  tile.querySelector('.tile-pts').textContent  = now ? 'done' : gVerbPts[i] + ' pts';
+  if (!was && now) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
+}
+
+function renderGNounsGrid() {
+  var grid = document.getElementById('grid-gnouns');
+  if (!grid) return;
+  grid.innerHTML = '';
+  DE_NOUNS.forEach(function(item, i) {
+    var learned = gNounPts[i] >= MAX_PTS;
+    var tile = document.createElement('div');
+    tile.className = 'tile' + (learned ? ' learned' : '');
+    tile.id = 'gntile-' + i;
+    tile.innerHTML =
+      '<div class="tile-main" style="font-size:0.9rem">' + item.art + ' ' + item.de + '</div>' +
+      '<div class="tile-sub">' + item.eng.substring(0, 22) + (item.eng.length > 22 ? '...' : '') + '</div>' +
+      '<div class="tile-bar"><div class="tile-fill" style="width:' + (gNounPts[i] / MAX_PTS * 100) + '%"></div></div>' +
+      '<div class="tile-pts">' + (learned ? 'done' : gNounPts[i] + ' pts') + '</div>';
+    grid.appendChild(tile);
+  });
+}
+function updateGNounsTile(i) {
+  var tile = document.getElementById('gntile-' + i);
+  if (!tile) return;
+  var was = tile.classList.contains('learned');
+  var now = gNounPts[i] >= MAX_PTS;
+  tile.className = 'tile' + (now ? ' learned' : '');
+  tile.querySelector('.tile-fill').style.width = (gNounPts[i] / MAX_PTS * 100) + '%';
+  tile.querySelector('.tile-pts').textContent  = now ? 'done' : gNounPts[i] + ' pts';
+  if (!was && now) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
+}
+
 /* ══════════════════════════════════════════
    TABS
 ══════════════════════════════════════════ */
 function switchTab(name, btn) {
   activeTab = name;
   document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b)   { b.classList.remove('active'); });
+  var bar = activeLang === 'de' ? document.getElementById('tabs-de') : document.getElementById('tabs-ua');
+  bar.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
   document.getElementById('panel-' + name).classList.add('active');
   btn.classList.add('active');
+  updateOverall();
+}
+
+function switchLang(lang, btn) {
+  activeLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+
+  document.getElementById('tabs-ua').style.display = (lang === 'ua') ? 'flex' : 'none';
+  document.getElementById('tabs-de').style.display = (lang === 'de') ? 'flex' : 'none';
+  document.getElementById('app-title').innerHTML = (lang === 'de')
+    ? '🇩🇪 German'
+    : '🇺🇦 Ukrainian';
+
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+
+  var bar = document.getElementById(lang === 'de' ? 'tabs-de' : 'tabs-ua');
+  bar.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  var firstBtn = bar.querySelector('.tab-btn');
+  firstBtn.classList.add('active');
+
+  var firstTab = (lang === 'de') ? 'gverbs' : 'letters';
+  activeTab = firstTab;
+  document.getElementById('panel-' + firstTab).classList.add('active');
   updateOverall();
 }
 
 /* ══════════════════════════════════════════
    SAVE / LOAD
 ══════════════════════════════════════════ */
-var STORAGE_KEY = 'ua_learn_v11';
+var STORAGE_KEY = 'ua_learn_v12';
 
 function saveProgress() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ lp: letterPts, vc: vocabPts, np: nounPts }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ lp: letterPts, vc: vocabPts, np: nounPts, gv: gVerbPts, gn: gNounPts }));
   } catch(e) {}
 }
 
@@ -1353,6 +2743,10 @@ function loadProgress() {
       vocabPts = d.vc.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
     if (d.np && d.np.length === NOUNS.length)
       nounPts = d.np.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
+    if (d.gv && d.gv.length === DE_VERBS.length)
+      gVerbPts = d.gv.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
+    if (d.gn && d.gn.length === DE_NOUNS.length)
+      gNounPts = d.gn.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
   } catch(e) {}
 }
 
@@ -1360,11 +2754,13 @@ function loadProgress() {
    KEYBOARD  Q W A S + Space/Enter
 ══════════════════════════════════════════ */
 document.addEventListener('keydown', function(e) {
-  if (activeTab === 'progress') return;
+  if (activeTab === 'progress' || activeTab === 'gprogress') return;
   var tab      = activeTab;
-  var answered = tab === 'letters' ? letterAnswered
+  var answered = tab === 'letters'   ? letterAnswered
                : tab === 'words'     ? wordsAnswered
                : tab === 'sentences' ? sentencesAnswered
+               : tab === 'gverbs'    ? gverbsAnswered
+               : tab === 'gnouns'    ? gnounsAnswered
                : nounsAnswered;
 
   if ((e.code === 'Space' || e.code === 'Enter') && answered) {
@@ -1389,11 +2785,15 @@ renderLetterGrid();
 renderWordsGrid();
 renderSentencesGrid();
 renderNounsGrid();
+renderGVerbsGrid();
+renderGNounsGrid();
 updateOverall();
 renderLetterQuestion();
 renderWordsQuestion();
 renderSentencesQuestion();
 renderNounsQuestion();
+renderGVerbsQuestion();
+renderGNounsQuestion();
 </script>
 </body>
 </html>
