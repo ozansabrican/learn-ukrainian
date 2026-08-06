@@ -1922,6 +1922,7 @@ function handleLetterAnswer(chosenIdx) {
   updateOverall();
   saveProgress();
   document.getElementById('letters-next').className = 'next-btn show';
+  if (correct) setTimeout(function() { if (activeTab === 'letters') nextQ('letters'); }, 500);
 }
 
 /* ══════════════════════════════════════════
@@ -2008,6 +2009,7 @@ function handleWordsAnswer(chosenIdx) {
   updateOverall();
   saveProgress();
   document.getElementById('words-next').className = 'next-btn show';
+  if (correct) setTimeout(function() { if (activeTab === 'words') nextQ('words'); }, 500);
 }
 
 /* ══════════════════════════════════════════
@@ -2084,6 +2086,7 @@ function handleSentencesAnswer(chosenIdx) {
   updateOverall();
   saveProgress();
   document.getElementById('sentences-next').className = 'next-btn show';
+  if (correct) setTimeout(function() { if (activeTab === 'sentences') nextQ('sentences'); }, 500);
 }
 
 /* ══════════════════════════════════════════
@@ -2162,6 +2165,7 @@ function handleNounsAnswer(chosenIdx) {
   updateOverall();
   saveProgress();
   document.getElementById('nouns-next').className = 'next-btn show';
+  if (correct) setTimeout(function() { if (activeTab === 'nouns') nextQ('nouns'); }, 500);
 }
 
 /* ══════════════════════════════════════════
@@ -2245,6 +2249,7 @@ function handleGVerbsAnswer(chosenIdx) {
   updateOverall();
   saveProgress();
   document.getElementById('gverbs-next').className = 'next-btn show';
+  if (correct) setTimeout(function() { if (activeTab === 'gverbs') nextQ('gverbs'); }, 500);
 }
 
 /* ══════════════════════════════════════════
@@ -2337,6 +2342,7 @@ function handleGNounsAnswer(chosenIdx) {
   updateOverall();
   saveProgress();
   document.getElementById('gnouns-next').className = 'next-btn show';
+  if (correct) setTimeout(function() { if (activeTab === 'gnouns') nextQ('gnouns'); }, 500);
 }
 
 function nextQ(mode) {
