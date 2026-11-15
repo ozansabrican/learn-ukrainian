@@ -11,7 +11,8 @@ const onVercel = Boolean(env.VERCEL);
 
 export const config = {
   port: Number(env.PORT ?? 3000),
-  host: env.HOST ?? (onVercel ? '0.0.0.0' : '127.0.0.1'),
+  /** On Vercel leave it to the platform (as in Vercel's examples). */
+  host: onVercel ? undefined : (env.HOST ?? '127.0.0.1'),
   /** 'blob' = Vercel Blob, 'file' = JSON files in DATA_DIR (local dev) */
   storage: (env.STORAGE ?? (onVercel ? 'blob' : 'file')) as 'blob' | 'file',
   dataDir: resolve(env.DATA_DIR ?? 'data'),

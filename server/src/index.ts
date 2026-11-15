@@ -23,4 +23,11 @@ app.log.info(
   `storage: ${config.storage === 'blob' ? `Vercel Blob${config.blobPrefix ? ` (prefix "${config.blobPrefix}")` : ''}` : config.dataDir}`,
 );
 
-await app.listen({ port: config.port, host: config.host });
+// Not awaited, on purpose: on Vercel, listen() is intercepted and its promise
+// never settles — awaiting it here would stop this module from finishing loading,
+// so the function never becomes ready (FUNCTION_INVOCATION_FAILED).
+// This matches Vercel's own Fastify example.
+app.listen({ port: config.port, host: config.host }).catch((err) => {
+  app.log.error(err);
+  process.exit(1);
+});
