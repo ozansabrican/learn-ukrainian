@@ -1,0 +1,33 @@
+{
+  "name": "learn-ukrainian-server",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "API for learn-ukrainian: word lists and progress sync, stored in Vercel Blob.",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "gen": "tsx scripts/gen.ts",
+    "predev": "npm run gen",
+    "dev": "tsx watch --ignore ./data --ignore ./src/generated src/index.ts",
+    "pretest": "npm run gen",
+    "test": "tsx --test \"test/**/*.test.ts\"",
+    "pretypecheck": "npm run gen",
+    "typecheck": "tsc --noEmit",
+    "vercel-build": "npm run gen"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.4.3",
+    "@vercel/blob": "^2.9.0",
+    "fastify": "^5.12.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "overrides": {
+    "@vercel/cli-config": "^0.4.0"
+  }
+}

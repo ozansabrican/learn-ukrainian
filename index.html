@@ -27,6 +27,15 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .lang-btn { padding: 7px 16px; border-radius: 8px; border: none; background: transparent; color: #4a6275; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; }
 .lang-btn.active { background: #162230; color: #f5c518; }
 
+/* ── Profile / sync ── */
+.profile-row { margin-top: 10px; }
+.profile-btn { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border-radius: 99px; border: 1px solid #1b2d3e; background: #0c151f; color: #8aa0b2; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+.profile-btn::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #4a6275; }
+.profile-btn.sync-local   { color: #4a6275; }
+.profile-btn.sync-synced::before  { background: #4caf50; }
+.profile-btn.sync-syncing::before { background: #f5c518; }
+.profile-btn.sync-offline::before { background: #e05555; }
+
 /* ── Overall bar ── */
 .overall-wrap { width: 100%; max-width: 520px; margin-bottom: 18px; }
 .overall-row  { display: flex; justify-content: space-between; margin-bottom: 6px; }
@@ -191,6 +200,9 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   <div class="lang-switch">
     <button class="lang-btn active" id="lang-ua" onclick="switchLang('ua', this)">&#127482;&#127462; Ukrainian</button>
     <button class="lang-btn"        id="lang-de" onclick="switchLang('de', this)">&#127465;&#127466; German</button>
+  </div>
+  <div class="profile-row">
+    <button class="profile-btn sync-local" id="profile-btn" onclick="changeProfile()"><span id="profile-name">Set profile</span></button>
   </div>
 </header>
 
@@ -2736,6 +2748,7 @@ function saveProgress() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ lp: letterPts, vc: vocabPts, np: nounPts, gv: gVerbPts, gn: gNounPts }));
   } catch(e) {}
+  scheduleSync();
 }
 
 function loadProgress() {
@@ -2755,6 +2768,230 @@ function loadProgress() {
       gNounPts = d.gn.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
   } catch(e) {}
 }
+
+/* ══════════════════════════════════════════
+   SYNC  (optional — backend in server/)
+   localStorage stays the working copy; when a profile name is set, changed
+   items are pushed to the server and the server copy is loaded on start.
+══════════════════════════════════════════ */
+var API_BASE    = (location.protocol === 'file:') ? 'http://127.0.0.1:3000' : '';
+var PROFILE_KEY = 'ua_profile';
+var SYNCED_KEY  = 'ua_synced_v1';   /* last state known to be on the server */
+var PROFILE_RE  = /^[a-z0-9][a-z0-9_-]{2,39}$/;
+
+/* Must match server/src/decks.ts (deck names + item keys). */
+var SYNC_DECKS = [
+  { deck: 'letters',  field: 'lp', list: LETTERS,  key: function(i) { return i.show; } },
+  { deck: 'vocab',    field: 'vc', list: VOCAB,    key: function(i) { return i.ukr; } },
+  { deck: 'nouns',    field: 'np', list: NOUNS,    key: function(i) { return i.ukr; } },
+  { deck: 'de_verbs', field: 'gv', list: DE_VERBS, key: function(i) { return i.de; } },
+  { deck: 'de_nouns', field: 'gn', list: DE_NOUNS, key: function(i) { return i.art + ' ' + i.de; } }
+];
+SYNC_DECKS.forEach(function(d) {
+  var seen = {};
+  d.keys = d.list.map(function(item) {
+    var base = String(d.key(item));
+    seen[base] = (seen[base] || 0) + 1;
+    return seen[base] > 1 ? base + '#' + seen[base] : base;
+  });
+});
+
+var syncProfile = null;
+try { syncProfile = localStorage.getItem(PROFILE_KEY); } catch(e) {}
+var syncTimer = null, syncBusy = false, syncStatus = 'local';
+var syncReloading = false;   /* set once the page is about to reload with new data */
+
+function currentArrays() {
+  return { lp: letterPts.slice(), vc: vocabPts.slice(), np: nounPts.slice(), gv: gVerbPts.slice(), gn: gNounPts.slice() };
+}
+function zeroArrays() {
+  var out = {};
+  SYNC_DECKS.forEach(function(d) { out[d.field] = d.keys.map(function() { return 0; }); });
+  return out;
+}
+function hasAnyProgress(arrs) {
+  return SYNC_DECKS.some(function(d) { return arrs[d.field].some(function(v) { return v > 0; }); });
+}
+function readSnapshot() {
+  try {
+    var s = JSON.parse(localStorage.getItem(SYNCED_KEY) || 'null');
+    return (s && s.profile === syncProfile) ? s.data : null;
+  } catch(e) { return null; }
+}
+function writeSnapshot(data) {
+  try {
+    if (data) localStorage.setItem(SYNCED_KEY, JSON.stringify({ profile: syncProfile, data: data }));
+    else localStorage.removeItem(SYNCED_KEY);
+  } catch(e) {}
+}
+function writeLocal(arrs) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arrs)); } catch(e) {}
+}
+function serverToArrays(progress) {
+  var out = {};
+  SYNC_DECKS.forEach(function(d) {
+    var m = progress[d.deck] || {};
+    out[d.field] = d.keys.map(function(k) { return typeof m[k] === 'number' ? m[k] : 0; });
+  });
+  return out;
+}
+/* Items whose points differ from what the server last confirmed. */
+function diffPayload(cur, base) {
+  var body = {}, n = 0;
+  SYNC_DECKS.forEach(function(d) {
+    var b = base && base[d.field];
+    d.keys.forEach(function(k, i) {
+      var v = cur[d.field][i] || 0;
+      if (b ? b[i] !== v : v !== 0) { (body[d.deck] = body[d.deck] || {})[k] = v; n++; }
+    });
+  });
+  return n ? body : null;
+}
+
+/* Replace this device's progress with `arrs` and reload. The in-memory
+   arrays are stale from here on, so nothing may be pushed from them. */
+function reloadWith(arrs) {
+  syncReloading = true;
+  clearTimeout(syncTimer);
+  writeLocal(arrs);
+  location.reload();
+}
+
+function syncApi(profile, method, body) {
+  return fetch(API_BASE + '/api/profiles/' + encodeURIComponent(profile) + '/progress', {
+    method: method,
+    headers: body ? { 'Content-Type': 'application/json' } : {},
+    body: body ? JSON.stringify(body) : undefined,
+    keepalive: method === 'PATCH'
+  }).then(function(r) {
+    if (r.status === 404) return null;
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  });
+}
+
+function setSyncStatus(s) {
+  syncStatus = s;
+  var btn  = document.getElementById('profile-btn');
+  var name = document.getElementById('profile-name');
+  if (!btn) return;
+  btn.className = 'profile-btn sync-' + s;
+  name.textContent = syncProfile || 'Set profile';
+  btn.title = !syncProfile ? 'Progress is only saved on this device. Tap to set a profile name.'
+            : s === 'synced'  ? 'Synced — tap to change profile'
+            : s === 'syncing' ? 'Syncing…'
+            : 'Server not reachable — progress is kept on this device and will sync later';
+}
+
+/* Push unsent changes. Resolves true when the server is up to date. */
+function pushChanges() {
+  if (!syncProfile || syncReloading) return Promise.resolve(false);
+  if (syncBusy) { scheduleSync(); return Promise.resolve(false); }
+  var cur  = currentArrays();
+  var body = diffPayload(cur, readSnapshot());
+  if (!body) { setSyncStatus('synced'); return Promise.resolve(true); }
+  var profile = syncProfile;
+  syncBusy = true;
+  setSyncStatus('syncing');
+  return syncApi(profile, 'PATCH', body).then(function() {
+    if (profile !== syncProfile) return false;
+    writeSnapshot(cur);
+    setSyncStatus('synced');
+    return true;
+  }).catch(function() {
+    setSyncStatus('offline');
+    return false;
+  }).then(function(ok) {
+    syncBusy = false;
+    if (ok && diffPayload(currentArrays(), readSnapshot())) scheduleSync();
+    return ok;
+  });
+}
+
+function scheduleSync() {
+  if (!syncProfile || syncReloading) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(pushChanges, 1200);
+}
+
+/* Load the server copy; reloads the page if it differs from this device. */
+function pullServer() {
+  var profile = syncProfile;
+  return syncApi(profile, 'GET').then(function(res) {
+    if (profile !== syncProfile) return;
+    if (!res) { setSyncStatus('synced'); return; }   /* name not used yet */
+    var server = serverToArrays(res.progress);
+    writeSnapshot(server);
+    if (JSON.stringify(server) !== JSON.stringify(currentArrays())) { reloadWith(server); return; }
+    setSyncStatus('synced');
+  }).catch(function() { setSyncStatus('offline'); });
+}
+
+function syncOnStart() {
+  setSyncStatus(syncProfile ? 'syncing' : 'local');
+  if (!syncProfile) return;
+  pushChanges().then(function(ok) { if (ok) pullServer(); });
+}
+
+function changeProfile() {
+  var input = prompt(
+    'Profile name — use the same name on every device to share progress.\n' +
+    '3–40 characters: a–z, 0–9, - or _\n\n' +
+    'Leave empty to stop syncing (progress stays on this device).',
+    syncProfile || '');
+  if (input === null) return;
+  var id = input.trim().toLowerCase();
+
+  if (!id) {
+    syncProfile = null;
+    try { localStorage.removeItem(PROFILE_KEY); } catch(e) {}
+    writeSnapshot(null);
+    setSyncStatus('local');
+    return;
+  }
+  if (!PROFILE_RE.test(id)) {
+    alert('“' + id + '” isn’t a valid name.\nUse 3–40 characters: a–z, 0–9, - or _ (starting with a letter or digit).');
+    return;
+  }
+  if (id === syncProfile) { syncOnStart(); return; }
+
+  var prev = syncProfile;
+  var flushPrev = prev ? pushChanges() : Promise.resolve(true);
+  setSyncStatus('syncing');
+  flushPrev.then(function() { return syncApi(id, 'GET'); }).then(function(res) {
+    syncProfile = id;
+    try { localStorage.setItem(PROFILE_KEY, id); } catch(e) {}
+    if (res && Object.keys(res.progress).length) {
+      /* existing profile → show its progress */
+      var server = serverToArrays(res.progress);
+      writeSnapshot(server);
+      reloadWith(server);
+      return;
+    }
+    /* new name → copy this device's progress, or start from zero */
+    var local = currentArrays();
+    if (hasAnyProgress(local) &&
+        confirm('“' + id + '” is a new profile.\n\nOK = copy this device’s current progress into it\nCancel = start it from zero')) {
+      writeSnapshot(null);
+      pushChanges();
+    } else if (hasAnyProgress(local)) {
+      writeSnapshot(zeroArrays());
+      reloadWith(zeroArrays());
+    } else {
+      writeSnapshot(zeroArrays());
+      setSyncStatus('synced');
+    }
+  }).catch(function() {
+    syncProfile = prev;
+    setSyncStatus(prev ? 'offline' : 'local');
+    alert('Couldn’t reach the sync server, so the profile wasn’t changed. Try again when you’re online.');
+  });
+}
+
+window.addEventListener('online', function() { pushChanges(); });
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') { clearTimeout(syncTimer); pushChanges(); }
+});
 
 /* ══════════════════════════════════════════
    KEYBOARD  Q W A S + Space/Enter
@@ -2800,6 +3037,7 @@ renderSentencesQuestion();
 renderNounsQuestion();
 renderGVerbsQuestion();
 renderGNounsQuestion();
+syncOnStart();
 </script>
 </body>
 </html>
