@@ -164,6 +164,18 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .tile { background: #162230; border: 1.5px solid #1b2d3e; border-radius: 12px; padding: 10px 8px 8px; text-align: center; transition: border-color 0.3s, background 0.3s; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
 .tile:hover { border-color: #2d4a60; }
 .tile:active { transform: scale(0.97); }
+.conj-tense { display: inline-flex; gap: 6px; align-items: center; font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; margin-bottom: 14px; }
+.conj-tense.present { color: #3d8bcd; background: rgba(61,139,205,0.12); border: 1px solid rgba(61,139,205,0.35); }
+.conj-tense.past    { color: #c9a227; background: rgba(245,197,24,0.08); border: 1px solid rgba(245,197,24,0.3); }
+.conj-tense .cue { text-transform: none; letter-spacing: 0; font-weight: 600; opacity: 0.85; }
+.conj-sentence { font-size: 2.2rem; font-weight: 700; color: #fff; line-height: 1.2; }
+.conj-sentence .blank { display: inline-block; min-width: 2.6em; border-bottom: 3px solid #f5c518; margin-left: 8px; }
+.conj-sentence .pr-hint { font-size: 0.85rem; color: #4a6275; font-weight: 600; margin-left: 6px; vertical-align: middle; }
+.conj-verb { margin-top: 10px; font-size: 1.05rem; color: #f5c518; font-weight: 700; }
+.conj-verb span { color: #4a6275; font-weight: 500; font-size: 0.85rem; margin-left: 6px; }
+.conj-opt { font-size: 1.25rem; font-weight: 700; }
+#conj-fb-sub { white-space: pre-line; line-height: 1.6; }
+@media (max-width: 440px) { .tabs .tab-btn { font-size: 0.74rem; padding-left: 2px; padding-right: 2px; } }
 .prog-hint { font-size: 0.75rem; color: #4a6275; text-align: center; margin: -4px 0 14px; line-height: 1.5; }
 .prog-hint a { color: #8aa0b2; }
 .tile.learned { border-color: #2d7a55; background: #0f2a1c; }
@@ -221,6 +233,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 <div class="tabs" id="tabs-ua">
   <button class="tab-btn active" onclick="switchTab('letters',     this)">Letters</button>
   <button class="tab-btn"        onclick="switchTab('words',        this)">Verbs</button>
+  <button class="tab-btn"        onclick="switchTab('conj',         this)">Conjugate</button>
   <button class="tab-btn"        onclick="switchTab('sentences',    this)">Sentences</button>
   <button class="tab-btn"        onclick="switchTab('nouns',        this)">Nouns</button>
   <button class="tab-btn"        onclick="switchTab('progress',     this)">Progress</button>
@@ -277,6 +290,30 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
     <h2>Verbs mastered!</h2>
     <p>All 61 verbs learned.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072;!</p>
     <button class="reset-btn" onclick="resetMode('words')">Start over</button>
+  </div>
+</div>
+
+<!-- ══ CONJUGATION TAB ══ -->
+<div class="tab-panel" id="panel-conj">
+  <div class="quiz-wrap" id="conj-quiz-wrap">
+    <div class="q-type-badge">conjugate</div>
+    <div class="prompt-verb" id="conj-prompt" style="padding:8px 0"></div>
+    <div class="pts-row">
+      <div class="pts-bar"><div class="pts-fill" id="conj-pts-fill" style="width:0%"></div></div>
+      <div class="pts-text" id="conj-pts-text">0 / 10 pts</div>
+    </div>
+    <div class="options-grid" id="conj-options"></div>
+    <div class="feedback-row">
+      <div class="feedback-msg" id="conj-fb-msg"></div>
+      <div class="feedback-sub" id="conj-fb-sub"></div>
+    </div>
+    <button class="next-btn" id="conj-next" onclick="nextQ('conj')">Next &#8594;</button>
+  </div>
+  <div class="completion" id="conj-done">
+    <div style="font-size:3rem">&#127942;</div>
+    <h2>Conjugation mastered!</h2>
+    <p>Every verb conjugated.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1086;!</p>
+    <button class="reset-btn" onclick="resetMode('conj')">Start over</button>
   </div>
 </div>
 
@@ -338,6 +375,10 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
   <div class="prog-section">
     <h2>Verbs &mdash; <span id="prog-words-count">0</span> / <span id="prog-words-total">0</span></h2>
     <div class="vocab-grid" id="grid-words"></div>
+  </div>
+  <div class="prog-section">
+    <h2>Conjugation &mdash; <span id="prog-conj-count">0</span> / <span id="prog-conj-total">0</span></h2>
+    <div class="vocab-grid" id="grid-conj"></div>
   </div>
   <div class="prog-section">
     <h2>Sentences &mdash; <span id="prog-sentences-count">0</span> / <span id="prog-sentences-total">0</span></h2>
@@ -1783,6 +1824,72 @@ var DE_NOUNS = [
 /* ══════════════════════════════════════════
    STATE
 ══════════════════════════════════════════ */
+/* Conjugation: present (я ти він/вона/воно ми ви вони) and past (m f n pl),
+   space-separated. pres '' = no present tense (perfective verbs, бути) → past only. */
+var CONJ = [
+  { inf: 'мати',          eng: 'to have',               pres: 'маю маєш має маємо маєте мають',                                      past: 'мав мала мало мали' },
+  { inf: 'знати',         eng: 'to know',               pres: 'знаю знаєш знає знаємо знаєте знають',                                past: 'знав знала знало знали' },
+  { inf: 'думати',        eng: 'to think',              pres: 'думаю думаєш думає думаємо думаєте думають',                          past: 'думав думала думало думали' },
+  { inf: 'читати',        eng: 'to read',               pres: 'читаю читаєш читає читаємо читаєте читають',                          past: 'читав читала читало читали' },
+  { inf: 'слухати',       eng: 'to listen',             pres: 'слухаю слухаєш слухає слухаємо слухаєте слухають',                    past: 'слухав слухала слухало слухали' },
+  { inf: 'відпочивати',   eng: 'to rest',               pres: 'відпочиваю відпочиваєш відпочиває відпочиваємо відпочиваєте відпочивають', past: 'відпочивав відпочивала відпочивало відпочивали' },
+  { inf: 'працювати',     eng: 'to work',               pres: 'працюю працюєш працює працюємо працюєте працюють',                    past: 'працював працювала працювало працювали' },
+  { inf: 'обідати',       eng: 'to have lunch',         pres: 'обідаю обідаєш обідає обідаємо обідаєте обідають',                    past: 'обідав обідала обідало обідали' },
+  { inf: 'грати',         eng: 'to play',               pres: 'граю граєш грає граємо граєте грають',                                past: 'грав грала грало грали' },
+  { inf: 'вчити',         eng: 'to learn',              pres: 'вчу вчиш вчить вчимо вчите вчать',                                    past: 'вчив вчила вчило вчили' },
+  { inf: 'їхати',         eng: 'to travel',             pres: 'їду їдеш їде їдемо їдете їдуть',                                      past: 'їхав їхала їхало їхали' },
+  { inf: 'говорити',      eng: 'to speak',              pres: 'говорю говориш говорить говоримо говорите говорять',                  past: 'говорив говорила говорило говорили' },
+  { inf: 'писати',        eng: 'to write',              pres: 'пишу пишеш пише пишемо пишете пишуть',                                past: 'писав писала писало писали' },
+  { inf: 'розуміти',      eng: 'to understand',         pres: 'розумію розумієш розуміє розуміємо розумієте розуміють',              past: 'розумів розуміла розуміло розуміли' },
+  { inf: 'питати',        eng: 'to ask',                pres: 'питаю питаєш питає питаємо питаєте питають',                          past: 'питав питала питало питали' },
+  { inf: 'запитувати',    eng: 'to ask / inquire',      pres: 'запитую запитуєш запитує запитуємо запитуєте запитують',              past: 'запитував запитувала запитувало запитували' },
+  { inf: 'відповідати',   eng: 'to answer',             pres: 'відповідаю відповідаєш відповідає відповідаємо відповідаєте відповідають', past: 'відповідав відповідала відповідало відповідали' },
+  { inf: 'снідати',       eng: 'to have breakfast',     pres: 'снідаю снідаєш снідає снідаємо снідаєте снідають',                    past: 'снідав снідала снідало снідали' },
+  { inf: 'вечеряти',      eng: 'to have dinner',        pres: 'вечеряю вечеряєш вечеряє вечеряємо вечеряєте вечеряють',              past: 'вечеряв вечеряла вечеряло вечеряли' },
+  { inf: 'гуляти',        eng: 'to walk / hang out',    pres: 'гуляю гуляєш гуляє гуляємо гуляєте гуляють',                          past: 'гуляв гуляла гуляло гуляли' },
+  { inf: 'дивитися',      eng: 'to watch',              pres: 'дивлюся дивишся дивиться дивимося дивитеся дивляться',                past: 'дивився дивилася дивилося дивилися' },
+  { inf: 'перевіряти',    eng: 'to check',              pres: 'перевіряю перевіряєш перевіряє перевіряємо перевіряєте перевіряють',  past: 'перевіряв перевіряла перевіряло перевіряли' },
+  { inf: 'займатися',     eng: 'to do / to practice',   pres: 'займаюся займаєшся займається займаємося займаєтеся займаються',      past: 'займався займалася займалося займалися' },
+  { inf: 'вивчати',       eng: 'to study',              pres: 'вивчаю вивчаєш вивчає вивчаємо вивчаєте вивчають',                    past: 'вивчав вивчала вивчало вивчали' },
+  { inf: 'повторювати',   eng: 'to repeat',             pres: 'повторюю повторюєш повторює повторюємо повторюєте повторюють',        past: 'повторював повторювала повторювало повторювали' },
+  { inf: 'пояснювати',    eng: 'to explain',            pres: 'пояснюю пояснюєш пояснює пояснюємо пояснюєте пояснюють',              past: 'пояснював пояснювала пояснювало пояснювали' },
+  { inf: 'учитися',       eng: 'to study / learn',      pres: 'учуся учишся учиться учимося учитеся учаться',                        past: 'учився училася училося училися' },
+  { inf: 'розмовляти',    eng: 'to talk',               pres: 'розмовляю розмовляєш розмовляє розмовляємо розмовляєте розмовляють',  past: 'розмовляв розмовляла розмовляло розмовляли' },
+  { inf: 'розповідати',   eng: 'to tell / narrate',     pres: 'розповідаю розповідаєш розповідає розповідаємо розповідаєте розповідають', past: 'розповідав розповідала розповідало розповідали' },
+  { inf: 'виконувати',    eng: 'to perform / carry out', pres: 'виконую виконуєш виконує виконуємо виконуєте виконують',              past: 'виконував виконувала виконувало виконували' },
+  { inf: 'нести',         eng: 'to carry',              pres: 'несу несеш несе несемо несете несуть',                                past: 'ніс несла несло несли' },
+  { inf: 'бути',          eng: 'to be',                 pres: '',                                                                    past: 'був була було були' },
+  { inf: 'робити',        eng: 'to do',                 pres: 'роблю робиш робить робимо робите роблять',                            past: 'робив робила робило робили' },
+  { inf: 'хотіти',        eng: 'to want',               pres: 'хочу хочеш хоче хочемо хочете хочуть',                                past: 'хотів хотіла хотіло хотіли' },
+  { inf: 'йти',           eng: 'to go',                 pres: 'йду йдеш йде йдемо йдете йдуть',                                      past: 'йшов йшла йшло йшли' },
+  { inf: 'бачити',        eng: 'to see',                pres: 'бачу бачиш бачить бачимо бачите бачать',                              past: 'бачив бачила бачило бачили' },
+  { inf: 'взяти',         eng: 'to take',               pres: '',                                                                    past: 'взяв взяла взяло взяли' },
+  { inf: 'прийти',        eng: 'to come',               pres: '',                                                                    past: 'прийшов прийшла прийшло прийшли' },
+  { inf: 'давати',        eng: 'to give',               pres: 'даю даєш дає даємо даєте дають',                                      past: 'давав давала давало давали' },
+  { inf: 'чути',          eng: 'to hear',               pres: 'чую чуєш чує чуємо чуєте чують',                                      past: 'чув чула чуло чули' },
+  { inf: 'відчувати',     eng: 'to feel',               pres: 'відчуваю відчуваєш відчуває відчуваємо відчуваєте відчувають',        past: 'відчував відчувала відчувало відчували' },
+  { inf: 'допомогти',     eng: 'to help',               pres: '',                                                                    past: 'допоміг допомогла допомогло допомогли' },
+  { inf: 'показати',      eng: 'to show',               pres: '',                                                                    past: 'показав показала показало показали' },
+  { inf: 'вирішити',      eng: 'to decide',             pres: '',                                                                    past: 'вирішив вирішила вирішило вирішили' },
+  { inf: 'відкрити',      eng: 'to open',               pres: '',                                                                    past: 'відкрив відкрила відкрило відкрили' },
+  { inf: 'закрити',       eng: 'to close',              pres: '',                                                                    past: 'закрив закрила закрило закрили' },
+  { inf: 'забути',        eng: 'to forget',             pres: '',                                                                    past: 'забув забула забуло забули' },
+  { inf: 'готувати',      eng: 'to cook',               pres: 'готую готуєш готує готуємо готуєте готують',                          past: 'готував готувала готувало готували' },
+  { inf: 'плавати',       eng: 'to swim',               pres: 'плаваю плаваєш плаває плаваємо плаваєте плавають',                    past: 'плавав плавала плавало плавали' },
+  { inf: 'пити',          eng: 'to drink',              pres: 'п’ю п’єш п’є п’ємо п’єте п’ють',                                      past: 'пив пила пило пили' },
+  { inf: 'купувати',      eng: 'to buy',                pres: 'купую купуєш купує купуємо купуєте купують',                          past: 'купував купувала купувало купували' },
+  { inf: 'танцювати',     eng: 'to dance',              pres: 'танцюю танцюєш танцює танцюємо танцюєте танцюють',                    past: 'танцював танцювала танцювало танцювали' },
+  { inf: 'співати',       eng: 'to sing',               pres: 'співаю співаєш співає співаємо співаєте співають',                    past: 'співав співала співало співали' },
+  { inf: 'сміятися',      eng: 'to laugh',              pres: 'сміюся смієшся сміється сміємося смієтеся сміються',                  past: 'сміявся сміялася сміялося сміялися' },
+  { inf: 'спати',         eng: 'to sleep',              pres: 'сплю спиш спить спимо спите сплять',                                  past: 'спав спала спало спали' },
+  { inf: 'бігти',         eng: 'to run',                pres: 'біжу біжиш біжить біжимо біжите біжать',                              past: 'біг бігла бігло бігли' },
+  { inf: 'платити',       eng: 'to pay',                pres: 'плачу платиш платить платимо платите платять',                        past: 'платив платила платило платили' },
+  { inf: 'зустріти',      eng: 'to meet',               pres: '',                                                                    past: 'зустрів зустріла зустріло зустріли' },
+  { inf: 'шукати',        eng: 'to look for / search',  pres: 'шукаю шукаєш шукає шукаємо шукаєте шукають',                          past: 'шукав шукала шукало шукали' },
+  { inf: 'носити',        eng: 'to wear / carry',       pres: 'ношу носиш носить носимо носите носять',                              past: 'носив носила носило носили' },
+  { inf: 'залишати',      eng: 'to leave',              pres: 'залишаю залишаєш залишає залишаємо залишаєте залишають',              past: 'залишав залишала залишало залишали' }
+];
+
 /* ══════════════════════════════════════════
    CUSTOM WORDS  (added in /admin)
    Cached in localStorage so the app starts instantly and works offline;
@@ -1790,14 +1897,14 @@ var DE_NOUNS = [
    reloads once if they changed. Appended after the built-in items.
 ══════════════════════════════════════════ */
 var CUSTOM_KEY = 'ua_custom_words_v1';
-var BUILTIN_COUNT = { lp: LETTERS.length, vc: VOCAB.length, np: NOUNS.length, gv: DE_VERBS.length, gn: DE_NOUNS.length };
+var BUILTIN_COUNT = { lp: LETTERS.length, vc: VOCAB.length, np: NOUNS.length, gv: DE_VERBS.length, gn: DE_NOUNS.length, cj: CONJ.length };
 var customWordsJson = null;
 try { customWordsJson = localStorage.getItem(CUSTOM_KEY); } catch(e) {}
 (function() {
   if (!customWordsJson) return;
   try {
     var decks = JSON.parse(customWordsJson);
-    var lists = { letters: LETTERS, vocab: VOCAB, nouns: NOUNS, de_verbs: DE_VERBS, de_nouns: DE_NOUNS };
+    var lists = { letters: LETTERS, vocab: VOCAB, nouns: NOUNS, de_verbs: DE_VERBS, de_nouns: DE_NOUNS, conj: CONJ };
     Object.keys(lists).forEach(function(name) {
       (decks[name] || []).forEach(function(item) { item.custom = true; lists[name].push(item); });
     });
@@ -1817,10 +1924,11 @@ var vocabPts   = VOCAB.map(function() { return 0; });   /* indexed by VOCAB idx;
 var nounPts    = NOUNS.map(function() { return 0; });
 var gVerbPts   = DE_VERBS.map(function() { return 0; });
 var gNounPts   = DE_NOUNS.map(function() { return 0; });
+var conjPts    = CONJ.map(function() { return 0; });    /* per verb; questions mix tense and person */
 
-var letterQueue = [], wordsQueue = [], sentencesQueue = [], nounsQueue = [], gverbsQueue = [], gnounsQueue = [];
-var letterCurrent = null, wordsCurrent = null, sentencesCurrent = null, nounsCurrent = null, gverbsCurrent = null, gnounsCurrent = null;
-var letterAnswered = false, wordsAnswered = false, sentencesAnswered = false, nounsAnswered = false, gverbsAnswered = false, gnounsAnswered = false;
+var letterQueue = [], wordsQueue = [], sentencesQueue = [], nounsQueue = [], gverbsQueue = [], gnounsQueue = [], conjQueue = [];
+var letterCurrent = null, wordsCurrent = null, sentencesCurrent = null, nounsCurrent = null, gverbsCurrent = null, gnounsCurrent = null, conjCurrent = null;
+var letterAnswered = false, wordsAnswered = false, sentencesAnswered = false, nounsAnswered = false, gverbsAnswered = false, gnounsAnswered = false, conjAnswered = false;
 
 /* ══════════════════════════════════════════
    HELPERS
@@ -2049,6 +2157,197 @@ function handleWordsAnswer(chosenIdx) {
   saveProgress();
   document.getElementById('words-next').className = 'next-btn show';
   if (correct) setTimeout(function() { if (activeTab === 'words') nextQ('words'); }, 500);
+}
+
+/* ══════════════════════════════════════════
+   CONJUGATION QUIZ
+   Pronoun + verb, pick the right form out of two. The wrong option is
+   deliberately close: another person of the same tense, or the same
+   person in the other tense.
+══════════════════════════════════════════ */
+/* index into the present forms: я ти він/вона/воно ми ви вони */
+var CONJ_PRES_PRONOUNS = [
+  { ua: 'я',    en: 'I',          f: 0 }, { ua: 'ти',   en: 'you',          f: 1 },
+  { ua: 'він',  en: 'he',         f: 2 }, { ua: 'вона', en: 'she',          f: 2 },
+  { ua: 'воно', en: 'it',         f: 2 }, { ua: 'ми',   en: 'we',           f: 3 },
+  { ua: 'ви',   en: 'you (pl.)',  f: 4 }, { ua: 'вони', en: 'they',         f: 5 }
+];
+/* index into the past forms: m f n pl.  pf = matching present form (for tense traps) */
+var CONJ_PAST_PRONOUNS = [
+  { ua: 'він',  en: 'he',   f: 0, pf: 2 }, { ua: 'вона', en: 'she',  f: 1, pf: 2 },
+  { ua: 'воно', en: 'it',   f: 2, pf: 2 }, { ua: 'ми',   en: 'we',   f: 3, pf: 3 },
+  { ua: 'ви',   en: 'you (pl.)', f: 3, pf: 4 }, { ua: 'вони', en: 'they', f: 3, pf: 5 },
+  { ua: 'я',  hint: 'm', en: 'I (man)',     f: 0, pf: 0 }, { ua: 'я',  hint: 'f', en: 'I (woman)',   f: 1, pf: 0 },
+  { ua: 'ти', hint: 'm', en: 'you (man)',   f: 0, pf: 1 }, { ua: 'ти', hint: 'f', en: 'you (woman)', f: 1, pf: 1 }
+];
+/* forms that are easy to mix up with each other */
+var CONJ_PRES_CONFUSE = { 0: [5, 2, 1], 1: [4, 2, 0], 2: [5, 1, 3], 3: [4, 5, 0], 4: [3, 1, 5], 5: [2, 0, 3] };
+var CONJ_PAST_CONFUSE = { 0: [1, 3], 1: [0, 3, 2], 2: [1, 3, 0], 3: [1, 0] };
+var conjQ = null;   /* { tense, pronoun, correct, options } for the current question */
+
+function conjForms(item, tense) {
+  var str = tense === 'pres' ? item.pres : item.past;
+  return str ? String(str).trim().split(/\s+/) : [];
+}
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function refillConjQueue() {
+  var pool = [];
+  for (var i = 0; i < CONJ.length; i++) {
+    if (conjPts[i] < MAX_PTS && conjForms(CONJ[i], 'past').length === 4) pool.push(i);
+  }
+  conjQueue = shuffle(pool);
+}
+function pickNextConj() {
+  conjQueue = conjQueue.filter(function(i) { return conjPts[i] < MAX_PTS; });
+  if (conjQueue.length === 0) refillConjQueue();
+  if (conjQueue.length === 0) return null;
+  return conjQueue.shift();
+}
+
+function buildConjQuestion(item) {
+  var pres = conjForms(item, 'pres'), past = conjForms(item, 'past');
+  var hasPres = pres.length === 6;
+  var tense = hasPres && Math.random() < 0.5 ? 'pres' : 'past';
+  var pr, correct, wrong = null;
+  if (tense === 'pres') {
+    pr = pickRandom(CONJ_PRES_PRONOUNS);
+    correct = pres[pr.f];
+    if (Math.random() < 0.25) {                         /* tense trap */
+      wrong = past[pr.f === 2 ? pickRandom([0, 1, 2]) : pr.f >= 3 ? 3 : pickRandom([0, 1])];
+    } else {
+      var c = CONJ_PRES_CONFUSE[pr.f].map(function(i) { return pres[i]; }).filter(function(f) { return f !== correct; });
+      wrong = pickRandom(c);
+    }
+  } else {
+    pr = pickRandom(CONJ_PAST_PRONOUNS);
+    correct = past[pr.f];
+    if (hasPres && Math.random() < 0.25) {              /* tense trap */
+      wrong = pres[pr.pf];
+    } else {
+      var c2 = CONJ_PAST_CONFUSE[pr.f].map(function(i) { return past[i]; }).filter(function(f) { return f !== correct; });
+      wrong = pickRandom(c2);
+    }
+  }
+  if (!wrong || wrong === correct) {                    /* fallback: any other form */
+    var all = pres.concat(past).filter(function(f) { return f !== correct; });
+    wrong = pickRandom(all);
+  }
+  return { tense: tense, pronoun: pr, correct: correct, options: shuffle([correct, wrong]) };
+}
+
+function renderConjQuestion() {
+  conjAnswered = false;
+  conjCurrent  = pickNextConj();
+  if (conjCurrent === null) { showCompletion('conj'); return; }
+
+  var item = CONJ[conjCurrent];
+  var pts  = conjPts[conjCurrent];
+  conjQ = buildConjQuestion(item);
+  var pr = conjQ.pronoun;
+
+  document.getElementById('conj-prompt').innerHTML =
+    '<div class="conj-tense ' + (conjQ.tense === 'pres' ? 'present' : 'past') + '">' +
+      (conjQ.tense === 'pres' ? 'present <span class="cue">· зараз (now)</span>' : 'past <span class="cue">· вчора (yesterday)</span>') +
+    '</div>' +
+    '<div class="conj-sentence">' + pr.ua +
+      (pr.hint ? '<span class="pr-hint">(' + pr.hint + ')</span>' : '') +
+      '<span class="blank">&nbsp;</span></div>' +
+    '<div class="conj-verb">' + item.inf + '<span>' + item.eng + ' · ' + pr.en + '</span></div>';
+
+  document.getElementById('conj-pts-fill').style.width = (pts / MAX_PTS * 100) + '%';
+  document.getElementById('conj-pts-text').textContent = pts + ' / ' + MAX_PTS + ' pts';
+  clearFeedback('conj');
+
+  var grid = document.getElementById('conj-options');
+  grid.innerHTML = '';
+  conjQ.options.forEach(function(form, pos) {
+    var btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.setAttribute('data-form', form);
+    btn.innerHTML = '<span class="key-hint">' + KEY_LABELS[pos] + '</span>';
+    var label = document.createElement('span');
+    label.className = 'conj-opt';
+    label.textContent = form;
+    btn.appendChild(label);
+    btn.addEventListener('click', function() { handleConjAnswer(form); });
+    grid.appendChild(btn);
+  });
+}
+
+function conjTableText(item, tense) {
+  var f = conjForms(item, tense);
+  if (tense === 'pres') return 'я ' + f[0] + ' · ти ' + f[1] + ' · він/вона ' + f[2] + ' · ми ' + f[3] + ' · ви ' + f[4] + ' · вони ' + f[5];
+  return 'він ' + f[0] + ' · вона ' + f[1] + ' · воно ' + f[2] + ' · ми/ви/вони ' + f[3];
+}
+
+function handleConjAnswer(chosen) {
+  if (conjAnswered) return;
+  conjAnswered = true;
+
+  var correct = (chosen === conjQ.correct);
+  var prevPts = conjPts[conjCurrent];
+  conjPts[conjCurrent] = Math.max(0, Math.min(MAX_PTS, prevPts + (correct ? CORRECT_PT : WRONG_PT)));
+  var newPts  = conjPts[conjCurrent];
+  var item    = CONJ[conjCurrent];
+
+  document.querySelectorAll('#conj-options .opt-btn').forEach(function(b) {
+    b.classList.add('locked');
+    var form = b.getAttribute('data-form');
+    if (form === conjQ.correct)                  b.classList.add('correct');
+    if (form === chosen && form !== conjQ.correct) b.classList.add('wrong');
+  });
+  var blank = document.querySelector('#conj-prompt .blank');
+  if (blank) blank.textContent = conjQ.correct;
+
+  spawnDelta(correct ? '+' + CORRECT_PT : '-1', correct, 'conj-quiz-wrap');
+
+  var justLearned = (newPts >= MAX_PTS && prevPts < MAX_PTS);
+  var sentence = conjQ.pronoun.ua + ' ' + conjQ.correct;
+  if (correct) {
+    showFeedback('conj', true,
+      justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
+      justLearned ? item.inf + ' fully learned!' : sentence + ' · ' + newPts + ' / ' + MAX_PTS + ' pts');
+  } else {
+    showFeedback('conj', false, (newPts < prevPts) ? '-1 pt' : 'Miss!',
+      'Correct: ' + sentence + '\n' + conjTableText(item, conjQ.tense));
+  }
+
+  document.getElementById('conj-pts-fill').style.width = (newPts / MAX_PTS * 100) + '%';
+  document.getElementById('conj-pts-text').textContent = newPts + ' / ' + MAX_PTS + ' pts';
+  updateConjTile(conjCurrent);
+  updateOverall();
+  saveProgress();
+  document.getElementById('conj-next').className = 'next-btn show';
+  if (correct) setTimeout(function() { if (activeTab === 'conj') nextQ('conj'); }, 700);
+}
+
+function renderConjGrid() {
+  var grid = document.getElementById('grid-conj');
+  if (!grid) return;
+  grid.innerHTML = '';
+  CONJ.forEach(function(item, i) {
+    var learned = conjPts[i] >= MAX_PTS;
+    var tile = document.createElement('div');
+    tile.className = 'tile' + (learned ? ' learned' : '');
+    tile.id = 'ctile-' + i;
+    tile.innerHTML =
+      '<div class="tile-main" style="font-size:0.95rem">' + item.inf + '</div>' +
+      '<div class="tile-sub">' + (item.pres ? 'present + past' : 'past only') + '</div>' +
+      '<div class="tile-bar"><div class="tile-fill" style="width:' + (conjPts[i] / MAX_PTS * 100) + '%"></div></div>' +
+      '<div class="tile-pts">' + (learned ? 'done' : conjPts[i] + ' pts') + '</div>';
+    grid.appendChild(tile);
+  });
+}
+function updateConjTile(i) {
+  var tile = document.getElementById('ctile-' + i);
+  if (!tile) return;
+  var was = tile.classList.contains('learned');
+  var now = conjPts[i] >= MAX_PTS;
+  tile.className = 'tile' + (now ? ' learned' : '');
+  tile.querySelector('.tile-fill').style.width = (conjPts[i] / MAX_PTS * 100) + '%';
+  tile.querySelector('.tile-pts').textContent  = now ? 'done' : conjPts[i] + ' pts';
+  if (!was && now) { tile.classList.add('just-learned'); setTimeout(function() { tile.classList.remove('just-learned'); }, 500); }
 }
 
 /* ══════════════════════════════════════════
@@ -2390,6 +2689,7 @@ function nextQ(mode) {
   else if (mode === 'sentences')  renderSentencesQuestion();
   else if (mode === 'gverbs')     renderGVerbsQuestion();
   else if (mode === 'gnouns')     renderGNounsQuestion();
+  else if (mode === 'conj')       renderConjQuestion();
   else                            renderNounsQuestion();
 }
 
@@ -2493,6 +2793,13 @@ function resetMode(mode) {
     document.getElementById('gverbs-done').style.display      = 'none';
     renderGVerbsGrid();
     renderGVerbsQuestion();
+  } else if (mode === 'conj') {
+    conjPts = CONJ.map(function() { return 0; });
+    conjQueue = [];
+    document.getElementById('conj-quiz-wrap').style.display = 'block';
+    document.getElementById('conj-done').style.display      = 'none';
+    renderConjGrid();
+    renderConjQuestion();
   } else if (mode === 'gnouns') {
     gNounPts = DE_NOUNS.map(function() { return 0; });
     gnounsQueue = [];
@@ -2526,6 +2833,7 @@ function updateOverall() {
   var learnedN = nounPts.filter(function(p) { return p >= MAX_PTS; }).length;
   var learnedGV = gVerbPts.filter(function(p) { return p >= MAX_PTS; }).length;
   var learnedGN = gNounPts.filter(function(p) { return p >= MAX_PTS; }).length;
+  var learnedC  = conjPts.filter(function(p) { return p >= MAX_PTS; }).length;
 
   function setOverall(label, count, total) {
     document.getElementById('overall-label').textContent = label;
@@ -2534,7 +2842,9 @@ function updateOverall() {
     document.getElementById('overall-fill').style.width  = (total ? count / total * 100 : 0) + '%';
   }
 
-  if (activeTab === 'nouns') {
+  if (activeTab === 'conj') {
+    setOverall('VERBS CONJUGATED', learnedC, CONJ.length);
+  } else if (activeTab === 'nouns') {
     setOverall('NOUNS & QUESTIONS LEARNED', learnedN, NOUNS.length);
   } else if (activeTab === 'words') {
     setOverall('VERBS LEARNED', learnedW, totalW);
@@ -2546,7 +2856,7 @@ function updateOverall() {
     setOverall('GERMAN NOUNS LEARNED', learnedGN, DE_NOUNS.length);
   } else if (activeTab === 'progress' || activeTab === 'gprogress') {
     if (activeLang === 'de') setOverall('GERMAN LEARNED', learnedGV + learnedGN, DE_VERBS.length + DE_NOUNS.length);
-    else setOverall('UKRAINIAN LEARNED', learnedL + learnedW + learnedS + learnedN, LETTERS.length + totalW + totalS + NOUNS.length);
+    else setOverall('UKRAINIAN LEARNED', learnedL + learnedW + learnedS + learnedN + learnedC, LETTERS.length + totalW + totalS + NOUNS.length + CONJ.length);
   } else {
     setOverall('LETTERS LEARNED', learnedL, LETTERS.length);
   }
@@ -2559,6 +2869,8 @@ function updateOverall() {
   document.getElementById('prog-letters-total').textContent    = LETTERS.length;
   document.getElementById('prog-words-total').textContent      = totalW;
   document.getElementById('prog-sentences-total').textContent  = totalS;
+  document.getElementById('prog-conj-count').textContent       = learnedC;
+  document.getElementById('prog-conj-total').textContent       = CONJ.length;
   document.getElementById('prog-gverbs-count').textContent     = learnedGV;
   document.getElementById('prog-gverbs-total').textContent     = DE_VERBS.length;
   document.getElementById('prog-gnouns-count').textContent     = learnedGN;
@@ -2784,7 +3096,7 @@ function saveProgress() {
 }
 
 function setAllPts(arrs) {
-  letterPts = arrs.lp; vocabPts = arrs.vc; nounPts = arrs.np; gVerbPts = arrs.gv; gNounPts = arrs.gn;
+  letterPts = arrs.lp; vocabPts = arrs.vc; nounPts = arrs.np; gVerbPts = arrs.gv; gNounPts = arrs.gn; conjPts = arrs.cj;
 }
 
 function loadProgress() {
@@ -2816,7 +3128,8 @@ var SYNC_DECKS = [
   { deck: 'vocab',    field: 'vc', list: VOCAB,    key: function(i) { return i.ukr; } },
   { deck: 'nouns',    field: 'np', list: NOUNS,    key: function(i) { return i.ukr; } },
   { deck: 'de_verbs', field: 'gv', list: DE_VERBS, key: function(i) { return i.de; } },
-  { deck: 'de_nouns', field: 'gn', list: DE_NOUNS, key: function(i) { return i.art + ' ' + i.de; } }
+  { deck: 'de_nouns', field: 'gn', list: DE_NOUNS, key: function(i) { return i.art + ' ' + i.de; } },
+  { deck: 'conj',     field: 'cj', list: CONJ,     key: function(i) { return i.inf; } }
 ];
 SYNC_DECKS.forEach(function(d) {
   var seen = {};
@@ -2833,7 +3146,7 @@ var syncTimer = null, syncBusy = false, syncStatus = 'local';
 var syncReloading = false;   /* set once the page is about to reload with new data */
 
 function currentArrays() {
-  return { lp: letterPts.slice(), vc: vocabPts.slice(), np: nounPts.slice(), gv: gVerbPts.slice(), gn: gNounPts.slice() };
+  return { lp: letterPts.slice(), vc: vocabPts.slice(), np: nounPts.slice(), gv: gVerbPts.slice(), gn: gNounPts.slice(), cj: conjPts.slice() };
 }
 function zeroArrays() {
   var out = {};
@@ -3090,12 +3403,14 @@ var TILE_TYPES = {
   'stile-':  { pts: function() { return vocabPts;  }, update: function(i) { updateVocabTile(i);  }, mode: 'sentences' },
   'ntile-':  { pts: function() { return nounPts;   }, update: function(i) { updateNounsTile(i);  }, mode: 'nouns' },
   'gvtile-': { pts: function() { return gVerbPts;  }, update: function(i) { updateGVerbsTile(i); }, mode: 'gverbs' },
-  'gntile-': { pts: function() { return gNounPts;  }, update: function(i) { updateGNounsTile(i); }, mode: 'gnouns' }
+  'gntile-': { pts: function() { return gNounPts;  }, update: function(i) { updateGNounsTile(i); }, mode: 'gnouns' },
+  'ctile-':  { pts: function() { return conjPts;   }, update: function(i) { updateConjTile(i);   }, mode: 'conj' }
 };
 var QUESTION_RENDERERS = {
   letters: function() { renderLetterQuestion(); }, words: function() { renderWordsQuestion(); },
   sentences: function() { renderSentencesQuestion(); }, nouns: function() { renderNounsQuestion(); },
-  gverbs: function() { renderGVerbsQuestion(); }, gnouns: function() { renderGNounsQuestion(); }
+  gverbs: function() { renderGVerbsQuestion(); }, gnouns: function() { renderGNounsQuestion(); },
+  conj: function() { renderConjQuestion(); }
 };
 var tilePrevPts = {};   /* tile id → points before it was marked learned (for undo) */
 
@@ -3124,7 +3439,7 @@ function toggleTileLearned(tile) {
   saveProgress();
 }
 
-['grid-letters', 'grid-words', 'grid-sentences', 'grid-nouns', 'grid-gverbs', 'grid-gnouns'].forEach(function(id) {
+['grid-letters', 'grid-words', 'grid-sentences', 'grid-nouns', 'grid-gverbs', 'grid-gnouns', 'grid-conj'].forEach(function(id) {
   var grid = document.getElementById(id);
   if (!grid) return;
   grid.addEventListener('click', function(e) {
@@ -3144,6 +3459,7 @@ document.addEventListener('keydown', function(e) {
                : tab === 'sentences' ? sentencesAnswered
                : tab === 'gverbs'    ? gverbsAnswered
                : tab === 'gnouns'    ? gnounsAnswered
+               : tab === 'conj'      ? conjAnswered
                : nounsAnswered;
 
   if ((e.code === 'Space' || e.code === 'Enter') && answered) {
@@ -3170,6 +3486,7 @@ renderSentencesGrid();
 renderNounsGrid();
 renderGVerbsGrid();
 renderGNounsGrid();
+renderConjGrid();
 updateOverall();
 renderLetterQuestion();
 renderWordsQuestion();
@@ -3177,6 +3494,7 @@ renderSentencesQuestion();
 renderNounsQuestion();
 renderGVerbsQuestion();
 renderGNounsQuestion();
+renderConjQuestion();
 syncOnStart();
 refreshCustomWords();
 </script>

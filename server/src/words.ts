@@ -16,6 +16,9 @@ export interface FieldDef {
   placeholder?: string;
   /** Value stored when the field is left empty */
   emptyValue?: string;
+  /** If set, a non-empty value must have exactly this many space-separated words */
+  words?: number;
+  hint?: string;
 }
 
 export interface DeckInfo {
@@ -75,6 +78,23 @@ export const DECK_INFO: Record<DeckName, DeckInfo> = {
       { name: 'eng', label: 'English', required: true, placeholder: 'book' },
     ],
   },
+  conj: {
+    label: 'UA conjugation',
+    addable: true,
+    fields: [
+      { name: 'inf', label: 'Infinitive', required: true, placeholder: 'читати' },
+      { name: 'eng', label: 'English', required: true, placeholder: 'to read' },
+      {
+        name: 'pres', label: 'Present (я ти він ми ви вони)', required: false, words: 6, emptyValue: '',
+        placeholder: 'читаю читаєш читає читаємо читаєте читають',
+        hint: '6 forms separated by spaces; leave empty for perfective verbs (past only)',
+      },
+      {
+        name: 'past', label: 'Past (m f n pl)', required: true, words: 4,
+        placeholder: 'читав читала читало читали', hint: '4 forms separated by spaces',
+      },
+    ],
+  },
 };
 
 const MAX_LEN = 200;
@@ -110,6 +130,9 @@ export function validateItem(deck: DeckName, body: unknown): Item {
     }
     if (value.length > MAX_LEN) throw new WordError(`${f.label} is too long (max ${MAX_LEN})`, 400);
     if (/[<>]/.test(value)) throw new WordError(`${f.label} can't contain < or >`, 400);
+    if (f.words && value.split(' ').length !== f.words) {
+      throw new WordError(`${f.label}: needs exactly ${f.words} forms separated by spaces`, 400);
+    }
     if (f.options && !f.options.includes(value)) {
       throw new WordError(`${f.label} must be one of: ${f.options.join(', ')}`, 400);
     }

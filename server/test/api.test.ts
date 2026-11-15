@@ -20,6 +20,8 @@ describe('source extraction', () => {
     for (const name of DECK_NAMES) assert.ok(decks[name].length > 0, `${name} is empty`);
     assert.equal(decks.letters[0]?.key, 'А а');
     assert.equal(decks.de_nouns[0]?.key, 'der Mann');
+    assert.equal(decks.conj.length, 61);
+    assert.equal(decks.conj[0]?.key, 'мати');
   });
 
   test('handles brackets inside strings and comments', () => {
@@ -207,6 +209,17 @@ describe('custom words + admin', () => {
     assert.equal((await post('klingon', { a: 1 })).statusCode, 404);
     const missing = await app.inject({ method: 'DELETE', url: '/api/admin/words/vocab/nothing', headers: auth });
     assert.equal(missing.statusCode, 404);
+  });
+
+  test('conjugation: validates the number of forms', async () => {
+    const post = (payload: object) =>
+      app.inject({ method: 'POST', url: '/api/admin/words/conj', headers: auth, payload });
+    const ok = await post({ inf: 'вишивати', eng: 'to embroider', pres: 'вишиваю вишиваєш вишиває вишиваємо вишиваєте вишивають', past: 'вишивав вишивала вишивало вишивали' });
+    assert.equal(ok.statusCode, 201, ok.body);
+    assert.equal((await post({ inf: 'вишити', eng: 'to embroider (pf.)', past: 'вишив вишила вишило вишили' })).statusCode, 201, 'past only');
+    assert.equal((await post({ inf: 'x1', eng: 'x', pres: 'a b c', past: 'a b c d' })).statusCode, 400, '3 present forms');
+    assert.equal((await post({ inf: 'x2', eng: 'x', past: 'a b c' })).statusCode, 400, '3 past forms');
+    assert.equal((await post({ inf: 'читати', eng: 'x', past: 'a b c d' })).statusCode, 409, 'built-in verb');
   });
 
   test('admin disabled without a password', async () => {

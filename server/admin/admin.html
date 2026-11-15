@@ -41,6 +41,8 @@ button:disabled { opacity: 0.5; cursor: default; }
 .form { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; align-items: end; }
 .form label { display: flex; flex-direction: column; gap: 4px; font-size: 0.72rem; color: #8aa0b2; font-weight: 600; }
 .form .req::after { content: ' *'; color: #f5c518; }
+.form .hint { font-weight: 500; color: #4a6275; font-size: 0.68rem; }
+.form label.wide { grid-column: span 2; }
 .form .actions { display: flex; gap: 6px; }
 
 .toolbar { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; }
@@ -217,14 +219,18 @@ function renderForm() {
     if (f.options) {
       input = el('select', { name: f.name }, f.options.map(function (o) { return el('option', { value: o, text: o }); }));
     } else {
-      input = el('input', { name: f.name, placeholder: f.placeholder || '', autocomplete: 'off', maxlength: 200 });
+      input = el('input', { name: f.name, placeholder: f.placeholder || '', autocomplete: 'off', maxlength: 200, lang: 'uk' });
     }
     if (editing) {
       var v = editing[f.name] == null ? '' : String(editing[f.name]);
       if (f.emptyValue !== undefined && v === f.emptyValue) v = '';
       input.value = v;
     }
-    form.appendChild(el('label', {}, [el('span', { class: f.required ? 'req' : '', text: f.label }), input]));
+    form.appendChild(el('label', { class: f.words && f.words > 2 ? 'wide' : null }, [
+      el('span', { class: f.required ? 'req' : '', text: f.label }),
+      input,
+      f.hint ? el('span', { class: 'hint', text: f.hint }) : null
+    ]));
   });
   var actions = el('div', { class: 'actions' }, [
     el('button', { class: 'primary', type: 'submit', text: editing ? 'Save' : 'Add' }),
