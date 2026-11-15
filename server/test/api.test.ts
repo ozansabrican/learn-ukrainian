@@ -10,6 +10,7 @@ import { extractArray, readDecksFromHtml } from '../src/source.js';
 import { FileKV } from '../src/store/file-kv.js';
 import { MemoryKV, type KV } from '../src/store/kv.js';
 import { ProgressStore } from '../src/store/progress-store.js';
+import { CustomWordsStore } from '../src/words.js';
 
 const htmlPath = resolve(import.meta.dirname, '../../index.html');
 const decks = withKeys(readDecksFromHtml(htmlPath));
@@ -31,7 +32,15 @@ describe('API', () => {
   let app: Awaited<ReturnType<typeof buildApp>>;
 
   before(async () => {
-    app = await buildApp({ store: new ProgressStore(new MemoryKV()), decks, indexHtml: '<!DOCTYPE html><title>t</title>' });
+    const kv = new MemoryKV();
+    app = await buildApp({
+      store: new ProgressStore(kv),
+      words: new CustomWordsStore(kv, decks),
+      decks,
+      adminPassword: 'secret-pw',
+      adminHtml: '<!DOCTYPE html><title>admin</title>',
+      indexHtml: '<!DOCTYPE html><title>t</title>',
+    });
   });
   after(() => app.close());
 
@@ -112,5 +121,98 @@ describe('storage', () => {
     await new ProgressStore(new FileKV(dir)).merge('disk', { letters: { 'А а': 3 } });
     const again = await new ProgressStore(new FileKV(dir)).get('disk');
     assert.deepEqual(again?.progress, { letters: { 'А а': 3 } });
+  });
+});
+
+describe('custom words + admin', () => {
+  let app: Awaited<ReturnType<typeof buildApp>>;
+  const auth = { authorization: 'Bearer secret-pw' };
+
+  before(async () => {
+    const kv = new MemoryKV();
+    app = await buildApp({
+      store: new ProgressStore(kv),
+      words: new CustomWordsStore(kv, decks),
+      decks,
+      adminPassword: 'secret-pw',
+      adminHtml: '<!DOCTYPE html><title>admin</title>',
+    });
+  });
+  after(() => app.close());
+
+  test('admin page and schema are public', async () => {
+    assert.equal((await app.inject('/admin')).statusCode, 200);
+    const schema = (await app.inject('/api/words/schema')).json();
+    assert.equal(schema.letters.addable, false);
+    assert.equal(schema.vocab.addable, true);
+  });
+
+  test('admin routes need the password', async () => {
+    assert.equal((await app.inject('/api/admin/check')).statusCode, 401);
+    assert.equal((await app.inject({ url: '/api/admin/check', headers: { authorization: 'Bearer nope' } })).statusCode, 401);
+    assert.equal((await app.inject({ url: '/api/admin/check', headers: auth })).statusCode, 200);
+    const res = await app.inject({ method: 'POST', url: '/api/admin/words/vocab', payload: { ukr: 'x', eng: 'y', type: 'verb' } });
+    assert.equal(res.statusCode, 401);
+  });
+
+  test('add, list, edit, delete', async () => {
+    const add = await app.inject({
+      method: 'POST', url: '/api/admin/words/vocab', headers: auth,
+      payload: { ukr: '  вишивати ', eng: 'to embroider', type: 'verb' },
+    });
+    assert.equal(add.statusCode, 201, add.body);
+    assert.deepEqual(add.json(), { key: 'вишивати', ukr: 'вишивати', eng: 'to embroider', pron: '', type: 'verb' });
+
+    const gn = await app.inject({
+      method: 'POST', url: '/api/admin/words/de_nouns', headers: auth,
+      payload: { art: 'das', de: 'Lenkrad', eng: 'steering wheel' },
+    });
+    assert.equal(gn.json().pl, '—', 'empty plural becomes —');
+    assert.equal(gn.json().key, 'das Lenkrad');
+
+    const custom = (await app.inject('/api/words/custom')).json();
+    assert.equal(custom.decks.vocab.length, 1);
+    assert.equal(custom.decks.de_nouns.length, 1);
+
+    const items = (await app.inject('/api/decks/vocab/items')).json() as { key: string; custom: boolean }[];
+    assert.equal(items.at(-1)?.key, 'вишивати');
+    assert.equal(items.at(-1)?.custom, true);
+    assert.equal(items[0]?.custom, false);
+    const deckList = (await app.inject('/api/decks')).json() as { name: string; custom: number }[];
+    assert.equal(deckList.find((d) => d.name === 'vocab')?.custom, 1);
+
+    const edit = await app.inject({
+      method: 'PUT', url: `/api/admin/words/vocab/${encodeURIComponent('вишивати')}`, headers: auth,
+      payload: { ukr: 'вишити', eng: 'to embroider (pf.)', pron: 'VY-shy-ty', type: 'verb' },
+    });
+    assert.equal(edit.statusCode, 200, edit.body);
+    assert.equal(edit.json().key, 'вишити');
+
+    const del = await app.inject({ method: 'DELETE', url: `/api/admin/words/vocab/${encodeURIComponent('вишити')}`, headers: auth });
+    assert.equal(del.statusCode, 204);
+    assert.equal((await app.inject('/api/words/custom')).json().decks.vocab.length, 0);
+  });
+
+  test('rejects duplicates, bad fields and non-addable decks', async () => {
+    const post = (deck: string, payload: object) =>
+      app.inject({ method: 'POST', url: `/api/admin/words/${deck}`, headers: auth, payload });
+    assert.equal((await post('vocab', { ukr: 'мати', eng: 'to have', type: 'verb' })).statusCode, 409, 'built-in word');
+    assert.equal((await post('de_verbs', { de: 'gehen2', eng: 'x' })).statusCode, 201);
+    assert.equal((await post('de_verbs', { de: 'gehen2', eng: 'y' })).statusCode, 409, 'already added');
+    assert.equal((await post('vocab', { ukr: 'a', eng: 'b', type: 'adjective' })).statusCode, 400);
+    assert.equal((await post('vocab', { ukr: 'a', type: 'verb' })).statusCode, 400, 'missing English');
+    assert.equal((await post('vocab', { ukr: '<b>a</b>', eng: 'b', type: 'verb' })).statusCode, 400);
+    assert.equal((await post('vocab', { ukr: 'a', eng: 'b', type: 'verb', extra: 1 })).statusCode, 400);
+    assert.equal((await post('letters', { show: 'Ы ы', pron: 'y', desc: 'd', ex: 'e', exEng: 'e' })).statusCode, 400);
+    assert.equal((await post('klingon', { a: 1 })).statusCode, 404);
+    const missing = await app.inject({ method: 'DELETE', url: '/api/admin/words/vocab/nothing', headers: auth });
+    assert.equal(missing.statusCode, 404);
+  });
+
+  test('admin disabled without a password', async () => {
+    const kv = new MemoryKV();
+    const noAdmin = await buildApp({ store: new ProgressStore(kv), words: new CustomWordsStore(kv, decks), decks });
+    assert.equal((await noAdmin.inject({ url: '/api/admin/check', headers: auth })).statusCode, 503);
+    await noAdmin.close();
   });
 });

@@ -21,6 +21,10 @@ export const config = {
   /** Local dev only: serve index.html live from here. On Vercel the bundled copy is used. */
   webRoot: onVercel ? undefined : resolve(env.WEB_ROOT ?? '..'),
   corsOrigin: parseCors(env.CORS_ORIGIN ?? '*'),
+  /** Password for /admin (adding words). Unset = admin disabled. */
+  adminPassword: env.ADMIN_PASSWORD || undefined,
+  /** Local dev only: serve the admin page live from this file. */
+  adminFile: onVercel ? undefined : resolve('admin/admin.html'),
   logLevel: env.LOG_LEVEL ?? 'info',
 };
 

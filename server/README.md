@@ -25,7 +25,7 @@ restart dev) if you change the word lists themselves.
 | `npm run dev`       | Start with auto-reload, progress in `data/profiles/*.json` |
 | `npm test`          | API + storage tests (incl. concurrent writes)             |
 | `npm run typecheck` | Type-check                                                |
-| `npm run gen`       | Regenerate `src/generated/` (word lists + bundled page)   |
+| `npm run gen`       | Regenerate `src/generated/` (word lists + bundled pages)  |
 
 ## Deploy to Vercel (one-time setup)
 
@@ -48,6 +48,28 @@ branches get preview URLs.
 **Using the real Blob store locally** (optional): `npx vercel link`, then
 `npx vercel env pull .env`, and set `STORAGE=blob` and `BLOB_PREFIX=dev/` in
 `.env` so local testing doesn't touch your real profiles.
+
+## Admin page: browse and add words
+
+Open **`/admin`** (e.g. `https://<your-app>.vercel.app/admin`, or the
+"Browse or add words" link in the app's Progress tab).
+
+- **Browsing** every deck (built-in + added words, with search) is open to
+  anyone with the link.
+- **Adding, editing and deleting** words needs the admin password: set an
+  `ADMIN_PASSWORD` environment variable (Vercel → project → Settings →
+  Environment Variables, then redeploy; locally in `server/.env`). Without it
+  the page is read-only.
+- Added words are saved in Blob (`words/custom.json`) and appear in the app
+  the next time it opens: it fetches them on start and reloads once if they
+  changed. No code change or deploy needed.
+- The alphabet is complete, so letters can't be added.
+- Built-in words (from `index.html`) can't be edited here; edit `index.html`
+  for those.
+
+In the app, **tap a tile in the Progress tab** to mark that letter/word
+learned; tap again to undo (restores its previous points). It syncs like a
+normal answer.
 
 ## How it works
 
@@ -72,12 +94,19 @@ branches get preview URLs.
 | ------- | ---------------------------- | ----------------------------------------------------------- |
 | `GET`   | `/api/health`                | `{ ok: true }`                                              |
 | `GET`   | `/api/decks`                 | Decks with item counts                                      |
-| `GET`   | `/api/decks/:deck/items`     | Items of a deck, in order, each with its `key`              |
+| `GET`   | `/api/decks/:deck/items`     | Built-in + added items of a deck, each with `key` and `custom` |
+| `GET`   | `/api/words/custom`          | Only the added words (what the app loads on start)          |
+| `GET`   | `/api/words/schema`          | Fields per deck (used by the admin page's forms)            |
+| `GET`   | `/admin`                     | Admin page                                                  |
+| `GET`   | `/api/admin/check`           | 🔒 Check the password                                        |
+| `POST`  | `/api/admin/words/:deck`     | 🔒 Add a word                                                |
+| `PUT`   | `/api/admin/words/:deck/:key`| 🔒 Edit an added word                                        |
+| `DELETE`| `/api/admin/words/:deck/:key`| 🔒 Delete an added word                                      |
 | `GET`   | `/api/profiles/:id/progress` | `{ profileId, updatedAt, progress }`, 404 if unused         |
 | `PATCH` | `/api/profiles/:id/progress` | Merge `{ deck: { key: points } }`; creates the profile      |
 
 Decks: `letters`, `vocab`, `nouns`, `de_verbs`, `de_nouns`. Points are clamped
-to 0–10.
+to 0–10. 🔒 = needs `Authorization: Bearer <ADMIN_PASSWORD>`.
 
 A profile id is a name you choose (3–40 chars, `a–z 0–9 - _`, lowercase).
 There is no password: anyone who knows or guesses a name can read and change
@@ -86,7 +115,9 @@ accounts before opening it up to others.
 
 ## How the app syncs (SYNC section in `index.html`)
 
-- localStorage stays the working copy, so the app works offline.
+- localStorage stays the working copy, so the app works offline. Progress is
+  stored per word key (`ua_learn_v13`); the old position-based format
+  (`ua_learn_v12`) is migrated automatically on first load.
 - After each answer it sends only the items that changed since the last
   successful sync (debounced), and flushes when the tab is hidden.
 - On start it pushes unsent changes first, then loads the server copy.
@@ -102,12 +133,14 @@ src/
   config.ts             env vars / .env
   decks.ts              deck definitions and item key rules
   keyed.ts              adds keys to items
+  words.ts              added words: fields per deck, validation, storage
   source.ts             extracts the word arrays from index.html
   store/
     progress-store.ts   per-profile merge with retry
     kv.ts               storage interface + in-memory version (tests)
     blob-kv.ts          Vercel Blob
     file-kv.ts          local JSON files
+admin/admin.html        the /admin page (bundled into the function by gen)
   routes/               HTTP routes
   generated/            (git-ignored) word lists, from `npm run gen`
 scripts/gen.ts          build step

@@ -33,3 +33,24 @@ export class MemoryKV implements KV {
     return true;
   }
 }
+
+/**
+ * Read → change → conditional write, retried when someone else wrote in
+ * between, so concurrent updates are never lost. `change` may throw to abort.
+ */
+export async function updateJson<T, R>(
+  kv: KV,
+  key: string,
+  empty: () => T,
+  change: (doc: T) => R,
+  maxAttempts = 8,
+): Promise<{ doc: T; result: R }> {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const cur = await kv.read(key);
+    const doc = cur ? (JSON.parse(cur.data) as T) : empty();
+    const result = change(doc);
+    if (await kv.write(key, JSON.stringify(doc), cur?.version ?? null)) return { doc, result };
+    await new Promise((r) => setTimeout(r, 20 * 2 ** attempt * Math.random()));
+  }
+  throw new Error(`Could not save "${key}" (too many concurrent writes)`);
+}

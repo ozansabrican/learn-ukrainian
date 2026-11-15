@@ -161,7 +161,11 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 /* Verb tiles */
 .verb-grid  { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
 
-.tile { background: #162230; border: 1.5px solid #1b2d3e; border-radius: 12px; padding: 10px 8px 8px; text-align: center; transition: border-color 0.3s, background 0.3s; }
+.tile { background: #162230; border: 1.5px solid #1b2d3e; border-radius: 12px; padding: 10px 8px 8px; text-align: center; transition: border-color 0.3s, background 0.3s; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
+.tile:hover { border-color: #2d4a60; }
+.tile:active { transform: scale(0.97); }
+.prog-hint { font-size: 0.75rem; color: #4a6275; text-align: center; margin: -4px 0 14px; line-height: 1.5; }
+.prog-hint a { color: #8aa0b2; }
 .tile.learned { border-color: #2d7a55; background: #0f2a1c; }
 .tile-main { font-size: 1.25rem; font-weight: 700; color: #8fa8bc; }
 .tile.learned .tile-main { color: #4caf82; }
@@ -326,16 +330,17 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 
 <!-- ══ PROGRESS TAB ══ -->
 <div class="tab-panel" id="panel-progress">
+  <p class="prog-hint">Tap a tile to mark it learned &middot; tap again to undo<br><a href="/admin">Browse or add words</a></p>
   <div class="prog-section">
-    <h2>Letters &mdash; <span id="prog-letters-count">0</span> / 33</h2>
+    <h2>Letters &mdash; <span id="prog-letters-count">0</span> / <span id="prog-letters-total">0</span></h2>
     <div class="letter-grid" id="grid-letters"></div>
   </div>
   <div class="prog-section">
-    <h2>Verbs &mdash; <span id="prog-words-count">0</span> / 61</h2>
+    <h2>Verbs &mdash; <span id="prog-words-count">0</span> / <span id="prog-words-total">0</span></h2>
     <div class="vocab-grid" id="grid-words"></div>
   </div>
   <div class="prog-section">
-    <h2>Sentences &mdash; <span id="prog-sentences-count">0</span> / 13</h2>
+    <h2>Sentences &mdash; <span id="prog-sentences-count">0</span> / <span id="prog-sentences-total">0</span></h2>
     <div class="vocab-grid" id="grid-sentences"></div>
   </div>
   <div class="prog-section">
@@ -394,6 +399,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 
 <!-- ══ GERMAN PROGRESS TAB ══ -->
 <div class="tab-panel" id="panel-gprogress">
+  <p class="prog-hint">Tap a tile to mark it learned &middot; tap again to undo<br><a href="/admin#de_verbs">Browse or add words</a></p>
   <div class="prog-section">
     <h2>Verbs &mdash; <span id="prog-gverbs-count">0</span> / <span id="prog-gverbs-total">0</span></h2>
     <div class="vocab-grid" id="grid-gverbs"></div>
@@ -1777,6 +1783,27 @@ var DE_NOUNS = [
 /* ══════════════════════════════════════════
    STATE
 ══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   CUSTOM WORDS  (added in /admin)
+   Cached in localStorage so the app starts instantly and works offline;
+   refreshed from the server on start (refreshCustomWords), and the page
+   reloads once if they changed. Appended after the built-in items.
+══════════════════════════════════════════ */
+var CUSTOM_KEY = 'ua_custom_words_v1';
+var BUILTIN_COUNT = { lp: LETTERS.length, vc: VOCAB.length, np: NOUNS.length, gv: DE_VERBS.length, gn: DE_NOUNS.length };
+var customWordsJson = null;
+try { customWordsJson = localStorage.getItem(CUSTOM_KEY); } catch(e) {}
+(function() {
+  if (!customWordsJson) return;
+  try {
+    var decks = JSON.parse(customWordsJson);
+    var lists = { letters: LETTERS, vocab: VOCAB, nouns: NOUNS, de_verbs: DE_VERBS, de_nouns: DE_NOUNS };
+    Object.keys(lists).forEach(function(name) {
+      (decks[name] || []).forEach(function(item) { item.custom = true; lists[name].push(item); });
+    });
+  } catch(e) {}
+})();
+
 var MAX_PTS    = 10;
 var CORRECT_PT = 2;
 var WRONG_PT   = -1;
@@ -2529,6 +2556,9 @@ function updateOverall() {
   document.getElementById('prog-sentences-count').textContent  = learnedS;
   document.getElementById('prog-nouns-count').textContent      = learnedN;
   document.getElementById('prog-nouns-total').textContent      = NOUNS.length;
+  document.getElementById('prog-letters-total').textContent    = LETTERS.length;
+  document.getElementById('prog-words-total').textContent      = totalW;
+  document.getElementById('prog-sentences-total').textContent  = totalS;
   document.getElementById('prog-gverbs-count').textContent     = learnedGV;
   document.getElementById('prog-gverbs-total').textContent     = DE_VERBS.length;
   document.getElementById('prog-gnouns-count').textContent     = learnedGN;
@@ -2742,30 +2772,30 @@ function switchLang(lang, btn) {
 /* ══════════════════════════════════════════
    SAVE / LOAD
 ══════════════════════════════════════════ */
-var STORAGE_KEY = 'ua_learn_v12';
+/* Progress is stored per word ({ deck: { key: points } }), not per position,
+   so adding or removing words never shifts anyone's scores.
+   ua_learn_v12 is the old position-based format; it is migrated once. */
+var STORAGE_KEY        = 'ua_learn_v13';
+var LEGACY_STORAGE_KEY = 'ua_learn_v12';
 
 function saveProgress() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ lp: letterPts, vc: vocabPts, np: nounPts, gv: gVerbPts, gn: gNounPts }));
-  } catch(e) {}
+  writeLocal(currentArrays());
   scheduleSync();
+}
+
+function setAllPts(arrs) {
+  letterPts = arrs.lp; vocabPts = arrs.vc; nounPts = arrs.np; gVerbPts = arrs.gv; gNounPts = arrs.gn;
 }
 
 function loadProgress() {
   try {
     var raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    var d = JSON.parse(raw);
-    if (d.lp && d.lp.length === LETTERS.length)
-      letterPts = d.lp.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
-    if (d.vc && d.vc.length === VOCAB.length)
-      vocabPts = d.vc.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
-    if (d.np && d.np.length === NOUNS.length)
-      nounPts = d.np.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
-    if (d.gv && d.gv.length === DE_VERBS.length)
-      gVerbPts = d.gv.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
-    if (d.gn && d.gn.length === DE_NOUNS.length)
-      gNounPts = d.gn.map(function(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); });
+    if (raw) { setAllPts(fromKeyed(JSON.parse(raw).decks || {})); return; }
+    var legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (!legacy) return;
+    var arrs = legacyToArrays(JSON.parse(legacy));
+    setAllPts(arrs);
+    writeLocal(arrs);
   } catch(e) {}
 }
 
@@ -2776,7 +2806,8 @@ function loadProgress() {
 ══════════════════════════════════════════ */
 var API_BASE    = (location.protocol === 'file:') ? 'http://127.0.0.1:3000' : '';
 var PROFILE_KEY = 'ua_profile';
-var SYNCED_KEY  = 'ua_synced_v1';   /* last state known to be on the server */
+var SYNCED_KEY  = 'ua_synced_v2';   /* last state known to be on the server, by word key */
+var LEGACY_SYNCED_KEY = 'ua_synced_v1';   /* old position-based format */
 var PROFILE_RE  = /^[a-z0-9][a-z0-9_-]{2,39}$/;
 
 /* Must match server/src/decks.ts (deck names + item keys). */
@@ -2812,20 +2843,54 @@ function zeroArrays() {
 function hasAnyProgress(arrs) {
   return SYNC_DECKS.some(function(d) { return arrs[d.field].some(function(v) { return v > 0; }); });
 }
+function clampPts(v) { return Math.max(0, Math.min(MAX_PTS, Number(v) || 0)); }
+/* arrays (by position) → { deck: { key: pts } }, leaving out zeros */
+function toKeyed(arrs) {
+  var out = {};
+  SYNC_DECKS.forEach(function(d) {
+    var m = {};
+    d.keys.forEach(function(k, i) { var v = arrs[d.field][i] || 0; if (v) m[k] = v; });
+    out[d.deck] = m;
+  });
+  return out;
+}
+/* { deck: { key: pts } } → arrays for the current lists (unknown keys ignored) */
+function fromKeyed(keyed) {
+  var out = {};
+  SYNC_DECKS.forEach(function(d) {
+    var m = keyed[d.deck] || {};
+    out[d.field] = d.keys.map(function(k) { return clampPts(m[k]); });
+  });
+  return out;
+}
+/* Old position-based arrays; they only ever covered the built-in lists. */
+function legacyToArrays(old) {
+  var out = {};
+  SYNC_DECKS.forEach(function(d) {
+    var a = old[d.field];
+    var ok = a && a.length === BUILTIN_COUNT[d.field];
+    out[d.field] = d.keys.map(function(k, i) { return ok && i < a.length ? clampPts(a[i]) : 0; });
+  });
+  return out;
+}
 function readSnapshot() {
   try {
     var s = JSON.parse(localStorage.getItem(SYNCED_KEY) || 'null');
-    return (s && s.profile === syncProfile) ? s.data : null;
-  } catch(e) { return null; }
+    if (s) return s.profile === syncProfile ? s.decks : null;
+    var old = JSON.parse(localStorage.getItem(LEGACY_SYNCED_KEY) || 'null');
+    if (old && old.profile === syncProfile && old.data) return toKeyed(legacyToArrays(old.data));
+  } catch(e) {}
+  return null;
 }
-function writeSnapshot(data) {
+function writeSnapshot(arrs) {
   try {
-    if (data) localStorage.setItem(SYNCED_KEY, JSON.stringify({ profile: syncProfile, data: data }));
+    localStorage.removeItem(LEGACY_SYNCED_KEY);
+    if (arrs) localStorage.setItem(SYNCED_KEY, JSON.stringify({ profile: syncProfile, decks: toKeyed(arrs) }));
     else localStorage.removeItem(SYNCED_KEY);
   } catch(e) {}
 }
 function writeLocal(arrs) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arrs)); } catch(e) {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ v: 2, decks: toKeyed(arrs) })); } catch(e) {}
 }
 function serverToArrays(progress) {
   var out = {};
@@ -2835,14 +2900,15 @@ function serverToArrays(progress) {
   });
   return out;
 }
-/* Items whose points differ from what the server last confirmed. */
+/* Items whose points differ from what the server last confirmed
+   (`base` is keyed; null = nothing confirmed yet → send everything non-zero). */
 function diffPayload(cur, base) {
   var body = {}, n = 0;
   SYNC_DECKS.forEach(function(d) {
-    var b = base && base[d.field];
+    var b = base ? (base[d.deck] || {}) : null;
     d.keys.forEach(function(k, i) {
       var v = cur[d.field][i] || 0;
-      if (b ? b[i] !== v : v !== 0) { (body[d.deck] = body[d.deck] || {})[k] = v; n++; }
+      if (b ? (b[k] || 0) !== v : v !== 0) { (body[d.deck] = body[d.deck] || {})[k] = v; n++; }
     });
   });
   return n ? body : null;
@@ -2927,6 +2993,28 @@ function pullServer() {
   }).catch(function() { setSyncStatus('offline'); });
 }
 
+/* Fetch the words added in /admin; if they differ from the cached copy,
+   store them and reload once so they're part of every list. Progress is
+   saved by word key, so nothing shifts. */
+function refreshCustomWords() {
+  if (location.protocol === 'file:' && !syncProfile) return;
+  fetch(API_BASE + '/api/words/custom', { cache: 'no-store' }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(res) {
+    var decks = {};
+    Object.keys(res.decks || {}).forEach(function(name) {
+      if (res.decks[name].length) decks[name] = res.decks[name];
+    });
+    var json = Object.keys(decks).length ? JSON.stringify(decks) : null;
+    if (json === customWordsJson) return;
+    try { json ? localStorage.setItem(CUSTOM_KEY, json) : localStorage.removeItem(CUSTOM_KEY); } catch(e) { return; }
+    syncReloading = true;
+    clearTimeout(syncTimer);
+    location.reload();
+  }).catch(function() { /* offline or no server: keep the cached words */ });
+}
+
 function syncOnStart() {
   setSyncStatus(syncProfile ? 'syncing' : 'local');
   if (!syncProfile) return;
@@ -2994,6 +3082,58 @@ document.addEventListener('visibilitychange', function() {
 });
 
 /* ══════════════════════════════════════════
+   PROGRESS TILES  — tap to mark learned, tap again to undo
+══════════════════════════════════════════ */
+var TILE_TYPES = {
+  'ltile-':  { pts: function() { return letterPts; }, update: function(i) { updateLetterTile(i); }, mode: 'letters' },
+  'wtile-':  { pts: function() { return vocabPts;  }, update: function(i) { updateVocabTile(i);  }, mode: 'words' },
+  'stile-':  { pts: function() { return vocabPts;  }, update: function(i) { updateVocabTile(i);  }, mode: 'sentences' },
+  'ntile-':  { pts: function() { return nounPts;   }, update: function(i) { updateNounsTile(i);  }, mode: 'nouns' },
+  'gvtile-': { pts: function() { return gVerbPts;  }, update: function(i) { updateGVerbsTile(i); }, mode: 'gverbs' },
+  'gntile-': { pts: function() { return gNounPts;  }, update: function(i) { updateGNounsTile(i); }, mode: 'gnouns' }
+};
+var QUESTION_RENDERERS = {
+  letters: function() { renderLetterQuestion(); }, words: function() { renderWordsQuestion(); },
+  sentences: function() { renderSentencesQuestion(); }, nouns: function() { renderNounsQuestion(); },
+  gverbs: function() { renderGVerbsQuestion(); }, gnouns: function() { renderGNounsQuestion(); }
+};
+var tilePrevPts = {};   /* tile id → points before it was marked learned (for undo) */
+
+function toggleTileLearned(tile) {
+  var m = /^([a-z]+-)(\d+)$/.exec(tile.id || '');
+  var type = m && TILE_TYPES[m[1]];
+  if (!type) return;
+  var i = Number(m[2]);
+  var pts = type.pts();
+  if (pts[i] >= MAX_PTS) {
+    pts[i] = tilePrevPts[tile.id] || 0;
+    delete tilePrevPts[tile.id];
+  } else {
+    tilePrevPts[tile.id] = pts[i];
+    pts[i] = MAX_PTS;
+  }
+  type.update(i);
+  /* a finished deck that has an item to learn again → back to the quiz */
+  var done = document.getElementById(type.mode + '-done');
+  if (pts[i] < MAX_PTS && done && done.style.display === 'flex') {
+    done.style.display = 'none';
+    document.getElementById(type.mode + '-quiz-wrap').style.display = 'block';
+    QUESTION_RENDERERS[type.mode]();
+  }
+  updateOverall();
+  saveProgress();
+}
+
+['grid-letters', 'grid-words', 'grid-sentences', 'grid-nouns', 'grid-gverbs', 'grid-gnouns'].forEach(function(id) {
+  var grid = document.getElementById(id);
+  if (!grid) return;
+  grid.addEventListener('click', function(e) {
+    var tile = e.target.closest('.tile');
+    if (tile && grid.contains(tile)) toggleTileLearned(tile);
+  });
+});
+
+/* ══════════════════════════════════════════
    KEYBOARD  Q W A S + Space/Enter
 ══════════════════════════════════════════ */
 document.addEventListener('keydown', function(e) {
@@ -3038,6 +3178,7 @@ renderNounsQuestion();
 renderGVerbsQuestion();
 renderGNounsQuestion();
 syncOnStart();
+refreshCustomWords();
 </script>
 </body>
 </html>

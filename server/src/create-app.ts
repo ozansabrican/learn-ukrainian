@@ -5,11 +5,20 @@ import Fastify, { type FastifyInstance, type FastifyServerOptions } from 'fastif
 import type { DeckName } from './decks.js';
 import { deckRoutes, type KeyedItem } from './routes/decks.js';
 import { progressRoutes } from './routes/progress.js';
+import { wordRoutes } from './routes/words.js';
 import type { ProgressStore } from './store/progress-store.js';
+import type { CustomWordsStore } from './words.js';
 
 export interface AppOptions {
   store: ProgressStore;
+  words: CustomWordsStore;
   decks: Record<DeckName, KeyedItem[]>;
+  /** Enables /api/admin/* (adding words). Unset = admin disabled. */
+  adminPassword?: string;
+  /** The admin page's HTML, served at /admin */
+  adminHtml?: string;
+  /** Local dev: read the admin page from this file on every request instead */
+  adminFile?: string;
   /** The app's HTML, served at / (bundled copy from `npm run gen`) */
   indexHtml?: string;
   /** Local dev: read index.html from this folder on every request instead */
@@ -37,13 +46,20 @@ export async function buildApp(opts: AppOptions) {
 /** Registers plugins and routes on an existing Fastify instance. */
 export async function configureApp(
   app: FastifyInstance,
-  { store, decks, indexHtml, webRoot, corsOrigin = true }: AppOptions,
+  { store, words, decks, adminPassword, adminHtml, adminFile, indexHtml, webRoot, corsOrigin = true }: AppOptions,
 ) {
   await app.register(cors, { origin: corsOrigin, methods: ['GET', 'PATCH'] });
 
   app.get('/api/health', async () => ({ ok: true }));
-  deckRoutes(app, decks);
+  deckRoutes(app, decks, words);
   progressRoutes(app, store);
+  wordRoutes(app, words, adminPassword);
+
+  app.get('/admin', async (_req, reply) => {
+    const html = adminFile ? await readFile(adminFile, 'utf8').catch(() => adminHtml) : adminHtml;
+    if (!html) return reply.code(404).send({ error: 'admin page not available' });
+    return reply.type('text/html; charset=utf-8').header('cache-control', 'no-cache').send(html);
+  });
 
   app.get('/', async (_req, reply) => {
     let html = indexHtml;

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Words · learn-ukrainian admin</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1923; color: #dce3ea; min-height: 100vh; padding: 20px 16px 60px; }
+.wrap { max-width: 980px; margin: 0 auto; }
+a { color: #f5c518; }
+
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+header h1 { font-size: 1.35rem; color: #f5c518; }
+header h1 small { color: #4a6275; font-weight: 600; font-size: 0.8rem; margin-left: 8px; }
+
+.lock { display: flex; gap: 6px; align-items: center; font-size: 0.82rem; color: #8aa0b2; }
+.lock input { width: 170px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; font-size: 0.72rem; font-weight: 700; }
+.pill.ok { background: #0f2a1c; color: #4caf82; border: 1px solid #2d7a55; }
+
+input, select { background: #0c151f; border: 1.5px solid #1b2d3e; color: #dce3ea; border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 0.88rem; }
+input:focus, select:focus { outline: none; border-color: #3d8bcd; }
+button { font: inherit; font-size: 0.82rem; font-weight: 700; border-radius: 8px; padding: 8px 14px; border: none; cursor: pointer; background: #162230; color: #dce3ea; }
+button:hover { background: #1b2d3e; }
+button.primary { background: #f5c518; color: #0f1923; }
+button.primary:hover { background: #ffd740; }
+button.danger { color: #e05555; background: transparent; padding: 4px 8px; }
+button.link { background: transparent; color: #8aa0b2; padding: 4px 8px; }
+button:disabled { opacity: 0.5; cursor: default; }
+
+.tabs { display: flex; gap: 4px; background: #0c151f; border-radius: 12px; padding: 4px; margin-bottom: 16px; overflow-x: auto; }
+.tab { flex: 1; white-space: nowrap; background: transparent; color: #4a6275; padding: 9px 12px; }
+.tab.active { background: #162230; color: #f5c518; }
+.tab .n { font-weight: 600; opacity: 0.7; margin-left: 4px; }
+
+.card { background: #121f2b; border: 1.5px solid #1b2d3e; border-radius: 14px; padding: 16px; margin-bottom: 16px; }
+.card h2 { font-size: 0.95rem; margin-bottom: 12px; color: #dce3ea; }
+.note { font-size: 0.82rem; color: #8aa0b2; line-height: 1.5; }
+.form { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; align-items: end; }
+.form label { display: flex; flex-direction: column; gap: 4px; font-size: 0.72rem; color: #8aa0b2; font-weight: 600; }
+.form .req::after { content: ' *'; color: #f5c518; }
+.form .actions { display: flex; gap: 6px; }
+
+.toolbar { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; }
+.toolbar input { flex: 1; min-width: 200px; }
+.counts { font-size: 0.78rem; color: #4a6275; }
+
+.table-wrap { overflow-x: auto; border: 1.5px solid #1b2d3e; border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+th { text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: #4a6275; background: #0c151f; padding: 9px 10px; position: sticky; top: 0; }
+td { padding: 8px 10px; border-top: 1px solid #16242f; vertical-align: top; }
+tr.builtin td { color: #8aa0b2; }
+tr.custom td { background: #12261d; }
+tr.editing td { background: #2a2610; }
+.src { font-size: 0.66rem; font-weight: 700; padding: 2px 7px; border-radius: 99px; white-space: nowrap; }
+.src.builtin { color: #4a6275; border: 1px solid #1b2d3e; }
+.src.custom { color: #4caf82; border: 1px solid #2d7a55; }
+td.actions { white-space: nowrap; text-align: right; }
+.empty { padding: 20px; text-align: center; color: #4a6275; font-size: 0.85rem; }
+
+#toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: #162230; border: 1.5px solid #1b2d3e; color: #dce3ea; padding: 10px 16px; border-radius: 10px; font-size: 0.85rem; opacity: 0; pointer-events: none; transition: opacity 0.2s; max-width: 90vw; }
+#toast.show { opacity: 1; }
+#toast.err { border-color: #e05555; color: #ffb3b3; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Words <small><a href="/">← back to the app</a></small></h1>
+    <div class="lock" id="lock"></div>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="card" id="form-card"></div>
+
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Search this list…" autocomplete="off">
+    <span class="counts" id="counts"></span>
+  </div>
+  <div class="table-wrap"><table id="table"></table></div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* Admin page for learn-ukrainian. Browsing is public; adding, editing and
+   deleting need the ADMIN_PASSWORD (kept in this tab's sessionStorage only). */
+var PW_KEY = 'ua_admin_pw';
+var schema = null;       /* field definitions per deck, from /api/words/schema */
+var items = {};          /* deck -> [{key, custom, ...fields}] */
+var deck = 'vocab';
+var editingKey = null;
+var password = null;
+try { password = sessionStorage.getItem(PW_KEY); } catch (e) {}
+
+function $(id) { return document.getElementById(id); }
+function el(tag, attrs, children) {
+  var n = document.createElement(tag);
+  Object.keys(attrs || {}).forEach(function (k) {
+    if (k === 'text') n.textContent = attrs[k];
+    else if (k === 'on') Object.keys(attrs.on).forEach(function (ev) { n.addEventListener(ev, attrs.on[ev]); });
+    else if (attrs[k] !== undefined && attrs[k] !== null && attrs[k] !== false) n.setAttribute(k, attrs[k]);
+  });
+  (children || []).forEach(function (c) { if (c) n.appendChild(c); });
+  return n;
+}
+
+var toastTimer;
+function toast(msg, isErr) {
+  var t = $('toast');
+  t.textContent = msg;
+  t.className = 'show' + (isErr ? ' err' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.className = ''; }, isErr ? 5000 : 2500);
+}
+
+function api(method, path, body) {
+  var headers = {};
+  if (body) headers['Content-Type'] = 'application/json';
+  if (password) headers['Authorization'] = 'Bearer ' + password;
+  return fetch(path, { method: method, headers: headers, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' })
+    .then(function (r) {
+      if (r.status === 204) return null;
+      return r.json().catch(function () { return {}; }).then(function (data) {
+        if (!r.ok) {
+          var err = new Error(data.message || data.error || ('HTTP ' + r.status));
+          err.status = r.status;
+          throw err;
+        }
+        return data;
+      });
+    });
+}
+
+/* ── Lock / unlock ─────────────────────────────────────── */
+function renderLock() {
+  var box = $('lock');
+  box.innerHTML = '';
+  if (password) {
+    box.appendChild(el('span', { class: 'pill ok', text: '● Editing unlocked' }));
+    box.appendChild(el('button', { class: 'link', text: 'Lock', on: { click: function () { setPassword(null); } } }));
+  } else {
+    var input = el('input', { type: 'password', placeholder: 'Admin password', autocomplete: 'current-password' });
+    var btn = el('button', { class: 'primary', text: 'Unlock' });
+    function go() {
+      if (!input.value) return;
+      btn.disabled = true;
+      var pw = input.value;
+      password = pw;
+      api('GET', '/api/admin/check').then(function () {
+        setPassword(pw);
+        toast('Unlocked — you can add and edit words now.');
+      }).catch(function (e) {
+        password = null;
+        btn.disabled = false;
+        toast(e.message, true);
+      });
+    }
+    btn.addEventListener('click', go);
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
+    box.appendChild(input);
+    box.appendChild(btn);
+  }
+}
+function setPassword(pw) {
+  password = pw;
+  try { pw ? sessionStorage.setItem(PW_KEY, pw) : sessionStorage.removeItem(PW_KEY); } catch (e) {}
+  editingKey = null;
+  renderLock();
+  renderForm();
+  renderTable();
+}
+
+/* ── Tabs ──────────────────────────────────────────────── */
+function renderTabs() {
+  var box = $('tabs');
+  box.innerHTML = '';
+  Object.keys(schema).forEach(function (d) {
+    var list = items[d] || [];
+    var b = el('button', { class: 'tab' + (d === deck ? ' active' : ''), on: { click: function () { selectDeck(d); } } }, [
+      document.createTextNode(schema[d].label),
+      el('span', { class: 'n', text: list.length ? '(' + list.length + ')' : '' })
+    ]);
+    box.appendChild(b);
+  });
+}
+function selectDeck(d) {
+  deck = d;
+  editingKey = null;
+  try { history.replaceState(null, '', '#' + d); } catch (e) {}
+  renderTabs();
+  renderForm();
+  renderTable();
+}
+
+/* ── Add / edit form ───────────────────────────────────── */
+function renderForm() {
+  var card = $('form-card');
+  card.innerHTML = '';
+  var info = schema[deck];
+  if (!info.addable) {
+    card.appendChild(el('p', { class: 'note', text: 'The alphabet is complete, so letters can’t be added here. You can mark letters as learned in the app: Progress tab → tap a tile.' }));
+    return;
+  }
+  if (!password) {
+    card.appendChild(el('p', { class: 'note', text: 'Enter the admin password (top right) to add, edit or delete words. New words appear in the app the next time it opens.' }));
+    return;
+  }
+  var editing = editingKey !== null ? (items[deck] || []).filter(function (i) { return i.key === editingKey; })[0] : null;
+  card.appendChild(el('h2', { text: editing ? 'Edit “' + editing.key + '”' : 'Add to ' + info.label }));
+
+  var form = el('form', { class: 'form' });
+  info.fields.forEach(function (f) {
+    var input;
+    if (f.options) {
+      input = el('select', { name: f.name }, f.options.map(function (o) { return el('option', { value: o, text: o }); }));
+    } else {
+      input = el('input', { name: f.name, placeholder: f.placeholder || '', autocomplete: 'off', maxlength: 200 });
+    }
+    if (editing) {
+      var v = editing[f.name] == null ? '' : String(editing[f.name]);
+      if (f.emptyValue !== undefined && v === f.emptyValue) v = '';
+      input.value = v;
+    }
+    form.appendChild(el('label', {}, [el('span', { class: f.required ? 'req' : '', text: f.label }), input]));
+  });
+  var actions = el('div', { class: 'actions' }, [
+    el('button', { class: 'primary', type: 'submit', text: editing ? 'Save' : 'Add' }),
+    editing ? el('button', { type: 'button', text: 'Cancel', on: { click: function () { editingKey = null; renderForm(); renderTable(); } } }) : null
+  ]);
+  form.appendChild(actions);
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var body = {};
+    info.fields.forEach(function (f) { body[f.name] = form.elements[f.name].value; });
+    var submit = form.querySelector('button[type=submit]');
+    submit.disabled = true;
+    var req = editing
+      ? api('PUT', '/api/admin/words/' + deck + '/' + encodeURIComponent(editing.key), body)
+      : api('POST', '/api/admin/words/' + deck, body);
+    req.then(function (saved) {
+      toast((editing ? 'Saved “' : 'Added “') + saved.key + '”');
+      editingKey = null;
+      return loadDeck(deck).then(function () {
+        renderTabs(); renderForm(); renderTable();
+        var first = $('form-card').querySelector('input, select');
+        if (first && !editing) first.focus();
+      });
+    }).catch(function (err) {
+      submit.disabled = false;
+      if (err.status === 401) { setPassword(null); }
+      toast(err.message, true);
+    });
+  });
+  card.appendChild(form);
+  var first = form.querySelector('input, select');
+  if (editing && first) first.focus();
+}
+
+/* ── Table ─────────────────────────────────────────────── */
+function renderTable() {
+  var info = schema[deck];
+  var list = items[deck] || [];
+  var q = $('search').value.trim().toLowerCase();
+  var rows = list.filter(function (i) {
+    if (!q) return true;
+    return info.fields.some(function (f) { return String(i[f.name] == null ? '' : i[f.name]).toLowerCase().indexOf(q) !== -1; });
+  });
+  var added = list.filter(function (i) { return i.custom; }).length;
+  $('counts').textContent = (list.length - added) + ' built-in · ' + added + ' added' + (q ? ' · ' + rows.length + ' match' + (rows.length === 1 ? '' : 'es') : '');
+
+  var table = $('table');
+  table.innerHTML = '';
+  var head = el('tr', {}, info.fields.map(function (f) { return el('th', { text: f.label }); })
+    .concat([el('th', { text: '' }), el('th', { text: '' })]));
+  table.appendChild(el('thead', {}, [head]));
+  var body = el('tbody');
+  if (!rows.length) {
+    body.appendChild(el('tr', {}, [el('td', { colspan: info.fields.length + 2, class: 'empty', text: q ? 'Nothing matches “' + q + '”.' : 'No words yet.' })]));
+  }
+  rows.forEach(function (i) {
+    var tr = el('tr', { class: (i.custom ? 'custom' : 'builtin') + (i.key === editingKey ? ' editing' : '') });
+    info.fields.forEach(function (f) { tr.appendChild(el('td', { text: i[f.name] == null ? '' : String(i[f.name]) })); });
+    tr.appendChild(el('td', {}, [el('span', { class: 'src ' + (i.custom ? 'custom' : 'builtin'), text: i.custom ? 'added' : 'built-in' })]));
+    var actions = el('td', { class: 'actions' });
+    if (i.custom && password) {
+      actions.appendChild(el('button', { class: 'link', text: 'Edit', on: { click: function () {
+        editingKey = i.key; renderForm(); renderTable(); window.scrollTo({ top: 0, behavior: 'smooth' });
+      } } }));
+      actions.appendChild(el('button', { class: 'danger', text: 'Delete', on: { click: function () { remove(i); } } }));
+    }
+    tr.appendChild(actions);
+    body.appendChild(tr);
+  });
+  table.appendChild(body);
+}
+
+function remove(i) {
+  if (!confirm('Delete “' + i.key + '”? Progress on this word will no longer be shown.')) return;
+  api('DELETE', '/api/admin/words/' + deck + '/' + encodeURIComponent(i.key)).then(function () {
+    toast('Deleted “' + i.key + '”');
+    if (editingKey === i.key) editingKey = null;
+    return loadDeck(deck);
+  }).then(function () { renderTabs(); renderForm(); renderTable(); })
+    .catch(function (err) { if (err.status === 401) setPassword(null); toast(err.message, true); });
+}
+
+/* ── Load ──────────────────────────────────────────────── */
+function loadDeck(d) {
+  return api('GET', '/api/decks/' + d + '/items').then(function (list) { items[d] = list; });
+}
+
+$('search').addEventListener('input', renderTable);
+
+api('GET', '/api/words/schema').then(function (s) {
+  schema = s;
+  var fromHash = location.hash.slice(1);
+  if (schema[fromHash]) deck = fromHash;
+  return Promise.all(Object.keys(schema).map(loadDeck));
+}).then(function () {
+  renderLock(); renderTabs(); renderForm(); renderTable();
+  if (password) api('GET', '/api/admin/check').catch(function (e) { if (e.status === 401 || e.status === 503) setPassword(null); });
+}).catch(function (err) {
+  toast('Couldn’t load the word lists: ' + err.message, true);
+});
+</script>
+</body>
+</html>
