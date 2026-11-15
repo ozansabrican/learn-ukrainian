@@ -17,7 +17,8 @@ export const config = {
   dataDir: resolve(env.DATA_DIR ?? 'data'),
   /** Prefix for blob pathnames, e.g. "dev/" to keep test data apart */
   blobPrefix: env.BLOB_PREFIX ?? '',
-  webRoot: resolve(env.WEB_ROOT ?? '..'),
+  /** Local dev only: serve index.html live from here. On Vercel the bundled copy is used. */
+  webRoot: onVercel ? undefined : resolve(env.WEB_ROOT ?? '..'),
   corsOrigin: parseCors(env.CORS_ORIGIN ?? '*'),
   logLevel: env.LOG_LEVEL ?? 'info',
 };

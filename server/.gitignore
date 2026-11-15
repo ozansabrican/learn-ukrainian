@@ -1,6 +1,5 @@
 node_modules/
 data/
-public/
 src/generated/
 .env
 .env*.local

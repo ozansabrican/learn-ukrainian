@@ -3,7 +3,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { after, before, describe, test } from 'node:test';
-import { buildApp } from '../src/app.js';
+import { buildApp } from '../src/create-app.js';
 import { DECK_NAMES } from '../src/decks.js';
 import { withKeys } from '../src/keyed.js';
 import { extractArray, readDecksFromHtml } from '../src/source.js';
@@ -31,12 +31,18 @@ describe('API', () => {
   let app: Awaited<ReturnType<typeof buildApp>>;
 
   before(async () => {
-    app = await buildApp({ store: new ProgressStore(new MemoryKV()), decks });
+    app = await buildApp({ store: new ProgressStore(new MemoryKV()), decks, indexHtml: '<!DOCTYPE html><title>t</title>' });
   });
   after(() => app.close());
 
   test('health', async () => {
     assert.equal((await app.inject('/api/health')).statusCode, 200);
+  });
+
+  test('serves the app at /', async () => {
+    const res = await app.inject('/');
+    assert.equal(res.statusCode, 200);
+    assert.match(res.headers['content-type'] as string, /text\/html/);
   });
 
   test('lists decks with counts', async () => {

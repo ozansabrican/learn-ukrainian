@@ -25,14 +25,15 @@ restart dev) if you change the word lists themselves.
 | `npm run dev`       | Start with auto-reload, progress in `data/profiles/*.json` |
 | `npm test`          | API + storage tests (incl. concurrent writes)             |
 | `npm run typecheck` | Type-check                                                |
-| `npm run gen`       | Regenerate `src/generated/decks.ts` and `public/index.html` |
+| `npm run gen`       | Regenerate `src/generated/` (word lists + bundled page)   |
 
 ## Deploy to Vercel (one-time setup)
 
 1. **Push** the repo to GitHub (`git push`).
 2. **Import** it at <https://vercel.com/new>.
    - **Root Directory: `server`** (Edit → choose the `server` folder). Vercel
-     detects Fastify automatically; leave build settings at their defaults.
+     detects Fastify automatically (entry: `src/index.ts`); leave build
+     settings at their defaults.
    - Keep "Include files outside the root directory in the Build Step"
      enabled (the default) — the build reads `../index.html`.
 3. **Create the Blob store**: in the project → *Storage* → *Create* → *Blob*,
@@ -50,9 +51,13 @@ branches get preview URLs.
 
 ## How it works
 
-- **Vercel**: `src/index.ts` (the Fastify app) runs as one Vercel Function.
-  The build (`vercel-build` → `gen`) copies `index.html` into `public/`, which
-  Vercel serves from its CDN at `/`.
+- **Vercel**: `src/index.ts` runs as one Vercel Function. Vercel finds it
+  because it imports `fastify` — don't add a `src/app.ts`, Vercel would pick
+  that file instead. The build (`vercel-build` → `gen`) bundles the word lists
+  and a copy of `index.html` into the function, which serves the app at `/`.
+- **TypeScript**: Vercel compiles with the project's TypeScript 7, so
+  `tsconfig.json` deliberately has no `"types"` entry (it breaks that build).
+  To reproduce a Vercel build locally: `npx vercel build`.
 - **Storage**: `profiles/<name>.json` in a private Blob store, holding
   `{ deck: { itemKey: points } }`. Writes are *read → merge → conditional
   write* (Blob's `ifMatch` ETag), retried on conflict, so two devices saving at
@@ -92,8 +97,8 @@ accounts before opening it up to others.
 
 ```
 src/
-  index.ts              entry point (Vercel + local)
-  app.ts                builds the Fastify app — used by index.ts and tests
+  index.ts              entry point (Vercel + local): creates Fastify, listens
+  create-app.ts         plugins + routes — used by index.ts and the tests
   config.ts             env vars / .env
   decks.ts              deck definitions and item key rules
   keyed.ts              adds keys to items
