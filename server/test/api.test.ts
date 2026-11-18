@@ -22,6 +22,9 @@ describe('source extraction', () => {
     assert.equal(decks.de_nouns[0]?.key, 'der Mann');
     assert.equal(decks.conj.length, 61);
     assert.equal(decks.conj[0]?.key, 'мати');
+    assert.equal(decks.tr_verbs[0]?.key, 'olmak');
+    assert.equal(decks.tr_nouns.length, 123);
+    assert.equal(decks.tr_conj.length, decks.tr_verbs.length);
   });
 
   test('handles brackets inside strings and comments', () => {
@@ -220,6 +223,16 @@ describe('custom words + admin', () => {
     assert.equal((await post({ inf: 'x1', eng: 'x', pres: 'a b c', past: 'a b c d' })).statusCode, 400, '3 present forms');
     assert.equal((await post({ inf: 'x2', eng: 'x', past: 'a b c' })).statusCode, 400, '3 past forms');
     assert.equal((await post({ inf: 'читати', eng: 'x', past: 'a b c d' })).statusCode, 409, 'built-in verb');
+  });
+
+  test('turkish decks: add words and conjugations', async () => {
+    const post = (deck: string, payload: object) =>
+      app.inject({ method: 'POST', url: `/api/admin/words/${deck}`, headers: auth, payload });
+    assert.equal((await post('tr_nouns', { tr: 'masa', eng: 'table' })).statusCode, 409, 'built-in noun');
+    assert.equal((await post('tr_nouns', { tr: 'pencere kenarı', eng: 'window sill' })).statusCode, 201);
+    assert.equal((await post('tr_verbs', { tr: 'uçmak', eng: 'to fly' })).statusCode, 201);
+    assert.equal((await post('tr_conj', { inf: 'uçmak', eng: 'to fly', pres: 'uçarım uçarsın uçar uçarız uçarsınız uçarlar' })).statusCode, 201);
+    assert.equal((await post('tr_conj', { inf: 'x', eng: 'x', pres: 'a b c' })).statusCode, 400, 'needs 6 forms');
   });
 
   test('admin disabled without a password', async () => {

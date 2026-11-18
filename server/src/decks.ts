@@ -18,6 +18,9 @@ export const DECKS = {
   de_verbs: { source: 'DE_VERBS', storageField: 'gv', key: (i) => String(i.de) },
   de_nouns: { source: 'DE_NOUNS', storageField: 'gn', key: (i) => `${String(i.art)} ${String(i.de)}` },
   conj: { source: 'CONJ', storageField: 'cj', key: (i) => String(i.inf) },
+  tr_verbs: { source: 'TR_VERBS', storageField: 'tv', key: (i) => String(i.tr) },
+  tr_nouns: { source: 'TR_NOUNS', storageField: 'tn', key: (i) => String(i.tr) },
+  tr_conj: { source: 'TR_CONJ', storageField: 'tc', key: (i) => String(i.inf) },
 } satisfies Record<string, DeckDef>;
 
 export type DeckName = keyof typeof DECKS;

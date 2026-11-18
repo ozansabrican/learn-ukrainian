@@ -95,6 +95,34 @@ export const DECK_INFO: Record<DeckName, DeckInfo> = {
       },
     ],
   },
+  tr_verbs: {
+    label: 'TR verbs',
+    addable: true,
+    fields: [
+      { name: 'tr', label: 'Turkish', required: true, placeholder: 'okumak' },
+      { name: 'eng', label: 'English', required: true, placeholder: 'to read' },
+    ],
+  },
+  tr_nouns: {
+    label: 'TR nouns',
+    addable: true,
+    fields: [
+      { name: 'tr', label: 'Turkish', required: true, placeholder: 'kitap' },
+      { name: 'eng', label: 'English', required: true, placeholder: 'book' },
+    ],
+  },
+  tr_conj: {
+    label: 'TR conjugation',
+    addable: true,
+    fields: [
+      { name: 'inf', label: 'Infinitive', required: true, placeholder: 'okumak' },
+      { name: 'eng', label: 'English', required: true, placeholder: 'to read' },
+      {
+        name: 'pres', label: 'Present simple (ben sen o biz siz onlar)', required: true, words: 6,
+        placeholder: 'okurum okursun okur okuruz okursunuz okurlar', hint: '6 forms separated by spaces (geniş zaman)',
+      },
+    ],
+  },
 };
 
 const MAX_LEN = 200;
