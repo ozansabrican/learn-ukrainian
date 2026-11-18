@@ -146,6 +146,28 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .idk-btn .key-hint { position: static; }
 .idk-btn.hidden { display: none; }
 .feedback-msg.idk { color: #f5c518; }
+/* Conjugate: Choose | Type switch, answer box and on-screen keyboard */
+.input-switch { display: flex; width: fit-content; margin: 0 auto 14px; gap: 4px; background: #0c151f; border-radius: 10px; padding: 4px; }
+.input-btn { padding: 6px 14px; border-radius: 8px; border: none; background: transparent; color: #4a6275; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.input-btn.active { background: #162230; color: #f5c518; }
+.type-wrap { display: none; margin-bottom: 14px; }
+.type-wrap.show { display: block; }
+.type-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.type-input { flex: 1; min-width: 0; background: #0c151f; border: 2px solid #1b2d3e; border-radius: 12px; color: #fff; font: inherit; font-size: 1.35rem; font-weight: 700; text-align: center; padding: 10px 12px; outline: none; }
+.type-input:focus { border-color: #3d8bcd; }
+.type-input.correct { border-color: #4caf82; color: #4caf82; }
+.type-input.wrong { border-color: #e05c5c; color: #e05c5c; }
+.type-check { border: none; border-radius: 12px; background: #f5c518; color: #0f1923; font-weight: 800; font-size: 0.9rem; padding: 0 16px; cursor: pointer; }
+.type-check:disabled { opacity: 0.4; cursor: default; }
+.kbd { display: flex; flex-direction: column; gap: 5px; user-select: none; -webkit-user-select: none; }
+.kbd-row { display: flex; justify-content: center; gap: 4px; }
+.kbd-key { flex: 1 1 0; max-width: 40px; min-width: 0; height: 40px; border-radius: 7px; border: 1px solid #1b2d3e; background: #162230; color: #dce3ea; font-size: 1rem; font-weight: 600; cursor: pointer; padding: 0; touch-action: manipulation; }
+.kbd-key:active { background: #1f3346; transform: translateY(1px); }
+.kbd-key.wide { flex: 1.6 1 0; max-width: 64px; font-size: 0.9rem; }
+.kbd.locked .kbd-key { opacity: 0.4; pointer-events: none; }
+.quiz-wrap.typing .idk-btn .key-hint { display: none; }
+.kbd-note { font-size: 0.65rem; color: #2a4a60; text-align: center; margin-top: 8px; }
+@media (max-width: 440px) { .kbd-key { height: 38px; font-size: 0.92rem; } }
 
 /* ── Completion ── */
 .completion { display: none; flex-direction: column; align-items: center; text-align: center; gap: 14px; width: 100%; background: #162230; border: 1.5px solid #2d7a55; border-radius: 22px; padding: 44px 24px; margin-bottom: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
@@ -2666,6 +2688,7 @@ function renderConjQuestion() {
     btn.addEventListener('click', function() { handleConjAnswer(form); });
     grid.appendChild(btn);
   });
+  conjInputAfterRender('conj');
 }
 
 function conjTableText(item, tense) {
@@ -2912,6 +2935,7 @@ function renderTrConjQuestion() {
     btn.addEventListener('click', function() { handleTrConjAnswer(form); });
     grid.appendChild(btn);
   });
+  conjInputAfterRender('tconj');
 }
 function handleTrConjAnswer(chosen) {
   var st = trState.tconj;
@@ -2989,6 +3013,7 @@ function trDontKnow(mode) {
   var q2 = st.queue.filter(function(i) { return i !== st.current; });
   q2.splice(Math.min(TR_IDK_RETURN_AFTER, q2.length), 0, st.current);
   st.queue = q2;
+  if (mode === 'tconj') conjInputLock('tconj');
   document.getElementById(mode + '-next').className = 'next-btn show';
 }
 
@@ -3763,6 +3788,7 @@ function switchTab(name, btn) {
   document.getElementById('panel-' + name).classList.add('active');
   btn.classList.add('active');
   updateOverall();
+  if (isTypeMode(name) && !CONJ_INPUT[name].answered() && !coarsePointer) conjInputEl(name).focus({ preventScroll: true });
 }
 
 function switchLang(lang, btn) {
@@ -4167,6 +4193,210 @@ function toggleTileLearned(tile) {
 });
 
 /* ══════════════════════════════════════════
+   CONJUGATE: CHOOSE OR TYPE
+   Each Conjugate tab (Ukrainian `conj`, Turkish `tconj`) can show the two
+   options or an answer box with an on-screen keyboard. Typed answers are
+   scored exactly like a choice. On a regular (non-Ukrainian) keyboard the
+   Ukrainian keys follow the standard ЙЦУКЕН layout (Q = й, W = ц, …).
+══════════════════════════════════════════ */
+var CONJ_INPUT_KEY = 'ua_conj_input_v1';
+var UA_KEYS = ['йцукенгшщзхї', 'фівапролджєґ', 'ячсмитьбю’'];
+var TR_KEYS = ['qwertyuıopğü', 'asdfghjklşi', 'zxcvbnmöç'];
+/* physical key (e.code) → Ukrainian letter, used when the OS layout isn't Ukrainian */
+var UA_PHYS = {
+  KeyQ: 'й', KeyW: 'ц', KeyE: 'у', KeyR: 'к', KeyT: 'е', KeyY: 'н', KeyU: 'г', KeyI: 'ш', KeyO: 'щ', KeyP: 'з',
+  BracketLeft: 'х', BracketRight: 'ї', KeyA: 'ф', KeyS: 'і', KeyD: 'в', KeyF: 'а', KeyG: 'п', KeyH: 'р',
+  KeyJ: 'о', KeyK: 'л', KeyL: 'д', Semicolon: 'ж', Quote: 'є', Backslash: 'ґ', KeyZ: 'я', KeyX: 'ч',
+  KeyC: 'с', KeyV: 'м', KeyB: 'и', KeyN: 'т', KeyM: 'ь', Comma: 'б', Period: 'ю', Backquote: '’'
+};
+var CONJ_INPUT = {
+  conj: {
+    keys: UA_KEYS, lang: 'uk',
+    answered: function() { return conjAnswered; },
+    correct:  function() { return conjQ ? conjQ.correct : null; },
+    answer:   function(f) { handleConjAnswer(f); },
+    norm: function(v) { return String(v).trim().toLowerCase().replace(/['`ʼ‘]/g, '’'); },
+    note: 'Typing on a regular keyboard? Keys follow the Ukrainian layout: Q = й, W = ц, E = у …'
+  },
+  tconj: {
+    keys: TR_KEYS, lang: 'tr',
+    answered: function() { return trState.tconj.answered; },
+    correct:  function() { return trState.tconj.q ? trState.tconj.q.correct : null; },
+    answer:   function(f) { handleTrConjAnswer(f); },
+    norm: function(v) { return String(v).trim().toLocaleLowerCase('tr-TR'); },
+    note: 'Use the keys above for ı ğ ü ş ö ç.'
+  }
+};
+var conjInputModes = { conj: 'choose', tconj: 'choose' };
+try {
+  var savedModes = JSON.parse(localStorage.getItem(CONJ_INPUT_KEY) || '{}');
+  Object.keys(conjInputModes).forEach(function(m) { if (savedModes[m] === 'type') conjInputModes[m] = 'type'; });
+} catch(e) {}
+var coarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+function isTypeMode(mode) { return !!CONJ_INPUT[mode] && conjInputModes[mode] === 'type'; }
+function conjInputEl(mode) { return document.getElementById(mode + '-type-input'); }
+
+function setupConjInputs() {
+  Object.keys(CONJ_INPUT).forEach(function(mode) {
+    var cfg = CONJ_INPUT[mode];
+    var wrap = document.getElementById(mode + '-quiz-wrap');
+    var options = document.getElementById(mode + '-options');
+    if (!wrap || !options) return;
+
+    var sw = document.createElement('div');
+    sw.className = 'input-switch';
+    sw.innerHTML =
+      '<button class="input-btn" data-input="choose">&#9776; Choose</button>' +
+      '<button class="input-btn" data-input="type">&#9000; Type</button>';
+    sw.addEventListener('click', function(e) {
+      var b = e.target.closest('.input-btn');
+      if (b) setConjInputMode(mode, b.getAttribute('data-input'));
+    });
+    wrap.insertBefore(sw, wrap.firstChild);
+
+    var tw = document.createElement('div');
+    tw.className = 'type-wrap';
+    tw.id = mode + '-type-wrap';
+    var rows = cfg.keys.map(function(row, ri) {
+      var keys = row.split('').map(function(ch) {
+        return '<button type="button" class="kbd-key" data-ch="' + ch + '">' + ch + '</button>';
+      }).join('');
+      if (ri === cfg.keys.length - 1) keys += '<button type="button" class="kbd-key wide" data-act="back" aria-label="Backspace">&#9003;</button>';
+      return '<div class="kbd-row">' + keys + '</div>';
+    }).join('');
+    tw.innerHTML =
+      '<div class="type-row">' +
+        '<input class="type-input" id="' + mode + '-type-input" lang="' + cfg.lang + '" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="type the form…"' +
+          (coarsePointer ? ' inputmode="none"' : '') + '>' +
+        '<button type="button" class="type-check" id="' + mode + '-type-check">Check &#8629;</button>' +
+      '</div>' +
+      '<div class="kbd" id="' + mode + '-kbd" lang="' + cfg.lang + '">' + rows + '</div>' +
+      '<div class="kbd-note">' + cfg.note + '</div>';
+    options.parentNode.insertBefore(tw, options.nextSibling);
+
+    var input = conjInputEl(mode);
+    tw.querySelector('.kbd').addEventListener('click', function(e) {
+      var k = e.target.closest('.kbd-key');
+      if (!k || cfg.answered()) return;
+      if (k.getAttribute('data-act') === 'back') typeBackspace(mode);
+      else typeInsert(mode, k.getAttribute('data-ch'));
+      if (!coarsePointer) input.focus();
+    });
+    document.getElementById(mode + '-type-check').addEventListener('click', function() { submitTyped(mode); });
+    input.addEventListener('keydown', function(e) {
+      e.stopPropagation();   /* the global quiz shortcuts (Q W A S D) must not fire while typing */
+      if (cfg.answered()) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); nextQ(mode); }
+        return;
+      }
+      if (e.key === 'Enter') { e.preventDefault(); submitTyped(mode); return; }
+      var ch = physicalChar(mode, e);
+      if (ch) { e.preventDefault(); typeInsert(mode, ch); }
+    });
+    input.addEventListener('input', updateTypeCheck.bind(null, mode));
+    applyConjInputMode(mode);
+  });
+}
+
+/* Ukrainian on a non-Ukrainian layout: map the physical key to ЙЦУКЕН. */
+function physicalChar(mode, e) {
+  if (mode !== 'conj' || e.ctrlKey || e.metaKey || e.altKey) return null;
+  if (e.key.length !== 1 || /[а-яіїєґ’]/i.test(e.key)) return null;   /* already Cyrillic */
+  return UA_PHYS[e.code] || null;
+}
+function typeInsert(mode, ch) {
+  var input = conjInputEl(mode);
+  var start = input.selectionStart == null ? input.value.length : input.selectionStart;
+  var end = input.selectionEnd == null ? input.value.length : input.selectionEnd;
+  if (document.activeElement !== input) { start = end = input.value.length; }
+  input.value = input.value.slice(0, start) + ch + input.value.slice(end);
+  try { input.setSelectionRange(start + ch.length, start + ch.length); } catch(e) {}
+  updateTypeCheck(mode);
+}
+function typeBackspace(mode) {
+  var input = conjInputEl(mode);
+  var pos = document.activeElement === input && input.selectionStart != null ? input.selectionStart : input.value.length;
+  var end = document.activeElement === input && input.selectionEnd != null ? input.selectionEnd : pos;
+  if (end > pos) input.value = input.value.slice(0, pos) + input.value.slice(end);
+  else if (pos > 0) { input.value = input.value.slice(0, pos - 1) + input.value.slice(pos); pos--; }
+  try { input.setSelectionRange(pos, pos); } catch(e) {}
+  updateTypeCheck(mode);
+}
+function updateTypeCheck(mode) {
+  var b = document.getElementById(mode + '-type-check');
+  if (b) b.disabled = CONJ_INPUT[mode].answered() || !conjInputEl(mode).value.trim();
+}
+
+function setConjInputMode(mode, value) {
+  conjInputModes[mode] = value === 'type' ? 'type' : 'choose';
+  try { localStorage.setItem(CONJ_INPUT_KEY, JSON.stringify(conjInputModes)); } catch(e) {}
+  applyConjInputMode(mode);
+  if (isTypeMode(mode) && !CONJ_INPUT[mode].answered() && !coarsePointer) conjInputEl(mode).focus();
+}
+function applyConjInputMode(mode) {
+  var type = isTypeMode(mode);
+  document.querySelectorAll('#' + mode + '-quiz-wrap .input-btn').forEach(function(b) {
+    b.classList.toggle('active', b.getAttribute('data-input') === (type ? 'type' : 'choose'));
+  });
+  var options = document.getElementById(mode + '-options');
+  if (options) options.style.display = type ? 'none' : '';
+  var tw = document.getElementById(mode + '-type-wrap');
+  if (tw) tw.className = 'type-wrap' + (type ? ' show' : '');
+  var wrap = document.getElementById(mode + '-quiz-wrap');
+  if (wrap) wrap.classList.toggle('typing', type);   /* D types a letter here, so hide its hint */
+}
+
+/* called at the end of each Conjugate render: fresh, unlocked answer box */
+function conjInputAfterRender(mode) {
+  var input = conjInputEl(mode);
+  if (!input) return;
+  input.value = '';
+  input.readOnly = false;
+  input.className = 'type-input';
+  document.getElementById(mode + '-kbd').classList.remove('locked');
+  updateTypeCheck(mode);
+  applyConjInputMode(mode);
+  if (isTypeMode(mode) && activeTab === mode && !coarsePointer) input.focus({ preventScroll: true });
+}
+function conjInputLock(mode, state) {
+  var input = conjInputEl(mode);
+  if (!input) return;
+  input.readOnly = true;
+  if (state) input.className = 'type-input ' + state;
+  document.getElementById(mode + '-kbd').classList.add('locked');
+  updateTypeCheck(mode);
+}
+
+function submitTyped(mode) {
+  var cfg = CONJ_INPUT[mode];
+  var input = conjInputEl(mode);
+  if (cfg.answered() || !input.value.trim()) return;
+  var typed = input.value.trim();
+  var correct = cfg.correct();
+  var isRight = cfg.norm(typed) === cfg.norm(correct);
+  cfg.answer(isRight ? correct : typed);
+  conjInputLock(mode, isRight ? 'correct' : 'wrong');
+  if (isRight) input.value = correct;
+  else {
+    var sub = document.getElementById(mode + '-fb-sub');
+    sub.textContent = 'You typed “' + typed + '” · ' + sub.textContent;
+  }
+}
+
+/* keys pressed while the answer box isn't focused still type into it */
+function handleTypeModeKey(e, tab, answered) {
+  if (!isTypeMode(tab)) return false;
+  if (answered) return false;                       /* Space / Enter → next, as usual */
+  if (e.ctrlKey || e.metaKey || e.altKey) return true;
+  if (e.key === 'Enter') { e.preventDefault(); submitTyped(tab); return true; }
+  if (e.key === 'Backspace') { e.preventDefault(); typeBackspace(tab); return true; }
+  var ch = physicalChar(tab, e) || (e.key.length === 1 && e.key !== ' ' ? e.key : null);
+  if (ch) { e.preventDefault(); typeInsert(tab, ch.toLocaleLowerCase(CONJ_INPUT[tab].lang)); }
+  return true;
+}
+
+/* ══════════════════════════════════════════
    KEYBOARD  Q W A S + Space/Enter
 ══════════════════════════════════════════ */
 document.addEventListener('keydown', function(e) {
@@ -4181,6 +4411,8 @@ document.addEventListener('keydown', function(e) {
                : trState[tab]        ? trState[tab].answered
                : nounsAnswered;
 
+  if (e.target && e.target.tagName === 'INPUT') return;
+  if (handleTypeModeKey(e, tab, answered)) return;
   if ((e.code === 'Space' || e.code === 'Enter') && answered) {
     e.preventDefault();
     nextQ(tab);
@@ -4204,6 +4436,7 @@ document.addEventListener('keydown', function(e) {
    INIT
 ══════════════════════════════════════════ */
 loadProgress();
+setupConjInputs();
 renderLetterGrid();
 renderWordsGrid();
 renderSentencesGrid();
