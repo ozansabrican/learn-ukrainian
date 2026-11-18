@@ -141,6 +141,9 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .next-btn { display: none; margin: 14px auto 0; padding: 11px 36px; border-radius: 99px; border: none; background: #f5c518; color: #0f1923; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: background 0.2s, transform 0.15s; }
 .next-btn:hover { background: #ffd740; transform: scale(1.04); }
 .next-btn.show { display: block; }
+.idk-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: -4px auto 12px; }
+.idk-row .idk-btn { margin: 0; }
+.ex-btn.hidden { display: none; }
 .idk-btn { display: flex; align-items: center; gap: 8px; margin: -4px auto 12px; padding: 8px 16px; border-radius: 99px; border: 1.5px dashed #2a4a60; background: transparent; color: #8aa0b2; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
 .idk-btn:hover { border-color: #f5c518; color: #f5c518; }
 .idk-btn .key-hint { position: static; }
@@ -166,12 +169,18 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .kbd-key.wide { flex: 1.6 1 0; max-width: 64px; font-size: 0.9rem; }
 .kbd.locked .kbd-key { opacity: 0.4; pointer-events: none; }
 .quiz-wrap.typing .idk-btn .key-hint { display: none; }
-.example-box { display: none; margin: 12px auto 0; max-width: 440px; text-align: left; background: #0c151f; border: 1px solid #1b2d3e; border-left: 3px solid #f5c518; border-radius: 10px; padding: 10px 14px; }
+.example-box { display: none; margin: 0 auto 12px; max-width: 440px; text-align: left; background: #0c151f; border: 1px solid #1b2d3e; border-left: 3px solid #f5c518; border-radius: 10px; padding: 10px 14px; }
 .example-box.show { display: block; }
 .example-box .ex-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #4a6275; margin-bottom: 4px; }
 .example-box .ex-tr { font-size: 1rem; font-weight: 600; color: #fff; line-height: 1.4; }
 .example-box .ex-tr mark { background: none; color: #f5c518; }
 .example-box .ex-en { font-size: 0.8rem; color: #8aa0b2; margin-top: 2px; }
+.example-box .ex-en.pending { font-style: italic; color: #2a4a60; }
+.ex-tabs { display: flex; gap: 3px; background: #121f2b; border-radius: 8px; padding: 3px; margin: 2px 0 8px; }
+.ex-tab { flex: 1; border: none; background: transparent; color: #4a6275; border-radius: 6px; padding: 5px 2px; font-size: 0.7rem; font-weight: 700; cursor: pointer; line-height: 1.15; }
+.ex-tab small { display: block; font-size: 0.58rem; font-weight: 600; opacity: 0.8; }
+.ex-tab.active { background: #1f3346; color: #f5c518; }
+.example-box .ex-tr .gap { display: inline-block; min-width: 3em; border-bottom: 2px solid #f5c518; }
 .kbd-note { font-size: 0.65rem; color: #2a4a60; text-align: center; margin-top: 8px; }
 @media (max-width: 440px) { .kbd-key { height: 38px; font-size: 0.92rem; } }
 
@@ -491,12 +500,15 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
       <div class="pts-text" id="tverbs-pts-text">0 / 10 pts</div>
     </div>
     <div class="options-grid" id="tverbs-options"></div>
-    <button class="idk-btn" id="tverbs-idk" onclick="trDontKnow('tverbs')"><span class="key-hint">D</span>I don&rsquo;t know &mdash; show me</button>
+    <div class="idk-row">
+      <button class="idk-btn ex-btn" id="tverbs-exbtn" onclick="trToggleExample('tverbs')"><span class="key-hint">E</span><span class="ex-btn-label">Example</span></button>
+      <button class="idk-btn" id="tverbs-idk" onclick="trDontKnow('tverbs')"><span class="key-hint">D</span>I don&rsquo;t know &mdash; show me</button>
+    </div>
+    <div class="example-box" id="tverbs-example" lang="tr"></div>
     <div class="feedback-row">
       <div class="feedback-msg" id="tverbs-fb-msg"></div>
       <div class="feedback-sub" id="tverbs-fb-sub"></div>
     </div>
-    <div class="example-box" id="tverbs-example" lang="tr"></div>
     <button class="next-btn" id="tverbs-next" onclick="nextQ('tverbs')">Next &#8594;</button>
   </div>
   <div class="completion" id="tverbs-done">
@@ -516,12 +528,15 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
       <div class="pts-text" id="tnouns-pts-text">0 / 10 pts</div>
     </div>
     <div class="options-grid" id="tnouns-options"></div>
-    <button class="idk-btn" id="tnouns-idk" onclick="trDontKnow('tnouns')"><span class="key-hint">D</span>I don&rsquo;t know &mdash; show me</button>
+    <div class="idk-row">
+      <button class="idk-btn ex-btn" id="tnouns-exbtn" onclick="trToggleExample('tnouns')"><span class="key-hint">E</span><span class="ex-btn-label">Example</span></button>
+      <button class="idk-btn" id="tnouns-idk" onclick="trDontKnow('tnouns')"><span class="key-hint">D</span>I don&rsquo;t know &mdash; show me</button>
+    </div>
+    <div class="example-box" id="tnouns-example" lang="tr"></div>
     <div class="feedback-row">
       <div class="feedback-msg" id="tnouns-fb-msg"></div>
       <div class="feedback-sub" id="tnouns-fb-sub"></div>
     </div>
-    <div class="example-box" id="tnouns-example" lang="tr"></div>
     <button class="next-btn" id="tnouns-next" onclick="nextQ('tnouns')">Next &#8594;</button>
   </div>
   <div class="completion" id="tnouns-done">
@@ -541,12 +556,15 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
       <div class="pts-text" id="tconj-pts-text">0 / 10 pts</div>
     </div>
     <div class="options-grid" id="tconj-options"></div>
-    <button class="idk-btn" id="tconj-idk" onclick="trDontKnow('tconj')"><span class="key-hint">D</span>I don&rsquo;t know &mdash; show me</button>
+    <div class="idk-row">
+      <button class="idk-btn ex-btn" id="tconj-exbtn" onclick="trToggleExample('tconj')"><span class="key-hint">E</span><span class="ex-btn-label">Example</span></button>
+      <button class="idk-btn" id="tconj-idk" onclick="trDontKnow('tconj')"><span class="key-hint">D</span>I don&rsquo;t know &mdash; show me</button>
+    </div>
+    <div class="example-box" id="tconj-example" lang="tr"></div>
     <div class="feedback-row">
       <div class="feedback-msg" id="tconj-fb-msg"></div>
       <div class="feedback-sub" id="tconj-fb-sub"></div>
     </div>
-    <div class="example-box" id="tconj-example" lang="tr"></div>
     <button class="next-btn" id="tconj-next" onclick="nextQ('tconj')">Next &#8594;</button>
   </div>
   <div class="completion" id="tconj-done">
@@ -2029,204 +2047,399 @@ var CONJ = [
    TURKISH (A1)
 ══════════════════════════════════════════ */
 var TR_VERBS = [
-  { tr: 'olmak', eng: 'to be / to become', ex: 'Kışın hava soğuk olur.', exEng: 'In winter the weather is cold.' },
-  { tr: 'gelmek', eng: 'to come', ex: 'Babam her akşam eve geç gelir.', exEng: 'My father comes home late every evening.' },
-  { tr: 'gitmek', eng: 'to go', ex: 'Her gün okula giderim.', exEng: 'I go to school every day.' },
-  { tr: 'yapmak', eng: 'to do / to make', ex: 'Annem çok güzel yemek yapar.', exEng: 'My mother makes very good food.' },
-  { tr: 'etmek', eng: 'to do (with nouns)', ex: 'Sana teşekkür ederim.', exEng: 'I thank you.' },
-  { tr: 'almak', eng: 'to take / to buy', ex: 'Her sabah ekmek alırım.', exEng: 'I buy bread every morning.' },
-  { tr: 'vermek', eng: 'to give', ex: 'Öğretmen bize ödev verir.', exEng: 'The teacher gives us homework.' },
-  { tr: 'görmek', eng: 'to see', ex: 'Pencereden denizi görürüm.', exEng: 'I see the sea from the window.' },
-  { tr: 'bilmek', eng: 'to know', ex: 'Ben biraz Türkçe bilirim.', exEng: 'I know a little Turkish.' },
-  { tr: 'istemek', eng: 'to want', ex: 'Çocuklar her zaman dondurma ister.', exEng: 'Children always want ice cream.' },
-  { tr: 'demek', eng: 'to say', ex: 'Türkler sabah “günaydın” der.', exEng: 'Turks say “good morning” in the morning.' },
-  { tr: 'söylemek', eng: 'to say / to tell', ex: 'O her zaman doğruyu söyler.', exEng: 'He always tells the truth.' },
-  { tr: 'konuşmak', eng: 'to speak', ex: 'Biz evde Türkçe konuşuruz.', exEng: 'We speak Turkish at home.' },
-  { tr: 'yemek', eng: 'to eat', ex: 'Öğlen genellikle salata yerim.', exEng: 'I usually eat salad at noon.' },
-  { tr: 'içmek', eng: 'to drink', ex: 'Her sabah kahve içerim.', exEng: 'I drink coffee every morning.' },
-  { tr: 'okumak', eng: 'to read', ex: 'Akşamları kitap okurum.', exEng: 'I read books in the evenings.' },
-  { tr: 'yazmak', eng: 'to write', ex: 'Arkadaşıma mektup yazarım.', exEng: 'I write a letter to my friend.' },
-  { tr: 'dinlemek', eng: 'to listen', ex: 'Arabada müzik dinleriz.', exEng: 'We listen to music in the car.' },
-  { tr: 'bakmak', eng: 'to look', ex: 'Sabahları telefonuma bakarım.', exEng: 'I look at my phone in the mornings.' },
-  { tr: 'izlemek', eng: 'to watch', ex: 'Akşamları film izleriz.', exEng: 'We watch films in the evenings.' },
-  { tr: 'çalışmak', eng: 'to work / to study', ex: 'Annem bir bankada çalışır.', exEng: 'My mother works at a bank.' },
-  { tr: 'öğrenmek', eng: 'to learn', ex: 'Her gün yeni kelimeler öğrenirim.', exEng: 'I learn new words every day.' },
-  { tr: 'öğretmek', eng: 'to teach', ex: 'O, çocuklara İngilizce öğretir.', exEng: 'She teaches English to children.' },
-  { tr: 'anlamak', eng: 'to understand', ex: 'Türkçeyi biraz anlarım.', exEng: 'I understand Turkish a little.' },
-  { tr: 'sevmek', eng: 'to love / to like', ex: 'Kedileri çok severim.', exEng: 'I love cats a lot.' },
-  { tr: 'beğenmek', eng: 'to like', ex: 'Herkes bu filmi beğenir.', exEng: 'Everyone likes this film.' },
-  { tr: 'beklemek', eng: 'to wait', ex: 'Her sabah otobüsü beklerim.', exEng: 'I wait for the bus every morning.' },
-  { tr: 'bulmak', eng: 'to find', ex: 'Annem her şeyi bulur.', exEng: 'My mother finds everything.' },
-  { tr: 'aramak', eng: 'to look for / to call', ex: 'Annemi her akşam ararım.', exEng: 'I call my mother every evening.' },
-  { tr: 'sormak', eng: 'to ask', ex: 'Öğrenciler çok soru sorar.', exEng: 'The students ask a lot of questions.' },
-  { tr: 'açmak', eng: 'to open', ex: 'Sabah pencereyi açarım.', exEng: 'I open the window in the morning.' },
-  { tr: 'kapatmak', eng: 'to close', ex: 'Akşam kapıyı kapatırım.', exEng: 'I close the door in the evening.' },
-  { tr: 'başlamak', eng: 'to begin', ex: 'Ders saat dokuzda başlar.', exEng: 'The lesson starts at nine o\'clock.' },
-  { tr: 'bitirmek', eng: 'to finish', ex: 'İşimi saat beşte bitiririm.', exEng: 'I finish my work at five.' },
-  { tr: 'oturmak', eng: 'to sit / to live', ex: 'Biz İstanbul\'da otururuz.', exEng: 'We live in Istanbul.' },
-  { tr: 'kalkmak', eng: 'to get up', ex: 'Her gün saat yedide kalkarım.', exEng: 'I get up at seven every day.' },
-  { tr: 'yatmak', eng: 'to go to bed', ex: 'Genellikle saat on birde yatarım.', exEng: 'I usually go to bed at eleven.' },
-  { tr: 'uyumak', eng: 'to sleep', ex: 'Bebek çok uyur.', exEng: 'The baby sleeps a lot.' },
-  { tr: 'uyanmak', eng: 'to wake up', ex: 'Sabah erken uyanırım.', exEng: 'I wake up early in the morning.' },
-  { tr: 'koşmak', eng: 'to run', ex: 'Her sabah parkta koşarım.', exEng: 'I run in the park every morning.' },
-  { tr: 'yürümek', eng: 'to walk', ex: 'Okula yürürüm.', exEng: 'I walk to school.' },
-  { tr: 'binmek', eng: 'to get on / to ride', ex: 'Her gün otobüse binerim.', exEng: 'I take the bus every day.' },
-  { tr: 'inmek', eng: 'to get off', ex: 'Bir sonraki durakta ineriz.', exEng: 'We get off at the next stop.' },
-  { tr: 'satmak', eng: 'to sell', ex: 'Bu dükkan meyve satar.', exEng: 'This shop sells fruit.' },
-  { tr: 'ödemek', eng: 'to pay', ex: 'Faturaları ben öderim.', exEng: 'I pay the bills.' },
-  { tr: 'kullanmak', eng: 'to use', ex: 'Her gün bilgisayar kullanırım.', exEng: 'I use a computer every day.' },
-  { tr: 'düşünmek', eng: 'to think', ex: 'Sık sık seni düşünürüm.', exEng: 'I often think about you.' },
-  { tr: 'hatırlamak', eng: 'to remember', ex: 'Büyükannem her şeyi hatırlar.', exEng: 'My grandmother remembers everything.' },
-  { tr: 'unutmak', eng: 'to forget', ex: 'Babam anahtarlarını sık sık unutur.', exEng: 'My father often forgets his keys.' },
-  { tr: 'gülmek', eng: 'to laugh', ex: 'Çocuklar çok güler.', exEng: 'Children laugh a lot.' },
-  { tr: 'ağlamak', eng: 'to cry', ex: 'Bebekler çok ağlar.', exEng: 'Babies cry a lot.' },
-  { tr: 'yüzmek', eng: 'to swim', ex: 'Yazın denizde yüzeriz.', exEng: 'In summer we swim in the sea.' },
-  { tr: 'pişirmek', eng: 'to cook', ex: 'Annem pazar günleri tavuk pişirir.', exEng: 'My mother cooks chicken on Sundays.' },
-  { tr: 'yıkamak', eng: 'to wash', ex: 'Yemekten önce ellerimi yıkarım.', exEng: 'I wash my hands before eating.' },
-  { tr: 'temizlemek', eng: 'to clean', ex: 'Cumartesi günü evi temizleriz.', exEng: 'We clean the house on Saturday.' },
-  { tr: 'giymek', eng: 'to put on / to wear', ex: 'Kışın kalın bir mont giyerim.', exEng: 'In winter I wear a thick coat.' },
-  { tr: 'getirmek', eng: 'to bring', ex: 'Garson su getirir.', exEng: 'The waiter brings water.' },
-  { tr: 'göndermek', eng: 'to send', ex: 'Arkadaşlarıma mesaj gönderirim.', exEng: 'I send messages to my friends.' },
-  { tr: 'kalmak', eng: 'to stay', ex: 'Tatilde otelde kalırız.', exEng: 'On holiday we stay at a hotel.' },
-  { tr: 'dönmek', eng: 'to return', ex: 'Akşam saat altıda eve dönerim.', exEng: 'I return home at six in the evening.' },
-  { tr: 'girmek', eng: 'to enter', ex: 'Öğretmen sınıfa girer.', exEng: 'The teacher enters the classroom.' },
-  { tr: 'çıkmak', eng: 'to go out', ex: 'Sabah sekizde evden çıkarım.', exEng: 'I leave the house at eight in the morning.' },
-  { tr: 'oynamak', eng: 'to play', ex: 'Çocuklar parkta oynar.', exEng: 'The children play in the park.' },
-  { tr: 'tanımak', eng: 'to know (a person)', ex: 'Ben onu iyi tanırım.', exEng: 'I know him well.' },
-  { tr: 'yaşamak', eng: 'to live', ex: 'Ailem Ankara\'da yaşar.', exEng: 'My family lives in Ankara.' },
-  { tr: 'durmak', eng: 'to stop', ex: 'Otobüs burada durur.', exEng: 'The bus stops here.' },
-  { tr: 'taşımak', eng: 'to carry', ex: 'Babam ağır çantaları taşır.', exEng: 'My father carries the heavy bags.' },
-  { tr: 'göstermek', eng: 'to show', ex: 'Haritada yolu gösteririm.', exEng: 'I show the way on the map.' },
-  { tr: 'koymak', eng: 'to put', ex: 'Çantamı masaya koyarım.', exEng: 'I put my bag on the table.' },
-  { tr: 'tutmak', eng: 'to hold', ex: 'Anne bebeğin elini tutar.', exEng: 'The mother holds the baby\'s hand.' },
-  { tr: 'duymak', eng: 'to hear', ex: 'Sabahları kuşları duyarım.', exEng: 'In the mornings I hear the birds.' },
-  { tr: 'hissetmek', eng: 'to feel', ex: 'Burada kendimi mutlu hissederim.', exEng: 'I feel happy here.' }
+  { tr: 'olmak', eng: 'to be / to become', ex: 'Kışın hava soğuk olur.', exEng: 'The weather gets cold in winter.',
+    ext: { aor: ['Kışın hava soğuk ⟦olur⟧.', 'The weather gets cold in winter.'], cont: ['Bu kış hava soğuk ⟦oluyor⟧.', 'The weather is getting cold this winter.'], past: ['Geçen kış hava soğuk ⟦oldu⟧.', 'The weather got cold last winter.'], fut: ['Gelecek kış hava soğuk ⟦olacak⟧.', 'The weather will get cold next winter.'] } },
+  { tr: 'gelmek', eng: 'to come', ex: 'Her akşam babam eve geç gelir.', exEng: 'My father comes home late every evening.',
+    ext: { aor: ['Her akşam babam eve geç ⟦gelir⟧.', 'My father comes home late every evening.'], cont: ['Bu akşam babam eve geç ⟦geliyor⟧.', 'My father is coming home late this evening.'], past: ['Dün akşam babam eve geç ⟦geldi⟧.', 'My father came home late yesterday evening.'], fut: ['Yarın akşam babam eve geç ⟦gelecek⟧.', 'My father will come home late tomorrow evening.'] } },
+  { tr: 'gitmek', eng: 'to go', ex: 'Her gün okula giderim.', exEng: 'I go to school every day.',
+    ext: { aor: ['Her gün okula ⟦giderim⟧.', 'I go to school every day.'], cont: ['Bugün okula ⟦gidiyorum⟧.', 'I am going to school today.'], past: ['Dün okula ⟦gittim⟧.', 'I went to school yesterday.'], fut: ['Yarın okula ⟦gideceğim⟧.', 'I will go to school tomorrow.'] } },
+  { tr: 'yapmak', eng: 'to do / to make', ex: 'Her akşam annem yemek yapar.', exEng: 'My mother makes dinner every evening.',
+    ext: { aor: ['Her akşam annem yemek ⟦yapar⟧.', 'My mother makes dinner every evening.'], cont: ['Bu akşam annem yemek ⟦yapıyor⟧.', 'My mother is making dinner this evening.'], past: ['Dün akşam annem yemek ⟦yaptı⟧.', 'My mother made dinner yesterday evening.'], fut: ['Yarın akşam annem yemek ⟦yapacak⟧.', 'My mother will make dinner tomorrow evening.'] } },
+  { tr: 'etmek', eng: 'to do (with nouns)', ex: 'Her gün arkadaşıma yardım ederim.', exEng: 'I help my friend every day.',
+    ext: { aor: ['Her gün arkadaşıma yardım ⟦ederim⟧.', 'I help my friend every day.'], cont: ['Bugün arkadaşıma yardım ⟦ediyorum⟧.', 'I am helping my friend today.'], past: ['Dün arkadaşıma yardım ⟦ettim⟧.', 'I helped my friend yesterday.'], fut: ['Yarın arkadaşıma yardım ⟦edeceğim⟧.', 'I will help my friend tomorrow.'] } },
+  { tr: 'almak', eng: 'to take / to buy', ex: 'Her sabah ekmek alırım.', exEng: 'I buy bread every morning.',
+    ext: { aor: ['Her sabah ekmek ⟦alırım⟧.', 'I buy bread every morning.'], cont: ['Bu sabah ekmek ⟦alıyorum⟧.', 'I am buying bread this morning.'], past: ['Dün sabah ekmek ⟦aldım⟧.', 'I bought bread yesterday morning.'], fut: ['Yarın sabah ekmek ⟦alacağım⟧.', 'I will buy bread tomorrow morning.'] } },
+  { tr: 'vermek', eng: 'to give', ex: 'Her hafta öğretmen bize ödev verir.', exEng: 'The teacher gives us homework every week.',
+    ext: { aor: ['Her hafta öğretmen bize ödev ⟦verir⟧.', 'The teacher gives us homework every week.'], cont: ['Bu hafta öğretmen bize ödev ⟦veriyor⟧.', 'The teacher is giving us homework this week.'], past: ['Geçen hafta öğretmen bize ödev ⟦verdi⟧.', 'The teacher gave us homework last week.'], fut: ['Gelecek hafta öğretmen bize ödev ⟦verecek⟧.', 'The teacher will give us homework next week.'] } },
+  { tr: 'görmek', eng: 'to see', ex: 'Her sabah pencereden denizi görürüm.', exEng: 'I see the sea from the window every morning.',
+    ext: { aor: ['Her sabah pencereden denizi ⟦görürüm⟧.', 'I see the sea from the window every morning.'], cont: ['Bu sabah pencereden denizi ⟦görüyorum⟧.', 'I see the sea from the window this morning.'], past: ['Dün sabah pencereden denizi ⟦gördüm⟧.', 'I saw the sea from the window yesterday morning.'], fut: ['Yarın sabah pencereden denizi ⟦göreceğim⟧.', 'I will see the sea from the window tomorrow morning.'] } },
+  { tr: 'bilmek', eng: 'to know', ex: 'Bu şarkıyı bilirim.', exEng: 'I know this song.',
+    ext: { aor: ['Bu şarkıyı ⟦bilirim⟧.', 'I know this song.'], cont: ['Bu şarkıyı ⟦biliyorum⟧.', 'I know this song.'], past: ['Bu şarkıyı ⟦bildim⟧.', 'I knew this song.'], fut: ['Bu şarkıyı ⟦bileceğim⟧.', 'I will know this song.'] } },
+  { tr: 'istemek', eng: 'to want', ex: 'Her gün çocuklar dondurma isterler.', exEng: 'The children want ice cream every day.',
+    ext: { aor: ['Her gün çocuklar dondurma ⟦isterler⟧.', 'The children want ice cream every day.'], cont: ['Bugün çocuklar dondurma ⟦istiyorlar⟧.', 'The children want ice cream today.'], past: ['Dün çocuklar dondurma ⟦istediler⟧.', 'The children wanted ice cream yesterday.'], fut: ['Yarın çocuklar dondurma ⟦isteyecekler⟧.', 'The children will want ice cream tomorrow.'] } },
+  { tr: 'demek', eng: 'to say', ex: 'Her sabah annem “günaydın” der.', exEng: 'My mother says “good morning” every morning.',
+    ext: { aor: ['Her sabah annem “günaydın” ⟦der⟧.', 'My mother says “good morning” every morning.'], cont: ['Bu sabah annem “günaydın” ⟦diyor⟧.', 'My mother is saying “good morning” this morning.'], past: ['Dün sabah annem “günaydın” ⟦dedi⟧.', 'My mother said “good morning” yesterday morning.'], fut: ['Yarın sabah annem “günaydın” ⟦diyecek⟧.', 'My mother will say “good morning” tomorrow morning.'] } },
+  { tr: 'söylemek', eng: 'to say / to tell', ex: 'Her hafta öğretmen bir şarkı söyler.', exEng: 'The teacher sings a song every week.',
+    ext: { aor: ['Her hafta öğretmen bir şarkı ⟦söyler⟧.', 'The teacher sings a song every week.'], cont: ['Bu hafta öğretmen bir şarkı ⟦söylüyor⟧.', 'The teacher is singing a song this week.'], past: ['Geçen hafta öğretmen bir şarkı ⟦söyledi⟧.', 'The teacher sang a song last week.'], fut: ['Gelecek hafta öğretmen bir şarkı ⟦söyleyecek⟧.', 'The teacher will sing a song next week.'] } },
+  { tr: 'konuşmak', eng: 'to speak', ex: 'Evde Türkçe konuşuruz.', exEng: 'We speak Turkish at home.',
+    ext: { aor: ['Evde Türkçe ⟦konuşuruz⟧.', 'We speak Turkish at home.'], cont: ['Evde Türkçe ⟦konuşuyoruz⟧.', 'We are speaking Turkish at home.'], past: ['Evde Türkçe ⟦konuştuk⟧.', 'We spoke Turkish at home.'], fut: ['Evde Türkçe ⟦konuşacağız⟧.', 'We will speak Turkish at home.'] } },
+  { tr: 'yemek', eng: 'to eat', ex: 'Her gün salata yerim.', exEng: 'I eat salad every day.',
+    ext: { aor: ['Her gün salata ⟦yerim⟧.', 'I eat salad every day.'], cont: ['Bugün salata ⟦yiyorum⟧.', 'I am eating salad today.'], past: ['Dün salata ⟦yedim⟧.', 'I ate salad yesterday.'], fut: ['Yarın salata ⟦yiyeceğim⟧.', 'I will eat salad tomorrow.'] } },
+  { tr: 'içmek', eng: 'to drink', ex: 'Her sabah kahve içerim.', exEng: 'I drink coffee every morning.',
+    ext: { aor: ['Her sabah kahve ⟦içerim⟧.', 'I drink coffee every morning.'], cont: ['Bu sabah kahve ⟦içiyorum⟧.', 'I am drinking coffee this morning.'], past: ['Dün sabah kahve ⟦içtim⟧.', 'I drank coffee yesterday morning.'], fut: ['Yarın sabah kahve ⟦içeceğim⟧.', 'I will drink coffee tomorrow morning.'] } },
+  { tr: 'okumak', eng: 'to read', ex: 'Her akşam kitap okurum.', exEng: 'I read a book every evening.',
+    ext: { aor: ['Her akşam kitap ⟦okurum⟧.', 'I read a book every evening.'], cont: ['Bu akşam kitap ⟦okuyorum⟧.', 'I am reading a book this evening.'], past: ['Dün akşam kitap ⟦okudum⟧.', 'I read a book yesterday evening.'], fut: ['Yarın akşam kitap ⟦okuyacağım⟧.', 'I will read a book tomorrow evening.'] } },
+  { tr: 'yazmak', eng: 'to write', ex: 'Her hafta arkadaşıma mektup yazarım.', exEng: 'I write a letter to my friend every week.',
+    ext: { aor: ['Her hafta arkadaşıma mektup ⟦yazarım⟧.', 'I write a letter to my friend every week.'], cont: ['Bu hafta arkadaşıma mektup ⟦yazıyorum⟧.', 'I am writing a letter to my friend this week.'], past: ['Geçen hafta arkadaşıma mektup ⟦yazdım⟧.', 'I wrote a letter to my friend last week.'], fut: ['Gelecek hafta arkadaşıma mektup ⟦yazacağım⟧.', 'I will write a letter to my friend next week.'] } },
+  { tr: 'dinlemek', eng: 'to listen', ex: 'Her gün arabada müzik dinleriz.', exEng: 'We listen to music in the car every day.',
+    ext: { aor: ['Her gün arabada müzik ⟦dinleriz⟧.', 'We listen to music in the car every day.'], cont: ['Bugün arabada müzik ⟦dinliyoruz⟧.', 'We are listening to music in the car today.'], past: ['Dün arabada müzik ⟦dinledik⟧.', 'We listened to music in the car yesterday.'], fut: ['Yarın arabada müzik ⟦dinleyeceğiz⟧.', 'We will listen to music in the car tomorrow.'] } },
+  { tr: 'bakmak', eng: 'to look', ex: 'Her sabah haritaya bakarım.', exEng: 'I look at the map every morning.',
+    ext: { aor: ['Her sabah haritaya ⟦bakarım⟧.', 'I look at the map every morning.'], cont: ['Bu sabah haritaya ⟦bakıyorum⟧.', 'I am looking at the map this morning.'], past: ['Dün sabah haritaya ⟦baktım⟧.', 'I looked at the map yesterday morning.'], fut: ['Yarın sabah haritaya ⟦bakacağım⟧.', 'I will look at the map tomorrow morning.'] } },
+  { tr: 'izlemek', eng: 'to watch', ex: 'Her akşam film izleriz.', exEng: 'We watch a film every evening.',
+    ext: { aor: ['Her akşam film ⟦izleriz⟧.', 'We watch a film every evening.'], cont: ['Bu akşam film ⟦izliyoruz⟧.', 'We are watching a film this evening.'], past: ['Dün akşam film ⟦izledik⟧.', 'We watched a film yesterday evening.'], fut: ['Yarın akşam film ⟦izleyeceğiz⟧.', 'We will watch a film tomorrow evening.'] } },
+  { tr: 'çalışmak', eng: 'to work / to study', ex: 'Annem bir bankada çalışır.', exEng: 'My mother works at a bank.',
+    ext: { aor: ['Annem bir bankada ⟦çalışır⟧.', 'My mother works at a bank.'], cont: ['Annem bir bankada ⟦çalışıyor⟧.', 'My mother is working at a bank.'], past: ['Annem bir bankada ⟦çalıştı⟧.', 'My mother worked at a bank.'], fut: ['Annem bir bankada ⟦çalışacak⟧.', 'My mother will work at a bank.'] } },
+  { tr: 'öğrenmek', eng: 'to learn', ex: 'Her gün yeni kelimeler öğrenirim.', exEng: 'I learn new words every day.',
+    ext: { aor: ['Her gün yeni kelimeler ⟦öğrenirim⟧.', 'I learn new words every day.'], cont: ['Bugün yeni kelimeler ⟦öğreniyorum⟧.', 'I am learning new words today.'], past: ['Dün yeni kelimeler ⟦öğrendim⟧.', 'I learned new words yesterday.'], fut: ['Yarın yeni kelimeler ⟦öğreneceğim⟧.', 'I will learn new words tomorrow.'] } },
+  { tr: 'öğretmek', eng: 'to teach', ex: 'Her hafta çocuklara İngilizce öğretir.', exEng: 'She teaches children English every week.',
+    ext: { aor: ['Her hafta çocuklara İngilizce ⟦öğretir⟧.', 'She teaches children English every week.'], cont: ['Bu hafta çocuklara İngilizce ⟦öğretiyor⟧.', 'She is teaching children English this week.'], past: ['Geçen hafta çocuklara İngilizce ⟦öğretti⟧.', 'She taught children English last week.'], fut: ['Gelecek hafta çocuklara İngilizce ⟦öğretecek⟧.', 'She will teach children English next week.'] } },
+  { tr: 'anlamak', eng: 'to understand', ex: 'Öğretmeni anlarım.', exEng: 'I understand the teacher.',
+    ext: { aor: ['Öğretmeni ⟦anlarım⟧.', 'I understand the teacher.'], cont: ['Öğretmeni ⟦anlıyorum⟧.', 'I understand the teacher.'], past: ['Öğretmeni ⟦anladım⟧.', 'I understood the teacher.'], fut: ['Öğretmeni ⟦anlayacağım⟧.', 'I will understand the teacher.'] } },
+  { tr: 'sevmek', eng: 'to love / to like', ex: 'Bu şehri severim.', exEng: 'I love this city.',
+    ext: { aor: ['Bu şehri ⟦severim⟧.', 'I love this city.'], cont: ['Bu şehri ⟦seviyorum⟧.', 'I love this city.'], past: ['Bu şehri ⟦sevdim⟧.', 'I loved this city.'], fut: ['Bu şehri ⟦seveceğim⟧.', 'I will love this city.'] } },
+  { tr: 'beğenmek', eng: 'to like', ex: 'Herkes bu filmi beğenir.', exEng: 'Everyone likes this film.',
+    ext: { aor: ['Herkes bu filmi ⟦beğenir⟧.', 'Everyone likes this film.'], cont: ['Herkes bu filmi ⟦beğeniyor⟧.', 'Everyone likes this film.'], past: ['Herkes bu filmi ⟦beğendi⟧.', 'Everyone liked this film.'], fut: ['Herkes bu filmi ⟦beğenecek⟧.', 'Everyone will like this film.'] } },
+  { tr: 'beklemek', eng: 'to wait', ex: 'Her sabah otobüsü beklerim.', exEng: 'I wait for the bus every morning.',
+    ext: { aor: ['Her sabah otobüsü ⟦beklerim⟧.', 'I wait for the bus every morning.'], cont: ['Bu sabah otobüsü ⟦bekliyorum⟧.', 'I am waiting for the bus this morning.'], past: ['Dün sabah otobüsü ⟦bekledim⟧.', 'I waited for the bus yesterday morning.'], fut: ['Yarın sabah otobüsü ⟦bekleyeceğim⟧.', 'I will wait for the bus tomorrow morning.'] } },
+  { tr: 'bulmak', eng: 'to find', ex: 'Annem anahtarları bulur.', exEng: 'My mother finds the keys.',
+    ext: { aor: ['Annem anahtarları ⟦bulur⟧.', 'My mother finds the keys.'], cont: ['Annem anahtarları ⟦buluyor⟧.', 'My mother is finding the keys.'], past: ['Annem anahtarları ⟦buldu⟧.', 'My mother found the keys.'], fut: ['Annem anahtarları ⟦bulacak⟧.', 'My mother will find the keys.'] } },
+  { tr: 'aramak', eng: 'to look for / to call', ex: 'Her akşam annemi ararım.', exEng: 'I call my mother every evening.',
+    ext: { aor: ['Her akşam annemi ⟦ararım⟧.', 'I call my mother every evening.'], cont: ['Bu akşam annemi ⟦arıyorum⟧.', 'I am calling my mother this evening.'], past: ['Dün akşam annemi ⟦aradım⟧.', 'I called my mother yesterday evening.'], fut: ['Yarın akşam annemi ⟦arayacağım⟧.', 'I will call my mother tomorrow evening.'] } },
+  { tr: 'sormak', eng: 'to ask', ex: 'Her gün öğrenciler çok soru sorarlar.', exEng: 'The students ask a lot of questions every day.',
+    ext: { aor: ['Her gün öğrenciler çok soru ⟦sorarlar⟧.', 'The students ask a lot of questions every day.'], cont: ['Bugün öğrenciler çok soru ⟦soruyorlar⟧.', 'The students are asking a lot of questions today.'], past: ['Dün öğrenciler çok soru ⟦sordular⟧.', 'The students asked a lot of questions yesterday.'], fut: ['Yarın öğrenciler çok soru ⟦soracaklar⟧.', 'The students will ask a lot of questions tomorrow.'] } },
+  { tr: 'açmak', eng: 'to open', ex: 'Her sabah pencereyi açarım.', exEng: 'I open the window every morning.',
+    ext: { aor: ['Her sabah pencereyi ⟦açarım⟧.', 'I open the window every morning.'], cont: ['Bu sabah pencereyi ⟦açıyorum⟧.', 'I am opening the window this morning.'], past: ['Dün sabah pencereyi ⟦açtım⟧.', 'I opened the window yesterday morning.'], fut: ['Yarın sabah pencereyi ⟦açacağım⟧.', 'I will open the window tomorrow morning.'] } },
+  { tr: 'kapatmak', eng: 'to close', ex: 'Her akşam kapıyı kapatırım.', exEng: 'I close the door every evening.',
+    ext: { aor: ['Her akşam kapıyı ⟦kapatırım⟧.', 'I close the door every evening.'], cont: ['Bu akşam kapıyı ⟦kapatıyorum⟧.', 'I am closing the door this evening.'], past: ['Dün akşam kapıyı ⟦kapattım⟧.', 'I closed the door yesterday evening.'], fut: ['Yarın akşam kapıyı ⟦kapatacağım⟧.', 'I will close the door tomorrow evening.'] } },
+  { tr: 'başlamak', eng: 'to begin', ex: 'Ders saat dokuzda başlar.', exEng: 'The lesson starts at nine.',
+    ext: { aor: ['Ders saat dokuzda ⟦başlar⟧.', 'The lesson starts at nine.'], cont: ['Ders saat dokuzda ⟦başlıyor⟧.', 'The lesson is starting at nine.'], past: ['Ders saat dokuzda ⟦başladı⟧.', 'The lesson started at nine.'], fut: ['Ders saat dokuzda ⟦başlayacak⟧.', 'The lesson will start at nine.'] } },
+  { tr: 'bitirmek', eng: 'to finish', ex: 'İşimi saat beşte bitiririm.', exEng: 'I finish my work at five.',
+    ext: { aor: ['İşimi saat beşte ⟦bitiririm⟧.', 'I finish my work at five.'], cont: ['İşimi saat beşte ⟦bitiriyorum⟧.', 'I am finishing my work at five.'], past: ['İşimi saat beşte ⟦bitirdim⟧.', 'I finished my work at five.'], fut: ['İşimi saat beşte ⟦bitireceğim⟧.', 'I will finish my work at five.'] } },
+  { tr: 'oturmak', eng: 'to sit / to live', ex: 'İstanbul’da otururuz.', exEng: 'We live in Istanbul.',
+    ext: { aor: ['İstanbul’da ⟦otururuz⟧.', 'We live in Istanbul.'], cont: ['İstanbul’da ⟦oturuyoruz⟧.', 'We are living in Istanbul.'], past: ['İstanbul’da ⟦oturduk⟧.', 'We lived in Istanbul.'], fut: ['İstanbul’da ⟦oturacağız⟧.', 'We will live in Istanbul.'] } },
+  { tr: 'kalkmak', eng: 'to get up', ex: 'Saat yedide kalkarım.', exEng: 'I get up at seven.',
+    ext: { aor: ['Saat yedide ⟦kalkarım⟧.', 'I get up at seven.'], cont: ['Saat yedide ⟦kalkıyorum⟧.', 'I am getting up at seven.'], past: ['Saat yedide ⟦kalktım⟧.', 'I got up at seven.'], fut: ['Saat yedide ⟦kalkacağım⟧.', 'I will get up at seven.'] } },
+  { tr: 'yatmak', eng: 'to go to bed', ex: 'Saat on birde yatarım.', exEng: 'I go to bed at eleven.',
+    ext: { aor: ['Saat on birde ⟦yatarım⟧.', 'I go to bed at eleven.'], cont: ['Saat on birde ⟦yatıyorum⟧.', 'I am going to bed at eleven.'], past: ['Saat on birde ⟦yattım⟧.', 'I went to bed at eleven.'], fut: ['Saat on birde ⟦yatacağım⟧.', 'I will go to bed at eleven.'] } },
+  { tr: 'uyumak', eng: 'to sleep', ex: 'Bebek çok uyur.', exEng: 'The baby sleeps a lot.',
+    ext: { aor: ['Bebek çok ⟦uyur⟧.', 'The baby sleeps a lot.'], cont: ['Bebek çok ⟦uyuyor⟧.', 'The baby is sleeping a lot.'], past: ['Bebek çok ⟦uyudu⟧.', 'The baby slept a lot.'], fut: ['Bebek çok ⟦uyuyacak⟧.', 'The baby will sleep a lot.'] } },
+  { tr: 'uyanmak', eng: 'to wake up', ex: 'Her sabah erken uyanırım.', exEng: 'I wake up early every morning.',
+    ext: { aor: ['Her sabah erken ⟦uyanırım⟧.', 'I wake up early every morning.'], cont: ['Bu sabah erken ⟦uyanıyorum⟧.', 'I am waking up early this morning.'], past: ['Dün sabah erken ⟦uyandım⟧.', 'I woke up early yesterday morning.'], fut: ['Yarın sabah erken ⟦uyanacağım⟧.', 'I will wake up early tomorrow morning.'] } },
+  { tr: 'koşmak', eng: 'to run', ex: 'Her sabah parkta koşarım.', exEng: 'I run in the park every morning.',
+    ext: { aor: ['Her sabah parkta ⟦koşarım⟧.', 'I run in the park every morning.'], cont: ['Bu sabah parkta ⟦koşuyorum⟧.', 'I am running in the park this morning.'], past: ['Dün sabah parkta ⟦koştum⟧.', 'I ran in the park yesterday morning.'], fut: ['Yarın sabah parkta ⟦koşacağım⟧.', 'I will run in the park tomorrow morning.'] } },
+  { tr: 'yürümek', eng: 'to walk', ex: 'Her gün okula yürürüm.', exEng: 'I walk to school every day.',
+    ext: { aor: ['Her gün okula ⟦yürürüm⟧.', 'I walk to school every day.'], cont: ['Bugün okula ⟦yürüyorum⟧.', 'I am walking to school today.'], past: ['Dün okula ⟦yürüdüm⟧.', 'I walked to school yesterday.'], fut: ['Yarın okula ⟦yürüyeceğim⟧.', 'I will walk to school tomorrow.'] } },
+  { tr: 'binmek', eng: 'to get on / to ride', ex: 'Her gün otobüse binerim.', exEng: 'I take the bus every day.',
+    ext: { aor: ['Her gün otobüse ⟦binerim⟧.', 'I take the bus every day.'], cont: ['Bugün otobüse ⟦biniyorum⟧.', 'I am taking the bus today.'], past: ['Dün otobüse ⟦bindim⟧.', 'I took the bus yesterday.'], fut: ['Yarın otobüse ⟦bineceğim⟧.', 'I will take the bus tomorrow.'] } },
+  { tr: 'inmek', eng: 'to get off', ex: 'Bu durakta ineriz.', exEng: 'We get off at this stop.',
+    ext: { aor: ['Bu durakta ⟦ineriz⟧.', 'We get off at this stop.'], cont: ['Bu durakta ⟦iniyoruz⟧.', 'We are getting off at this stop.'], past: ['Bu durakta ⟦indik⟧.', 'We got off at this stop.'], fut: ['Bu durakta ⟦ineceğiz⟧.', 'We will get off at this stop.'] } },
+  { tr: 'satmak', eng: 'to sell', ex: 'Bu dükkan meyve satar.', exEng: 'This shop sells fruit.',
+    ext: { aor: ['Bu dükkan meyve ⟦satar⟧.', 'This shop sells fruit.'], cont: ['Bu dükkan meyve ⟦satıyor⟧.', 'This shop is selling fruit.'], past: ['Bu dükkan meyve ⟦sattı⟧.', 'This shop sold fruit.'], fut: ['Bu dükkan meyve ⟦satacak⟧.', 'This shop will sell fruit.'] } },
+  { tr: 'ödemek', eng: 'to pay', ex: 'Her hafta faturaları öderim.', exEng: 'I pay the bills every week.',
+    ext: { aor: ['Her hafta faturaları ⟦öderim⟧.', 'I pay the bills every week.'], cont: ['Bu hafta faturaları ⟦ödüyorum⟧.', 'I am paying the bills this week.'], past: ['Geçen hafta faturaları ⟦ödedim⟧.', 'I paid the bills last week.'], fut: ['Gelecek hafta faturaları ⟦ödeyeceğim⟧.', 'I will pay the bills next week.'] } },
+  { tr: 'kullanmak', eng: 'to use', ex: 'Her gün bilgisayar kullanırım.', exEng: 'I use a computer every day.',
+    ext: { aor: ['Her gün bilgisayar ⟦kullanırım⟧.', 'I use a computer every day.'], cont: ['Bugün bilgisayar ⟦kullanıyorum⟧.', 'I am using a computer today.'], past: ['Dün bilgisayar ⟦kullandım⟧.', 'I used a computer yesterday.'], fut: ['Yarın bilgisayar ⟦kullanacağım⟧.', 'I will use a computer tomorrow.'] } },
+  { tr: 'düşünmek', eng: 'to think', ex: 'Her gün seni düşünürüm.', exEng: 'I think about you every day.',
+    ext: { aor: ['Her gün seni ⟦düşünürüm⟧.', 'I think about you every day.'], cont: ['Bugün seni ⟦düşünüyorum⟧.', 'I am thinking about you today.'], past: ['Dün seni ⟦düşündüm⟧.', 'I thought about you yesterday.'], fut: ['Yarın seni ⟦düşüneceğim⟧.', 'I will think about you tomorrow.'] } },
+  { tr: 'hatırlamak', eng: 'to remember', ex: 'Büyükannem her şeyi hatırlar.', exEng: 'My grandmother remembers everything.',
+    ext: { aor: ['Büyükannem her şeyi ⟦hatırlar⟧.', 'My grandmother remembers everything.'], cont: ['Büyükannem her şeyi ⟦hatırlıyor⟧.', 'My grandmother remembers everything.'], past: ['Büyükannem her şeyi ⟦hatırladı⟧.', 'My grandmother remembered everything.'], fut: ['Büyükannem her şeyi ⟦hatırlayacak⟧.', 'My grandmother will remember everything.'] } },
+  { tr: 'unutmak', eng: 'to forget', ex: 'Babam anahtarlarını unutur.', exEng: 'My father forgets his keys.',
+    ext: { aor: ['Babam anahtarlarını ⟦unutur⟧.', 'My father forgets his keys.'], cont: ['Babam anahtarlarını ⟦unutuyor⟧.', 'My father is forgetting his keys.'], past: ['Babam anahtarlarını ⟦unuttu⟧.', 'My father forgot his keys.'], fut: ['Babam anahtarlarını ⟦unutacak⟧.', 'My father will forget his keys.'] } },
+  { tr: 'gülmek', eng: 'to laugh', ex: 'Çocuklar bu filme gülerler.', exEng: 'The children laugh at this film.',
+    ext: { aor: ['Çocuklar bu filme ⟦gülerler⟧.', 'The children laugh at this film.'], cont: ['Çocuklar bu filme ⟦gülüyorlar⟧.', 'The children are laughing at this film.'], past: ['Çocuklar bu filme ⟦güldüler⟧.', 'The children laughed at this film.'], fut: ['Çocuklar bu filme ⟦gülecekler⟧.', 'The children will laugh at this film.'] } },
+  { tr: 'ağlamak', eng: 'to cry', ex: 'Bebek gece ağlar.', exEng: 'The baby cries at night.',
+    ext: { aor: ['Bebek gece ⟦ağlar⟧.', 'The baby cries at night.'], cont: ['Bebek gece ⟦ağlıyor⟧.', 'The baby is crying at night.'], past: ['Bebek gece ⟦ağladı⟧.', 'The baby cried at night.'], fut: ['Bebek gece ⟦ağlayacak⟧.', 'The baby will cry at night.'] } },
+  { tr: 'yüzmek', eng: 'to swim', ex: 'Her yaz denizde yüzeriz.', exEng: 'We swim in the sea every summer.',
+    ext: { aor: ['Her yaz denizde ⟦yüzeriz⟧.', 'We swim in the sea every summer.'], cont: ['Bu yaz denizde ⟦yüzüyoruz⟧.', 'We are swimming in the sea this summer.'], past: ['Geçen yaz denizde ⟦yüzdük⟧.', 'We swam in the sea last summer.'], fut: ['Gelecek yaz denizde ⟦yüzeceğiz⟧.', 'We will swim in the sea next summer.'] } },
+  { tr: 'pişirmek', eng: 'to cook', ex: 'Hafta sonları annem tavuk pişirir.', exEng: 'My mother cooks chicken at weekends.',
+    ext: { aor: ['Hafta sonları annem tavuk ⟦pişirir⟧.', 'My mother cooks chicken at weekends.'], cont: ['Bu hafta sonu annem tavuk ⟦pişiriyor⟧.', 'My mother is cooking chicken this weekend.'], past: ['Geçen hafta sonu annem tavuk ⟦pişirdi⟧.', 'My mother cooked chicken last weekend.'], fut: ['Gelecek hafta sonu annem tavuk ⟦pişirecek⟧.', 'My mother will cook chicken next weekend.'] } },
+  { tr: 'yıkamak', eng: 'to wash', ex: 'Yemekten önce ellerimi yıkarım.', exEng: 'I wash my hands before eating.',
+    ext: { aor: ['Yemekten önce ellerimi ⟦yıkarım⟧.', 'I wash my hands before eating.'], cont: ['Yemekten önce ellerimi ⟦yıkıyorum⟧.', 'I am washing my hands before eating.'], past: ['Yemekten önce ellerimi ⟦yıkadım⟧.', 'I washed my hands before eating.'], fut: ['Yemekten önce ellerimi ⟦yıkayacağım⟧.', 'I will wash my hands before eating.'] } },
+  { tr: 'temizlemek', eng: 'to clean', ex: 'Hafta sonları evi temizleriz.', exEng: 'We clean the house at weekends.',
+    ext: { aor: ['Hafta sonları evi ⟦temizleriz⟧.', 'We clean the house at weekends.'], cont: ['Bu hafta sonu evi ⟦temizliyoruz⟧.', 'We are cleaning the house this weekend.'], past: ['Geçen hafta sonu evi ⟦temizledik⟧.', 'We cleaned the house last weekend.'], fut: ['Gelecek hafta sonu evi ⟦temizleyeceğiz⟧.', 'We will clean the house next weekend.'] } },
+  { tr: 'giymek', eng: 'to put on / to wear', ex: 'Kışın kalın bir mont giyerim.', exEng: 'I wear a thick coat in winter.',
+    ext: { aor: ['Kışın kalın bir mont ⟦giyerim⟧.', 'I wear a thick coat in winter.'], cont: ['Bu kış kalın bir mont ⟦giyiyorum⟧.', 'I am wearing a thick coat this winter.'], past: ['Geçen kış kalın bir mont ⟦giydim⟧.', 'I wore a thick coat last winter.'], fut: ['Gelecek kış kalın bir mont ⟦giyeceğim⟧.', 'I will wear a thick coat next winter.'] } },
+  { tr: 'getirmek', eng: 'to bring', ex: 'Garson su getirir.', exEng: 'The waiter brings water.',
+    ext: { aor: ['Garson su ⟦getirir⟧.', 'The waiter brings water.'], cont: ['Garson su ⟦getiriyor⟧.', 'The waiter is bringing water.'], past: ['Garson su ⟦getirdi⟧.', 'The waiter brought water.'], fut: ['Garson su ⟦getirecek⟧.', 'The waiter will bring water.'] } },
+  { tr: 'göndermek', eng: 'to send', ex: 'Her gün arkadaşlarıma mesaj gönderirim.', exEng: 'I send messages to my friends every day.',
+    ext: { aor: ['Her gün arkadaşlarıma mesaj ⟦gönderirim⟧.', 'I send messages to my friends every day.'], cont: ['Bugün arkadaşlarıma mesaj ⟦gönderiyorum⟧.', 'I am sending messages to my friends today.'], past: ['Dün arkadaşlarıma mesaj ⟦gönderdim⟧.', 'I sent messages to my friends yesterday.'], fut: ['Yarın arkadaşlarıma mesaj ⟦göndereceğim⟧.', 'I will send messages to my friends tomorrow.'] } },
+  { tr: 'kalmak', eng: 'to stay', ex: 'Her yaz otelde kalırız.', exEng: 'We stay at a hotel every summer.',
+    ext: { aor: ['Her yaz otelde ⟦kalırız⟧.', 'We stay at a hotel every summer.'], cont: ['Bu yaz otelde ⟦kalıyoruz⟧.', 'We are staying at a hotel this summer.'], past: ['Geçen yaz otelde ⟦kaldık⟧.', 'We stayed at a hotel last summer.'], fut: ['Gelecek yaz otelde ⟦kalacağız⟧.', 'We will stay at a hotel next summer.'] } },
+  { tr: 'dönmek', eng: 'to return', ex: 'Saat altıda eve dönerim.', exEng: 'I come back home at six.',
+    ext: { aor: ['Saat altıda eve ⟦dönerim⟧.', 'I come back home at six.'], cont: ['Saat altıda eve ⟦dönüyorum⟧.', 'I am coming back home at six.'], past: ['Saat altıda eve ⟦döndüm⟧.', 'I came back home at six.'], fut: ['Saat altıda eve ⟦döneceğim⟧.', 'I will come back home at six.'] } },
+  { tr: 'girmek', eng: 'to enter', ex: 'Öğretmen sınıfa girer.', exEng: 'The teacher comes into the classroom.',
+    ext: { aor: ['Öğretmen sınıfa ⟦girer⟧.', 'The teacher comes into the classroom.'], cont: ['Öğretmen sınıfa ⟦giriyor⟧.', 'The teacher is coming into the classroom.'], past: ['Öğretmen sınıfa ⟦girdi⟧.', 'The teacher came into the classroom.'], fut: ['Öğretmen sınıfa ⟦girecek⟧.', 'The teacher will come into the classroom.'] } },
+  { tr: 'çıkmak', eng: 'to go out', ex: 'Saat sekizde evden çıkarım.', exEng: 'I leave the house at eight.',
+    ext: { aor: ['Saat sekizde evden ⟦çıkarım⟧.', 'I leave the house at eight.'], cont: ['Saat sekizde evden ⟦çıkıyorum⟧.', 'I am leaving the house at eight.'], past: ['Saat sekizde evden ⟦çıktım⟧.', 'I left the house at eight.'], fut: ['Saat sekizde evden ⟦çıkacağım⟧.', 'I will leave the house at eight.'] } },
+  { tr: 'oynamak', eng: 'to play', ex: 'Her gün çocuklar parkta oynarlar.', exEng: 'The children play in the park every day.',
+    ext: { aor: ['Her gün çocuklar parkta ⟦oynarlar⟧.', 'The children play in the park every day.'], cont: ['Bugün çocuklar parkta ⟦oynuyorlar⟧.', 'The children are playing in the park today.'], past: ['Dün çocuklar parkta ⟦oynadılar⟧.', 'The children played in the park yesterday.'], fut: ['Yarın çocuklar parkta ⟦oynayacaklar⟧.', 'The children will play in the park tomorrow.'] } },
+  { tr: 'tanımak', eng: 'to know (a person)', ex: 'Onu iyi tanırım.', exEng: 'I know him well.',
+    ext: { aor: ['Onu iyi ⟦tanırım⟧.', 'I know him well.'], cont: ['Onu iyi ⟦tanıyorum⟧.', 'I know him well.'], past: ['Onu iyi ⟦tanıdım⟧.', 'I knew him well.'], fut: ['Onu iyi ⟦tanıyacağım⟧.', 'I will know him well.'] } },
+  { tr: 'yaşamak', eng: 'to live', ex: 'Ailem Ankara’da yaşar.', exEng: 'My family lives in Ankara.',
+    ext: { aor: ['Ailem Ankara’da ⟦yaşar⟧.', 'My family lives in Ankara.'], cont: ['Ailem Ankara’da ⟦yaşıyor⟧.', 'My family is living in Ankara.'], past: ['Ailem Ankara’da ⟦yaşadı⟧.', 'My family lived in Ankara.'], fut: ['Ailem Ankara’da ⟦yaşayacak⟧.', 'My family will live in Ankara.'] } },
+  { tr: 'durmak', eng: 'to stop', ex: 'Otobüs burada durur.', exEng: 'The bus stops here.',
+    ext: { aor: ['Otobüs burada ⟦durur⟧.', 'The bus stops here.'], cont: ['Otobüs burada ⟦duruyor⟧.', 'The bus is stopping here.'], past: ['Otobüs burada ⟦durdu⟧.', 'The bus stopped here.'], fut: ['Otobüs burada ⟦duracak⟧.', 'The bus will stop here.'] } },
+  { tr: 'taşımak', eng: 'to carry', ex: 'Babam ağır çantaları taşır.', exEng: 'My father carries the heavy bags.',
+    ext: { aor: ['Babam ağır çantaları ⟦taşır⟧.', 'My father carries the heavy bags.'], cont: ['Babam ağır çantaları ⟦taşıyor⟧.', 'My father is carrying the heavy bags.'], past: ['Babam ağır çantaları ⟦taşıdı⟧.', 'My father carried the heavy bags.'], fut: ['Babam ağır çantaları ⟦taşıyacak⟧.', 'My father will carry the heavy bags.'] } },
+  { tr: 'göstermek', eng: 'to show', ex: 'Sana yolu gösteririm.', exEng: 'I show you the way.',
+    ext: { aor: ['Sana yolu ⟦gösteririm⟧.', 'I show you the way.'], cont: ['Sana yolu ⟦gösteriyorum⟧.', 'I am showing you the way.'], past: ['Sana yolu ⟦gösterdim⟧.', 'I showed you the way.'], fut: ['Sana yolu ⟦göstereceğim⟧.', 'I will show you the way.'] } },
+  { tr: 'koymak', eng: 'to put', ex: 'Çantamı masaya koyarım.', exEng: 'I put my bag on the table.',
+    ext: { aor: ['Çantamı masaya ⟦koyarım⟧.', 'I put my bag on the table.'], cont: ['Çantamı masaya ⟦koyuyorum⟧.', 'I am putting my bag on the table.'], past: ['Çantamı masaya ⟦koydum⟧.', 'I put my bag on the table.'], fut: ['Çantamı masaya ⟦koyacağım⟧.', 'I will put my bag on the table.'] } },
+  { tr: 'tutmak', eng: 'to hold', ex: 'Anne bebeğin elini tutar.', exEng: 'The mother holds the baby\'s hand.',
+    ext: { aor: ['Anne bebeğin elini ⟦tutar⟧.', 'The mother holds the baby\'s hand.'], cont: ['Anne bebeğin elini ⟦tutuyor⟧.', 'The mother is holding the baby\'s hand.'], past: ['Anne bebeğin elini ⟦tuttu⟧.', 'The mother held the baby\'s hand.'], fut: ['Anne bebeğin elini ⟦tutacak⟧.', 'The mother will hold the baby\'s hand.'] } },
+  { tr: 'duymak', eng: 'to hear', ex: 'Her sabah kuşları duyarım.', exEng: 'I hear the birds every morning.',
+    ext: { aor: ['Her sabah kuşları ⟦duyarım⟧.', 'I hear the birds every morning.'], cont: ['Bu sabah kuşları ⟦duyuyorum⟧.', 'I hear the birds this morning.'], past: ['Dün sabah kuşları ⟦duydum⟧.', 'I heard the birds yesterday morning.'], fut: ['Yarın sabah kuşları ⟦duyacağım⟧.', 'I will hear the birds tomorrow morning.'] } },
+  { tr: 'hissetmek', eng: 'to feel', ex: 'Kendimi mutlu hissederim.', exEng: 'I feel happy.',
+    ext: { aor: ['Kendimi mutlu ⟦hissederim⟧.', 'I feel happy.'], cont: ['Kendimi mutlu ⟦hissediyorum⟧.', 'I feel happy.'], past: ['Kendimi mutlu ⟦hissettim⟧.', 'I felt happy.'], fut: ['Kendimi mutlu ⟦hissedeceğim⟧.', 'I will feel happy.'] } }
 ];
 
 var TR_NOUNS = [
-  { tr: 'anne', eng: 'mother', ex: 'Annem öğretmen.', exEng: 'My mother is a teacher.' },
-  { tr: 'baba', eng: 'father', ex: 'Babam her sabah gazete okur.', exEng: 'My father reads the newspaper every morning.' },
-  { tr: 'kardeş', eng: 'sibling', ex: 'İki kardeşim var.', exEng: 'I have two siblings.' },
-  { tr: 'abla', eng: 'older sister', ex: 'Ablam çok güzel şarkı söyler.', exEng: 'My older sister sings very well.' },
-  { tr: 'ağabey', eng: 'older brother', ex: 'Ağabeyim futbol oynar.', exEng: 'My older brother plays football.' },
-  { tr: 'çocuk', eng: 'child', ex: 'Çocuk bahçede oynar.', exEng: 'The child plays in the garden.' },
-  { tr: 'arkadaş', eng: 'friend', ex: 'O benim en iyi arkadaşım.', exEng: 'He is my best friend.' },
-  { tr: 'adam', eng: 'man', ex: 'Bu adam benim komşum.', exEng: 'This man is my neighbour.' },
-  { tr: 'kadın', eng: 'woman', ex: 'O kadın bir doktor.', exEng: 'That woman is a doctor.' },
-  { tr: 'kız', eng: 'girl / daughter', ex: 'Onların bir kızı var.', exEng: 'They have a daughter.' },
-  { tr: 'oğul', eng: 'son', ex: 'Oğlum on yaşında.', exEng: 'My son is ten years old.' },
-  { tr: 'aile', eng: 'family', ex: 'Ailem çok büyük.', exEng: 'My family is very big.' },
-  { tr: 'bebek', eng: 'baby', ex: 'Bebek çok küçük.', exEng: 'The baby is very small.' },
-  { tr: 'insan', eng: 'person', ex: 'Burada çok insan var.', exEng: 'There are a lot of people here.' },
-  { tr: 'ev', eng: 'house', ex: 'Evimiz okula yakın.', exEng: 'Our house is close to the school.' },
-  { tr: 'oda', eng: 'room', ex: 'Benim odam küçük ama güzel.', exEng: 'My room is small but nice.' },
-  { tr: 'kapı', eng: 'door', ex: 'Kapı açık.', exEng: 'The door is open.' },
-  { tr: 'pencere', eng: 'window', ex: 'Pencere çok büyük.', exEng: 'The window is very big.' },
-  { tr: 'masa', eng: 'table', ex: 'Kitap masanın üstünde.', exEng: 'The book is on the table.' },
-  { tr: 'sandalye', eng: 'chair', ex: 'Bu sandalye çok rahat.', exEng: 'This chair is very comfortable.' },
-  { tr: 'yatak', eng: 'bed', ex: 'Yatağım çok rahat.', exEng: 'My bed is very comfortable.' },
-  { tr: 'mutfak', eng: 'kitchen', ex: 'Annem mutfakta.', exEng: 'My mother is in the kitchen.' },
-  { tr: 'banyo', eng: 'bathroom', ex: 'Banyo nerede?', exEng: 'Where is the bathroom?' },
-  { tr: 'anahtar', eng: 'key', ex: 'Anahtarım cebimde.', exEng: 'My key is in my pocket.' },
-  { tr: 'duvar', eng: 'wall', ex: 'Duvarda bir resim var.', exEng: 'There is a picture on the wall.' },
-  { tr: 'ekmek', eng: 'bread', ex: 'Fırından taze ekmek alırım.', exEng: 'I buy fresh bread from the bakery.' },
-  { tr: 'su', eng: 'water', ex: 'Bir bardak su lütfen.', exEng: 'A glass of water, please.' },
-  { tr: 'çay', eng: 'tea', ex: 'Türkiye\'de herkes çay içer.', exEng: 'In Turkey everyone drinks tea.' },
-  { tr: 'kahve', eng: 'coffee', ex: 'Kahve çok sıcak.', exEng: 'The coffee is very hot.' },
-  { tr: 'süt', eng: 'milk', ex: 'Çocuklar her sabah süt içer.', exEng: 'The children drink milk every morning.' },
-  { tr: 'peynir', eng: 'cheese', ex: 'Kahvaltıda peynir yerim.', exEng: 'I eat cheese at breakfast.' },
-  { tr: 'yumurta', eng: 'egg', ex: 'Buzdolabında altı yumurta var.', exEng: 'There are six eggs in the fridge.' },
-  { tr: 'et', eng: 'meat', ex: 'Kasap et satar.', exEng: 'The butcher sells meat.' },
-  { tr: 'tavuk', eng: 'chicken', ex: 'Tavuk çorbası çok lezzetli.', exEng: 'Chicken soup is very tasty.' },
-  { tr: 'balık', eng: 'fish', ex: 'Denizde çok balık var.', exEng: 'There are many fish in the sea.' },
-  { tr: 'elma', eng: 'apple', ex: 'Her gün bir elma yerim.', exEng: 'I eat an apple every day.' },
-  { tr: 'şeker', eng: 'sugar', ex: 'Çayına şeker ister misin?', exEng: 'Do you want sugar in your tea?' },
-  { tr: 'tuz', eng: 'salt', ex: 'Tuzu verir misin?', exEng: 'Can you pass the salt?' },
-  { tr: 'yemek', eng: 'food / meal', ex: 'Yemek hazır!', exEng: 'The food is ready!' },
-  { tr: 'kahvaltı', eng: 'breakfast', ex: 'Kahvaltı saat sekizde.', exEng: 'Breakfast is at eight o\'clock.' },
-  { tr: 'meyve', eng: 'fruit', ex: 'Meyve çok sağlıklı.', exEng: 'Fruit is very healthy.' },
-  { tr: 'sebze', eng: 'vegetable', ex: 'Pazarda taze sebze var.', exEng: 'There are fresh vegetables at the market.' },
-  { tr: 'okul', eng: 'school', ex: 'Okul saat dokuzda başlar.', exEng: 'School starts at nine o\'clock.' },
-  { tr: 'şehir', eng: 'city', ex: 'İstanbul çok büyük bir şehir.', exEng: 'Istanbul is a very big city.' },
-  { tr: 'köy', eng: 'village', ex: 'Dedem bir köyde yaşar.', exEng: 'My grandfather lives in a village.' },
-  { tr: 'sokak', eng: 'street', ex: 'Bu sokak çok sessiz.', exEng: 'This street is very quiet.' },
-  { tr: 'hastane', eng: 'hospital', ex: 'Hastane nerede?', exEng: 'Where is the hospital?' },
-  { tr: 'otel', eng: 'hotel', ex: 'Otelimiz denize yakın.', exEng: 'Our hotel is close to the sea.' },
-  { tr: 'restoran', eng: 'restaurant', ex: 'Bu restoran çok güzel.', exEng: 'This restaurant is very nice.' },
-  { tr: 'banka', eng: 'bank', ex: 'Banka saat beşte kapanır.', exEng: 'The bank closes at five.' },
-  { tr: 'park', eng: 'park', ex: 'Parkta çok ağaç var.', exEng: 'There are many trees in the park.' },
-  { tr: 'deniz', eng: 'sea', ex: 'Deniz bugün çok mavi.', exEng: 'The sea is very blue today.' },
-  { tr: 'plaj', eng: 'beach', ex: 'Yazın plaja gideriz.', exEng: 'In summer we go to the beach.' },
-  { tr: 'havalimanı', eng: 'airport', ex: 'Havalimanı şehirden uzak.', exEng: 'The airport is far from the city.' },
-  { tr: 'istasyon', eng: 'station', ex: 'İstasyon buraya yakın mı?', exEng: 'Is the station close to here?' },
-  { tr: 'ofis', eng: 'office', ex: 'Ofisim üçüncü katta.', exEng: 'My office is on the third floor.' },
-  { tr: 'ülke', eng: 'country', ex: 'Türkiye güzel bir ülke.', exEng: 'Turkey is a beautiful country.' },
-  { tr: 'dükkan', eng: 'shop', ex: 'Dükkan saat dokuzda açılır.', exEng: 'The shop opens at nine.' },
-  { tr: 'cami', eng: 'mosque', ex: 'Bu cami çok eski.', exEng: 'This mosque is very old.' },
-  { tr: 'müze', eng: 'museum', ex: 'Müze pazartesi kapalı.', exEng: 'The museum is closed on Monday.' },
-  { tr: 'araba', eng: 'car', ex: 'Babamın arabası kırmızı.', exEng: 'My father\'s car is red.' },
-  { tr: 'otobüs', eng: 'bus', ex: 'Otobüs her on dakikada gelir.', exEng: 'The bus comes every ten minutes.' },
-  { tr: 'tren', eng: 'train', ex: 'Tren saat üçte kalkar.', exEng: 'The train leaves at three o\'clock.' },
-  { tr: 'uçak', eng: 'plane', ex: 'Uçak çok hızlı.', exEng: 'The plane is very fast.' },
-  { tr: 'bisiklet', eng: 'bicycle', ex: 'Okula bisikletle giderim.', exEng: 'I go to school by bicycle.' },
-  { tr: 'gemi', eng: 'ship', ex: 'Gemi limanda.', exEng: 'The ship is in the harbour.' },
-  { tr: 'gün', eng: 'day', ex: 'Bugün güzel bir gün.', exEng: 'Today is a beautiful day.' },
-  { tr: 'gece', eng: 'night', ex: 'Gece çok soğuk.', exEng: 'The night is very cold.' },
-  { tr: 'sabah', eng: 'morning', ex: 'Sabah kahve içerim.', exEng: 'I drink coffee in the morning.' },
-  { tr: 'akşam', eng: 'evening', ex: 'Akşam televizyon izleriz.', exEng: 'We watch TV in the evening.' },
-  { tr: 'hafta', eng: 'week', ex: 'Bir haftada yedi gün var.', exEng: 'There are seven days in a week.' },
-  { tr: 'ay', eng: 'month / moon', ex: 'Bir yılda on iki ay var.', exEng: 'There are twelve months in a year.' },
-  { tr: 'yıl', eng: 'year', ex: 'Her yıl Türkiye\'ye gideriz.', exEng: 'Every year we go to Turkey.' },
-  { tr: 'saat', eng: 'hour / clock', ex: 'Saat kaç?', exEng: 'What time is it?' },
-  { tr: 'zaman', eng: 'time', ex: 'Çok zamanım yok.', exEng: 'I don\'t have much time.' },
-  { tr: 'kitap', eng: 'book', ex: 'Bu kitap çok ilginç.', exEng: 'This book is very interesting.' },
-  { tr: 'kalem', eng: 'pen', ex: 'Kalemin var mı?', exEng: 'Do you have a pen?' },
-  { tr: 'defter', eng: 'notebook', ex: 'Defterim çantamda.', exEng: 'My notebook is in my bag.' },
-  { tr: 'telefon', eng: 'phone', ex: 'Telefonum nerede?', exEng: 'Where is my phone?' },
-  { tr: 'bilgisayar', eng: 'computer', ex: 'Yeni bir bilgisayarım var.', exEng: 'I have a new computer.' },
-  { tr: 'para', eng: 'money', ex: 'Cebimde hiç para yok.', exEng: 'I have no money in my pocket.' },
-  { tr: 'çanta', eng: 'bag', ex: 'Bu çanta çok ağır.', exEng: 'This bag is very heavy.' },
-  { tr: 'ayakkabı', eng: 'shoes', ex: 'Yeni ayakkabılarım siyah.', exEng: 'My new shoes are black.' },
-  { tr: 'elbise', eng: 'dress', ex: 'Bu elbise çok güzel.', exEng: 'This dress is very nice.' },
-  { tr: 'gömlek', eng: 'shirt', ex: 'Babam beyaz bir gömlek giyer.', exEng: 'My father wears a white shirt.' },
-  { tr: 'şapka', eng: 'hat', ex: 'Yazın şapka takarım.', exEng: 'In summer I wear a hat.' },
-  { tr: 'baş', eng: 'head', ex: 'Başım ağrıyor.', exEng: 'I have a headache.' },
-  { tr: 'göz', eng: 'eye', ex: 'Onun gözleri mavi.', exEng: 'Her eyes are blue.' },
-  { tr: 'el', eng: 'hand', ex: 'Ellerin çok soğuk.', exEng: 'Your hands are very cold.' },
-  { tr: 'ayak', eng: 'foot', ex: 'Ayaklarım yorgun.', exEng: 'My feet are tired.' },
-  { tr: 'ağız', eng: 'mouth', ex: 'Ağzını aç lütfen.', exEng: 'Open your mouth, please.' },
-  { tr: 'kulak', eng: 'ear', ex: 'Kedinin kulakları küçük.', exEng: 'The cat\'s ears are small.' },
-  { tr: 'burun', eng: 'nose', ex: 'Köpeğin burnu soğuk.', exEng: 'The dog\'s nose is cold.' },
-  { tr: 'saç', eng: 'hair', ex: 'Kızın saçları uzun.', exEng: 'The girl\'s hair is long.' },
-  { tr: 'kalp', eng: 'heart', ex: 'Onun kalbi çok iyi.', exEng: 'He has a very good heart.' },
-  { tr: 'yüz', eng: 'face', ex: 'Bebeğin yüzü çok tatlı.', exEng: 'The baby\'s face is very sweet.' },
-  { tr: 'güneş', eng: 'sun', ex: 'Bugün güneş çok sıcak.', exEng: 'The sun is very hot today.' },
-  { tr: 'yıldız', eng: 'star', ex: 'Gökyüzünde çok yıldız var.', exEng: 'There are many stars in the sky.' },
-  { tr: 'hava', eng: 'weather / air', ex: 'Bugün hava çok güzel.', exEng: 'The weather is very nice today.' },
-  { tr: 'yağmur', eng: 'rain', ex: 'Bugün yağmur yağıyor.', exEng: 'It\'s raining today.' },
-  { tr: 'kar', eng: 'snow', ex: 'Kışın burada çok kar yağar.', exEng: 'In winter it snows a lot here.' },
-  { tr: 'ağaç', eng: 'tree', ex: 'Bahçede büyük bir ağaç var.', exEng: 'There is a big tree in the garden.' },
-  { tr: 'çiçek', eng: 'flower', ex: 'Annem çiçekleri çok sever.', exEng: 'My mother loves flowers a lot.' },
-  { tr: 'köpek', eng: 'dog', ex: 'Köpeğimin adı Karabaş.', exEng: 'My dog\'s name is Karabaş.' },
-  { tr: 'kedi', eng: 'cat', ex: 'Kedi masanın altında.', exEng: 'The cat is under the table.' },
-  { tr: 'kuş', eng: 'bird', ex: 'Ağaçta bir kuş var.', exEng: 'There is a bird in the tree.' },
-  { tr: 'at', eng: 'horse', ex: 'At çok hızlı koşar.', exEng: 'The horse runs very fast.' },
-  { tr: 'iş', eng: 'work / job', ex: 'Yeni işim çok güzel.', exEng: 'My new job is very nice.' },
-  { tr: 'öğretmen', eng: 'teacher', ex: 'Öğretmenimiz çok iyi.', exEng: 'Our teacher is very good.' },
-  { tr: 'öğrenci', eng: 'student', ex: 'Sınıfta yirmi öğrenci var.', exEng: 'There are twenty students in the class.' },
-  { tr: 'doktor', eng: 'doctor', ex: 'Doktor çok iyi bir insan.', exEng: 'The doctor is a very good person.' },
-  { tr: 'isim', eng: 'name', ex: 'İsmin ne?', exEng: 'What is your name?' },
-  { tr: 'dil', eng: 'language', ex: 'Türkçe güzel bir dil.', exEng: 'Turkish is a beautiful language.' },
-  { tr: 'soru', eng: 'question', ex: 'Bir sorum var.', exEng: 'I have a question.' },
-  { tr: 'cevap', eng: 'answer', ex: 'Cevap çok kolay.', exEng: 'The answer is very easy.' },
-  { tr: 'renk', eng: 'colour', ex: 'En sevdiğin renk ne?', exEng: 'What is your favourite colour?' },
-  { tr: 'müzik', eng: 'music', ex: 'Türk müziğini çok severim.', exEng: 'I love Turkish music a lot.' },
-  { tr: 'film', eng: 'film', ex: 'Bu film çok komik.', exEng: 'This film is very funny.' },
-  { tr: 'oyun', eng: 'game', ex: 'Bu oyun çok eğlenceli.', exEng: 'This game is very fun.' },
-  { tr: 'hediye', eng: 'gift', ex: 'Bu hediye senin için.', exEng: 'This gift is for you.' },
-  { tr: 'fiyat', eng: 'price', ex: 'Bunun fiyatı ne kadar?', exEng: 'How much is this?' },
-  { tr: 'bilet', eng: 'ticket', ex: 'İki bilet lütfen.', exEng: 'Two tickets, please.' },
-  { tr: 'harita', eng: 'map', ex: 'Haritaya bakalım.', exEng: 'Let\'s look at the map.' }
+  { tr: 'anne', eng: 'mother', ex: 'Her akşam annemi ararım.', exEng: 'I call my mother every evening.',
+    ext: { aor: ['Her akşam annemi ⟦ararım⟧.', 'I call my mother every evening.'], cont: ['Bu akşam annemi ⟦arıyorum⟧.', 'I am calling my mother this evening.'], past: ['Dün akşam annemi ⟦aradım⟧.', 'I called my mother yesterday evening.'], fut: ['Yarın akşam annemi ⟦arayacağım⟧.', 'I will call my mother tomorrow evening.'] } },
+  { tr: 'baba', eng: 'father', ex: 'Her sabah babam gazete okur.', exEng: 'My father reads the newspaper every morning.',
+    ext: { aor: ['Her sabah babam gazete ⟦okur⟧.', 'My father reads the newspaper every morning.'], cont: ['Bu sabah babam gazete ⟦okuyor⟧.', 'My father is reading the newspaper this morning.'], past: ['Dün sabah babam gazete ⟦okudu⟧.', 'My father read the newspaper yesterday morning.'], fut: ['Yarın sabah babam gazete ⟦okuyacak⟧.', 'My father will read the newspaper tomorrow morning.'] } },
+  { tr: 'kardeş', eng: 'sibling', ex: 'Hafta sonları kardeşimle futbol oynarız.', exEng: 'We play football with my brother at weekends.',
+    ext: { aor: ['Hafta sonları kardeşimle futbol ⟦oynarız⟧.', 'We play football with my brother at weekends.'], cont: ['Bu hafta sonu kardeşimle futbol ⟦oynuyoruz⟧.', 'We are playing football with my brother this weekend.'], past: ['Geçen hafta sonu kardeşimle futbol ⟦oynadık⟧.', 'We played football with my brother last weekend.'], fut: ['Gelecek hafta sonu kardeşimle futbol ⟦oynayacağız⟧.', 'We will play football with my brother next weekend.'] } },
+  { tr: 'abla', eng: 'older sister', ex: 'Her akşam ablam şarkı söyler.', exEng: 'My older sister sings every evening.',
+    ext: { aor: ['Her akşam ablam şarkı ⟦söyler⟧.', 'My older sister sings every evening.'], cont: ['Bu akşam ablam şarkı ⟦söylüyor⟧.', 'My older sister is singing this evening.'], past: ['Dün akşam ablam şarkı ⟦söyledi⟧.', 'My older sister sang yesterday evening.'], fut: ['Yarın akşam ablam şarkı ⟦söyleyecek⟧.', 'My older sister will sing tomorrow evening.'] } },
+  { tr: 'ağabey', eng: 'older brother', ex: 'Hafta sonları ağabeyim futbol oynar.', exEng: 'My older brother plays football at weekends.',
+    ext: { aor: ['Hafta sonları ağabeyim futbol ⟦oynar⟧.', 'My older brother plays football at weekends.'], cont: ['Bu hafta sonu ağabeyim futbol ⟦oynuyor⟧.', 'My older brother is playing football this weekend.'], past: ['Geçen hafta sonu ağabeyim futbol ⟦oynadı⟧.', 'My older brother played football last weekend.'], fut: ['Gelecek hafta sonu ağabeyim futbol ⟦oynayacak⟧.', 'My older brother will play football next weekend.'] } },
+  { tr: 'çocuk', eng: 'child', ex: 'Her gün çocuk bahçede oynar.', exEng: 'The child plays in the garden every day.',
+    ext: { aor: ['Her gün çocuk bahçede ⟦oynar⟧.', 'The child plays in the garden every day.'], cont: ['Bugün çocuk bahçede ⟦oynuyor⟧.', 'The child is playing in the garden today.'], past: ['Dün çocuk bahçede ⟦oynadı⟧.', 'The child played in the garden yesterday.'], fut: ['Yarın çocuk bahçede ⟦oynayacak⟧.', 'The child will play in the garden tomorrow.'] } },
+  { tr: 'arkadaş', eng: 'friend', ex: 'Hafta sonları arkadaşımla kahve içerim.', exEng: 'I drink coffee with my friend at weekends.',
+    ext: { aor: ['Hafta sonları arkadaşımla kahve ⟦içerim⟧.', 'I drink coffee with my friend at weekends.'], cont: ['Bu hafta sonu arkadaşımla kahve ⟦içiyorum⟧.', 'I am drinking coffee with my friend this weekend.'], past: ['Geçen hafta sonu arkadaşımla kahve ⟦içtim⟧.', 'I drank coffee with my friend last weekend.'], fut: ['Gelecek hafta sonu arkadaşımla kahve ⟦içeceğim⟧.', 'I will drink coffee with my friend next weekend.'] } },
+  { tr: 'adam', eng: 'man', ex: 'O adam bir otelde çalışır.', exEng: 'That man works at a hotel.',
+    ext: { aor: ['O adam bir otelde ⟦çalışır⟧.', 'That man works at a hotel.'], cont: ['O adam bir otelde ⟦çalışıyor⟧.', 'That man is working at a hotel.'], past: ['O adam bir otelde ⟦çalıştı⟧.', 'That man worked at a hotel.'], fut: ['O adam bir otelde ⟦çalışacak⟧.', 'That man will work at a hotel.'] } },
+  { tr: 'kadın', eng: 'woman', ex: 'O kadın bir okulda çalışır.', exEng: 'That woman works at a school.',
+    ext: { aor: ['O kadın bir okulda ⟦çalışır⟧.', 'That woman works at a school.'], cont: ['O kadın bir okulda ⟦çalışıyor⟧.', 'That woman is working at a school.'], past: ['O kadın bir okulda ⟦çalıştı⟧.', 'That woman worked at a school.'], fut: ['O kadın bir okulda ⟦çalışacak⟧.', 'That woman will work at a school.'] } },
+  { tr: 'kız', eng: 'girl / daughter', ex: 'Her gün kızım okula gider.', exEng: 'My daughter goes to school every day.',
+    ext: { aor: ['Her gün kızım okula ⟦gider⟧.', 'My daughter goes to school every day.'], cont: ['Bugün kızım okula ⟦gidiyor⟧.', 'My daughter is going to school today.'], past: ['Dün kızım okula ⟦gitti⟧.', 'My daughter went to school yesterday.'], fut: ['Yarın kızım okula ⟦gidecek⟧.', 'My daughter will go to school tomorrow.'] } },
+  { tr: 'oğul', eng: 'son', ex: 'Hafta sonları oğlum basketbol oynar.', exEng: 'My son plays basketball at weekends.',
+    ext: { aor: ['Hafta sonları oğlum basketbol ⟦oynar⟧.', 'My son plays basketball at weekends.'], cont: ['Bu hafta sonu oğlum basketbol ⟦oynuyor⟧.', 'My son is playing basketball this weekend.'], past: ['Geçen hafta sonu oğlum basketbol ⟦oynadı⟧.', 'My son played basketball last weekend.'], fut: ['Gelecek hafta sonu oğlum basketbol ⟦oynayacak⟧.', 'My son will play basketball next weekend.'] } },
+  { tr: 'aile', eng: 'family', ex: 'Hafta sonları ailemi ziyaret ederim.', exEng: 'I visit my family at weekends.',
+    ext: { aor: ['Hafta sonları ailemi ziyaret ⟦ederim⟧.', 'I visit my family at weekends.'], cont: ['Bu hafta sonu ailemi ziyaret ⟦ediyorum⟧.', 'I am visiting my family this weekend.'], past: ['Geçen hafta sonu ailemi ziyaret ⟦ettim⟧.', 'I visited my family last weekend.'], fut: ['Gelecek hafta sonu ailemi ziyaret ⟦edeceğim⟧.', 'I will visit my family next weekend.'] } },
+  { tr: 'bebek', eng: 'baby', ex: 'Her sabah bebek süt içer.', exEng: 'The baby drinks milk every morning.',
+    ext: { aor: ['Her sabah bebek süt ⟦içer⟧.', 'The baby drinks milk every morning.'], cont: ['Bu sabah bebek süt ⟦içiyor⟧.', 'The baby is drinking milk this morning.'], past: ['Dün sabah bebek süt ⟦içti⟧.', 'The baby drank milk yesterday morning.'], fut: ['Yarın sabah bebek süt ⟦içecek⟧.', 'The baby will drink milk tomorrow morning.'] } },
+  { tr: 'insan', eng: 'person', ex: 'Her akşam insanlar parkta yürürler.', exEng: 'People walk in the park every evening.',
+    ext: { aor: ['Her akşam insanlar parkta ⟦yürürler⟧.', 'People walk in the park every evening.'], cont: ['Bu akşam insanlar parkta ⟦yürüyorlar⟧.', 'People are walking in the park this evening.'], past: ['Dün akşam insanlar parkta ⟦yürüdüler⟧.', 'People walked in the park yesterday evening.'], fut: ['Yarın akşam insanlar parkta ⟦yürüyecekler⟧.', 'People will walk in the park tomorrow evening.'] } },
+  { tr: 'ev', eng: 'house', ex: 'Hafta sonları evde kalırım.', exEng: 'I stay at home at weekends.',
+    ext: { aor: ['Hafta sonları evde ⟦kalırım⟧.', 'I stay at home at weekends.'], cont: ['Bu hafta sonu evde ⟦kalıyorum⟧.', 'I am staying at home this weekend.'], past: ['Geçen hafta sonu evde ⟦kaldım⟧.', 'I stayed at home last weekend.'], fut: ['Gelecek hafta sonu evde ⟦kalacağım⟧.', 'I will stay at home next weekend.'] } },
+  { tr: 'oda', eng: 'room', ex: 'Hafta sonları odamı temizlerim.', exEng: 'I clean my room at weekends.',
+    ext: { aor: ['Hafta sonları odamı ⟦temizlerim⟧.', 'I clean my room at weekends.'], cont: ['Bu hafta sonu odamı ⟦temizliyorum⟧.', 'I am cleaning my room this weekend.'], past: ['Geçen hafta sonu odamı ⟦temizledim⟧.', 'I cleaned my room last weekend.'], fut: ['Gelecek hafta sonu odamı ⟦temizleyeceğim⟧.', 'I will clean my room next weekend.'] } },
+  { tr: 'kapı', eng: 'door', ex: 'Her sabah kapıyı açarım.', exEng: 'I open the door every morning.',
+    ext: { aor: ['Her sabah kapıyı ⟦açarım⟧.', 'I open the door every morning.'], cont: ['Bu sabah kapıyı ⟦açıyorum⟧.', 'I am opening the door this morning.'], past: ['Dün sabah kapıyı ⟦açtım⟧.', 'I opened the door yesterday morning.'], fut: ['Yarın sabah kapıyı ⟦açacağım⟧.', 'I will open the door tomorrow morning.'] } },
+  { tr: 'pencere', eng: 'window', ex: 'Her akşam pencereyi kapatırım.', exEng: 'I close the window every evening.',
+    ext: { aor: ['Her akşam pencereyi ⟦kapatırım⟧.', 'I close the window every evening.'], cont: ['Bu akşam pencereyi ⟦kapatıyorum⟧.', 'I am closing the window this evening.'], past: ['Dün akşam pencereyi ⟦kapattım⟧.', 'I closed the window yesterday evening.'], fut: ['Yarın akşam pencereyi ⟦kapatacağım⟧.', 'I will close the window tomorrow evening.'] } },
+  { tr: 'masa', eng: 'table', ex: 'Her akşam masayı temizlerim.', exEng: 'I clean the table every evening.',
+    ext: { aor: ['Her akşam masayı ⟦temizlerim⟧.', 'I clean the table every evening.'], cont: ['Bu akşam masayı ⟦temizliyorum⟧.', 'I am cleaning the table this evening.'], past: ['Dün akşam masayı ⟦temizledim⟧.', 'I cleaned the table yesterday evening.'], fut: ['Yarın akşam masayı ⟦temizleyeceğim⟧.', 'I will clean the table tomorrow evening.'] } },
+  { tr: 'sandalye', eng: 'chair', ex: 'Her akşam babam sandalyede oturur.', exEng: 'My father sits on the chair every evening.',
+    ext: { aor: ['Her akşam babam sandalyede ⟦oturur⟧.', 'My father sits on the chair every evening.'], cont: ['Bu akşam babam sandalyede ⟦oturuyor⟧.', 'My father is sitting on the chair this evening.'], past: ['Dün akşam babam sandalyede ⟦oturdu⟧.', 'My father sat on the chair yesterday evening.'], fut: ['Yarın akşam babam sandalyede ⟦oturacak⟧.', 'My father will sit on the chair tomorrow evening.'] } },
+  { tr: 'yatak', eng: 'bed', ex: 'Her akşam yatakta kitap okurum.', exEng: 'I read a book in bed every evening.',
+    ext: { aor: ['Her akşam yatakta kitap ⟦okurum⟧.', 'I read a book in bed every evening.'], cont: ['Bu akşam yatakta kitap ⟦okuyorum⟧.', 'I am reading a book in bed this evening.'], past: ['Dün akşam yatakta kitap ⟦okudum⟧.', 'I read a book in bed yesterday evening.'], fut: ['Yarın akşam yatakta kitap ⟦okuyacağım⟧.', 'I will read a book in bed tomorrow evening.'] } },
+  { tr: 'mutfak', eng: 'kitchen', ex: 'Her akşam annem mutfakta yemek yapar.', exEng: 'My mother cooks in the kitchen every evening.',
+    ext: { aor: ['Her akşam annem mutfakta yemek ⟦yapar⟧.', 'My mother cooks in the kitchen every evening.'], cont: ['Bu akşam annem mutfakta yemek ⟦yapıyor⟧.', 'My mother is cooking in the kitchen this evening.'], past: ['Dün akşam annem mutfakta yemek ⟦yaptı⟧.', 'My mother cooked in the kitchen yesterday evening.'], fut: ['Yarın akşam annem mutfakta yemek ⟦yapacak⟧.', 'My mother will cook in the kitchen tomorrow evening.'] } },
+  { tr: 'banyo', eng: 'bathroom', ex: 'Her sabah banyoda ellerimi yıkarım.', exEng: 'I wash my hands in the bathroom every morning.',
+    ext: { aor: ['Her sabah banyoda ellerimi ⟦yıkarım⟧.', 'I wash my hands in the bathroom every morning.'], cont: ['Bu sabah banyoda ellerimi ⟦yıkıyorum⟧.', 'I am washing my hands in the bathroom this morning.'], past: ['Dün sabah banyoda ellerimi ⟦yıkadım⟧.', 'I washed my hands in the bathroom yesterday morning.'], fut: ['Yarın sabah banyoda ellerimi ⟦yıkayacağım⟧.', 'I will wash my hands in the bathroom tomorrow morning.'] } },
+  { tr: 'anahtar', eng: 'key', ex: 'Her sabah anahtarlarımı ararım.', exEng: 'I look for my keys every morning.',
+    ext: { aor: ['Her sabah anahtarlarımı ⟦ararım⟧.', 'I look for my keys every morning.'], cont: ['Bu sabah anahtarlarımı ⟦arıyorum⟧.', 'I am looking for my keys this morning.'], past: ['Dün sabah anahtarlarımı ⟦aradım⟧.', 'I looked for my keys yesterday morning.'], fut: ['Yarın sabah anahtarlarımı ⟦arayacağım⟧.', 'I will look for my keys tomorrow morning.'] } },
+  { tr: 'duvar', eng: 'wall', ex: 'Duvara bir resim asarım.', exEng: 'I hang a picture on the wall.',
+    ext: { aor: ['Duvara bir resim ⟦asarım⟧.', 'I hang a picture on the wall.'], cont: ['Duvara bir resim ⟦asıyorum⟧.', 'I am hanging a picture on the wall.'], past: ['Duvara bir resim ⟦astım⟧.', 'I hung a picture on the wall.'], fut: ['Duvara bir resim ⟦asacağım⟧.', 'I will hang a picture on the wall.'] } },
+  { tr: 'ekmek', eng: 'bread', ex: 'Her sabah fırından ekmek alırım.', exEng: 'I buy bread from the bakery every morning.',
+    ext: { aor: ['Her sabah fırından ekmek ⟦alırım⟧.', 'I buy bread from the bakery every morning.'], cont: ['Bu sabah fırından ekmek ⟦alıyorum⟧.', 'I am buying bread from the bakery this morning.'], past: ['Dün sabah fırından ekmek ⟦aldım⟧.', 'I bought bread from the bakery yesterday morning.'], fut: ['Yarın sabah fırından ekmek ⟦alacağım⟧.', 'I will buy bread from the bakery tomorrow morning.'] } },
+  { tr: 'su', eng: 'water', ex: 'Her sabah bir bardak su içerim.', exEng: 'I drink a glass of water every morning.',
+    ext: { aor: ['Her sabah bir bardak su ⟦içerim⟧.', 'I drink a glass of water every morning.'], cont: ['Bu sabah bir bardak su ⟦içiyorum⟧.', 'I am drinking a glass of water this morning.'], past: ['Dün sabah bir bardak su ⟦içtim⟧.', 'I drank a glass of water yesterday morning.'], fut: ['Yarın sabah bir bardak su ⟦içeceğim⟧.', 'I will drink a glass of water tomorrow morning.'] } },
+  { tr: 'çay', eng: 'tea', ex: 'Her akşam çay içeriz.', exEng: 'We drink tea every evening.',
+    ext: { aor: ['Her akşam çay ⟦içeriz⟧.', 'We drink tea every evening.'], cont: ['Bu akşam çay ⟦içiyoruz⟧.', 'We are drinking tea this evening.'], past: ['Dün akşam çay ⟦içtik⟧.', 'We drank tea yesterday evening.'], fut: ['Yarın akşam çay ⟦içeceğiz⟧.', 'We will drink tea tomorrow evening.'] } },
+  { tr: 'kahve', eng: 'coffee', ex: 'Her sabah babam kahve yapar.', exEng: 'My father makes coffee every morning.',
+    ext: { aor: ['Her sabah babam kahve ⟦yapar⟧.', 'My father makes coffee every morning.'], cont: ['Bu sabah babam kahve ⟦yapıyor⟧.', 'My father is making coffee this morning.'], past: ['Dün sabah babam kahve ⟦yaptı⟧.', 'My father made coffee yesterday morning.'], fut: ['Yarın sabah babam kahve ⟦yapacak⟧.', 'My father will make coffee tomorrow morning.'] } },
+  { tr: 'süt', eng: 'milk', ex: 'Her sabah çocuklar süt içerler.', exEng: 'The children drink milk every morning.',
+    ext: { aor: ['Her sabah çocuklar süt ⟦içerler⟧.', 'The children drink milk every morning.'], cont: ['Bu sabah çocuklar süt ⟦içiyorlar⟧.', 'The children are drinking milk this morning.'], past: ['Dün sabah çocuklar süt ⟦içtiler⟧.', 'The children drank milk yesterday morning.'], fut: ['Yarın sabah çocuklar süt ⟦içecekler⟧.', 'The children will drink milk tomorrow morning.'] } },
+  { tr: 'peynir', eng: 'cheese', ex: 'Kahvaltıda peynir yerim.', exEng: 'I eat cheese at breakfast.',
+    ext: { aor: ['Kahvaltıda peynir ⟦yerim⟧.', 'I eat cheese at breakfast.'], cont: ['Kahvaltıda peynir ⟦yiyorum⟧.', 'I am eating cheese at breakfast.'], past: ['Kahvaltıda peynir ⟦yedim⟧.', 'I ate cheese at breakfast.'], fut: ['Kahvaltıda peynir ⟦yiyeceğim⟧.', 'I will eat cheese at breakfast.'] } },
+  { tr: 'yumurta', eng: 'egg', ex: 'Her sabah annem yumurta pişirir.', exEng: 'My mother cooks eggs every morning.',
+    ext: { aor: ['Her sabah annem yumurta ⟦pişirir⟧.', 'My mother cooks eggs every morning.'], cont: ['Bu sabah annem yumurta ⟦pişiriyor⟧.', 'My mother is cooking eggs this morning.'], past: ['Dün sabah annem yumurta ⟦pişirdi⟧.', 'My mother cooked eggs yesterday morning.'], fut: ['Yarın sabah annem yumurta ⟦pişirecek⟧.', 'My mother will cook eggs tomorrow morning.'] } },
+  { tr: 'et', eng: 'meat', ex: 'Kasap et satar.', exEng: 'The butcher sells meat.',
+    ext: { aor: ['Kasap et ⟦satar⟧.', 'The butcher sells meat.'], cont: ['Kasap et ⟦satıyor⟧.', 'The butcher is selling meat.'], past: ['Kasap et ⟦sattı⟧.', 'The butcher sold meat.'], fut: ['Kasap et ⟦satacak⟧.', 'The butcher will sell meat.'] } },
+  { tr: 'tavuk', eng: 'chicken', ex: 'Her akşam tavuk yeriz.', exEng: 'We eat chicken every evening.',
+    ext: { aor: ['Her akşam tavuk ⟦yeriz⟧.', 'We eat chicken every evening.'], cont: ['Bu akşam tavuk ⟦yiyoruz⟧.', 'We are eating chicken this evening.'], past: ['Dün akşam tavuk ⟦yedik⟧.', 'We ate chicken yesterday evening.'], fut: ['Yarın akşam tavuk ⟦yiyeceğiz⟧.', 'We will eat chicken tomorrow evening.'] } },
+  { tr: 'balık', eng: 'fish', ex: 'Hafta sonları dedem denizde balık tutar.', exEng: 'My grandfather catches fish in the sea at weekends.',
+    ext: { aor: ['Hafta sonları dedem denizde balık ⟦tutar⟧.', 'My grandfather catches fish in the sea at weekends.'], cont: ['Bu hafta sonu dedem denizde balık ⟦tutuyor⟧.', 'My grandfather is catching fish in the sea this weekend.'], past: ['Geçen hafta sonu dedem denizde balık ⟦tuttu⟧.', 'My grandfather caught fish in the sea last weekend.'], fut: ['Gelecek hafta sonu dedem denizde balık ⟦tutacak⟧.', 'My grandfather will catch fish in the sea next weekend.'] } },
+  { tr: 'elma', eng: 'apple', ex: 'Her gün bir elma yerim.', exEng: 'I eat an apple every day.',
+    ext: { aor: ['Her gün bir elma ⟦yerim⟧.', 'I eat an apple every day.'], cont: ['Bugün bir elma ⟦yiyorum⟧.', 'I am eating an apple today.'], past: ['Dün bir elma ⟦yedim⟧.', 'I ate an apple yesterday.'], fut: ['Yarın bir elma ⟦yiyeceğim⟧.', 'I will eat an apple tomorrow.'] } },
+  { tr: 'şeker', eng: 'sugar', ex: 'Her sabah babam çayına şeker koyar.', exEng: 'My father puts sugar in his tea every morning.',
+    ext: { aor: ['Her sabah babam çayına şeker ⟦koyar⟧.', 'My father puts sugar in his tea every morning.'], cont: ['Bu sabah babam çayına şeker ⟦koyuyor⟧.', 'My father is putting sugar in his tea this morning.'], past: ['Dün sabah babam çayına şeker ⟦koydu⟧.', 'My father put sugar in his tea yesterday morning.'], fut: ['Yarın sabah babam çayına şeker ⟦koyacak⟧.', 'My father will put sugar in his tea tomorrow morning.'] } },
+  { tr: 'tuz', eng: 'salt', ex: 'Annem çorbaya tuz koyar.', exEng: 'My mother puts salt in the soup.',
+    ext: { aor: ['Annem çorbaya tuz ⟦koyar⟧.', 'My mother puts salt in the soup.'], cont: ['Annem çorbaya tuz ⟦koyuyor⟧.', 'My mother is putting salt in the soup.'], past: ['Annem çorbaya tuz ⟦koydu⟧.', 'My mother put salt in the soup.'], fut: ['Annem çorbaya tuz ⟦koyacak⟧.', 'My mother will put salt in the soup.'] } },
+  { tr: 'yemek', eng: 'food / meal', ex: 'Her akşam birlikte yemek yeriz.', exEng: 'We eat together every evening.',
+    ext: { aor: ['Her akşam birlikte yemek ⟦yeriz⟧.', 'We eat together every evening.'], cont: ['Bu akşam birlikte yemek ⟦yiyoruz⟧.', 'We are eating together this evening.'], past: ['Dün akşam birlikte yemek ⟦yedik⟧.', 'We ate together yesterday evening.'], fut: ['Yarın akşam birlikte yemek ⟦yiyeceğiz⟧.', 'We will eat together tomorrow evening.'] } },
+  { tr: 'kahvaltı', eng: 'breakfast', ex: 'Hafta sonları birlikte kahvaltı yaparız.', exEng: 'We have breakfast together at weekends.',
+    ext: { aor: ['Hafta sonları birlikte kahvaltı ⟦yaparız⟧.', 'We have breakfast together at weekends.'], cont: ['Bu hafta sonu birlikte kahvaltı ⟦yapıyoruz⟧.', 'We are having breakfast together this weekend.'], past: ['Geçen hafta sonu birlikte kahvaltı ⟦yaptık⟧.', 'We had breakfast together last weekend.'], fut: ['Gelecek hafta sonu birlikte kahvaltı ⟦yapacağız⟧.', 'We will have breakfast together next weekend.'] } },
+  { tr: 'meyve', eng: 'fruit', ex: 'Her hafta pazardan meyve alırım.', exEng: 'I buy fruit at the market every week.',
+    ext: { aor: ['Her hafta pazardan meyve ⟦alırım⟧.', 'I buy fruit at the market every week.'], cont: ['Bu hafta pazardan meyve ⟦alıyorum⟧.', 'I am buying fruit at the market this week.'], past: ['Geçen hafta pazardan meyve ⟦aldım⟧.', 'I bought fruit at the market last week.'], fut: ['Gelecek hafta pazardan meyve ⟦alacağım⟧.', 'I will buy fruit at the market next week.'] } },
+  { tr: 'sebze', eng: 'vegetable', ex: 'Her akşam annem sebze pişirir.', exEng: 'My mother cooks vegetables every evening.',
+    ext: { aor: ['Her akşam annem sebze ⟦pişirir⟧.', 'My mother cooks vegetables every evening.'], cont: ['Bu akşam annem sebze ⟦pişiriyor⟧.', 'My mother is cooking vegetables this evening.'], past: ['Dün akşam annem sebze ⟦pişirdi⟧.', 'My mother cooked vegetables yesterday evening.'], fut: ['Yarın akşam annem sebze ⟦pişirecek⟧.', 'My mother will cook vegetables tomorrow evening.'] } },
+  { tr: 'okul', eng: 'school', ex: 'Her gün kardeşim okula otobüsle gider.', exEng: 'My brother goes to school by bus every day.',
+    ext: { aor: ['Her gün kardeşim okula otobüsle ⟦gider⟧.', 'My brother goes to school by bus every day.'], cont: ['Bugün kardeşim okula otobüsle ⟦gidiyor⟧.', 'My brother is going to school by bus today.'], past: ['Dün kardeşim okula otobüsle ⟦gitti⟧.', 'My brother went to school by bus yesterday.'], fut: ['Yarın kardeşim okula otobüsle ⟦gidecek⟧.', 'My brother will go to school by bus tomorrow.'] } },
+  { tr: 'şehir', eng: 'city', ex: 'Yeni bir şehirde yaşarız.', exEng: 'We live in a new city.',
+    ext: { aor: ['Yeni bir şehirde ⟦yaşarız⟧.', 'We live in a new city.'], cont: ['Yeni bir şehirde ⟦yaşıyoruz⟧.', 'We are living in a new city.'], past: ['Yeni bir şehirde ⟦yaşadık⟧.', 'We lived in a new city.'], fut: ['Yeni bir şehirde ⟦yaşayacağız⟧.', 'We will live in a new city.'] } },
+  { tr: 'köy', eng: 'village', ex: 'Dedem bir köyde yaşar.', exEng: 'My grandfather lives in a village.',
+    ext: { aor: ['Dedem bir köyde ⟦yaşar⟧.', 'My grandfather lives in a village.'], cont: ['Dedem bir köyde ⟦yaşıyor⟧.', 'My grandfather is living in a village.'], past: ['Dedem bir köyde ⟦yaşadı⟧.', 'My grandfather lived in a village.'], fut: ['Dedem bir köyde ⟦yaşayacak⟧.', 'My grandfather will live in a village.'] } },
+  { tr: 'sokak', eng: 'street', ex: 'Her akşam çocuklar sokakta oynarlar.', exEng: 'The children play in the street every evening.',
+    ext: { aor: ['Her akşam çocuklar sokakta ⟦oynarlar⟧.', 'The children play in the street every evening.'], cont: ['Bu akşam çocuklar sokakta ⟦oynuyorlar⟧.', 'The children are playing in the street this evening.'], past: ['Dün akşam çocuklar sokakta ⟦oynadılar⟧.', 'The children played in the street yesterday evening.'], fut: ['Yarın akşam çocuklar sokakta ⟦oynayacaklar⟧.', 'The children will play in the street tomorrow evening.'] } },
+  { tr: 'hastane', eng: 'hospital', ex: 'Doktor hastanede çalışır.', exEng: 'The doctor works at the hospital.',
+    ext: { aor: ['Doktor hastanede ⟦çalışır⟧.', 'The doctor works at the hospital.'], cont: ['Doktor hastanede ⟦çalışıyor⟧.', 'The doctor is working at the hospital.'], past: ['Doktor hastanede ⟦çalıştı⟧.', 'The doctor worked at the hospital.'], fut: ['Doktor hastanede ⟦çalışacak⟧.', 'The doctor will work at the hospital.'] } },
+  { tr: 'otel', eng: 'hotel', ex: 'Her yaz bu otelde kalırız.', exEng: 'We stay at this hotel every summer.',
+    ext: { aor: ['Her yaz bu otelde ⟦kalırız⟧.', 'We stay at this hotel every summer.'], cont: ['Bu yaz bu otelde ⟦kalıyoruz⟧.', 'We are staying at this hotel this summer.'], past: ['Geçen yaz bu otelde ⟦kaldık⟧.', 'We stayed at this hotel last summer.'], fut: ['Gelecek yaz bu otelde ⟦kalacağız⟧.', 'We will stay at this hotel next summer.'] } },
+  { tr: 'restoran', eng: 'restaurant', ex: 'Hafta sonları bu restoranda yemek yeriz.', exEng: 'We eat at this restaurant at weekends.',
+    ext: { aor: ['Hafta sonları bu restoranda yemek ⟦yeriz⟧.', 'We eat at this restaurant at weekends.'], cont: ['Bu hafta sonu bu restoranda yemek ⟦yiyoruz⟧.', 'We are eating at this restaurant this weekend.'], past: ['Geçen hafta sonu bu restoranda yemek ⟦yedik⟧.', 'We ate at this restaurant last weekend.'], fut: ['Gelecek hafta sonu bu restoranda yemek ⟦yiyeceğiz⟧.', 'We will eat at this restaurant next weekend.'] } },
+  { tr: 'banka', eng: 'bank', ex: 'Banka saat beşte kapanır.', exEng: 'The bank closes at five.',
+    ext: { aor: ['Banka saat beşte ⟦kapanır⟧.', 'The bank closes at five.'], cont: ['Banka saat beşte ⟦kapanıyor⟧.', 'The bank is closing at five.'], past: ['Banka saat beşte ⟦kapandı⟧.', 'The bank closed at five.'], fut: ['Banka saat beşte ⟦kapanacak⟧.', 'The bank will close at five.'] } },
+  { tr: 'park', eng: 'park', ex: 'Hafta sonları parkta yürürüz.', exEng: 'We walk in the park at weekends.',
+    ext: { aor: ['Hafta sonları parkta ⟦yürürüz⟧.', 'We walk in the park at weekends.'], cont: ['Bu hafta sonu parkta ⟦yürüyoruz⟧.', 'We are walking in the park this weekend.'], past: ['Geçen hafta sonu parkta ⟦yürüdük⟧.', 'We walked in the park last weekend.'], fut: ['Gelecek hafta sonu parkta ⟦yürüyeceğiz⟧.', 'We will walk in the park next weekend.'] } },
+  { tr: 'deniz', eng: 'sea', ex: 'Her yaz denizde yüzeriz.', exEng: 'We swim in the sea every summer.',
+    ext: { aor: ['Her yaz denizde ⟦yüzeriz⟧.', 'We swim in the sea every summer.'], cont: ['Bu yaz denizde ⟦yüzüyoruz⟧.', 'We are swimming in the sea this summer.'], past: ['Geçen yaz denizde ⟦yüzdük⟧.', 'We swam in the sea last summer.'], fut: ['Gelecek yaz denizde ⟦yüzeceğiz⟧.', 'We will swim in the sea next summer.'] } },
+  { tr: 'plaj', eng: 'beach', ex: 'Her yaz plaja gideriz.', exEng: 'We go to the beach every summer.',
+    ext: { aor: ['Her yaz plaja ⟦gideriz⟧.', 'We go to the beach every summer.'], cont: ['Bu yaz plaja ⟦gidiyoruz⟧.', 'We are going to the beach this summer.'], past: ['Geçen yaz plaja ⟦gittik⟧.', 'We went to the beach last summer.'], fut: ['Gelecek yaz plaja ⟦gideceğiz⟧.', 'We will go to the beach next summer.'] } },
+  { tr: 'havalimanı', eng: 'airport', ex: 'Havalimanına taksiyle giderim.', exEng: 'I go to the airport by taxi.',
+    ext: { aor: ['Havalimanına taksiyle ⟦giderim⟧.', 'I go to the airport by taxi.'], cont: ['Havalimanına taksiyle ⟦gidiyorum⟧.', 'I am going to the airport by taxi.'], past: ['Havalimanına taksiyle ⟦gittim⟧.', 'I went to the airport by taxi.'], fut: ['Havalimanına taksiyle ⟦gideceğim⟧.', 'I will go to the airport by taxi.'] } },
+  { tr: 'istasyon', eng: 'station', ex: 'Her akşam istasyonda arkadaşımı beklerim.', exEng: 'I wait for my friend at the station every evening.',
+    ext: { aor: ['Her akşam istasyonda arkadaşımı ⟦beklerim⟧.', 'I wait for my friend at the station every evening.'], cont: ['Bu akşam istasyonda arkadaşımı ⟦bekliyorum⟧.', 'I am waiting for my friend at the station this evening.'], past: ['Dün akşam istasyonda arkadaşımı ⟦bekledim⟧.', 'I waited for my friend at the station yesterday evening.'], fut: ['Yarın akşam istasyonda arkadaşımı ⟦bekleyeceğim⟧.', 'I will wait for my friend at the station tomorrow evening.'] } },
+  { tr: 'ofis', eng: 'office', ex: 'Her gün ofiste çalışırım.', exEng: 'I work at the office every day.',
+    ext: { aor: ['Her gün ofiste ⟦çalışırım⟧.', 'I work at the office every day.'], cont: ['Bugün ofiste ⟦çalışıyorum⟧.', 'I am working at the office today.'], past: ['Dün ofiste ⟦çalıştım⟧.', 'I worked at the office yesterday.'], fut: ['Yarın ofiste ⟦çalışacağım⟧.', 'I will work at the office tomorrow.'] } },
+  { tr: 'ülke', eng: 'country', ex: 'Bu ülkeyi çok severiz.', exEng: 'We love this country very much.',
+    ext: { aor: ['Bu ülkeyi çok ⟦severiz⟧.', 'We love this country very much.'], cont: ['Bu ülkeyi çok ⟦seviyoruz⟧.', 'We love this country very much.'], past: ['Bu ülkeyi çok ⟦sevdik⟧.', 'We loved this country very much.'], fut: ['Bu ülkeyi çok ⟦seveceğiz⟧.', 'We will love this country very much.'] } },
+  { tr: 'dükkan', eng: 'shop', ex: 'Dükkan saat dokuzda açılır.', exEng: 'The shop opens at nine.',
+    ext: { aor: ['Dükkan saat dokuzda ⟦açılır⟧.', 'The shop opens at nine.'], cont: ['Dükkan saat dokuzda ⟦açılıyor⟧.', 'The shop is opening at nine.'], past: ['Dükkan saat dokuzda ⟦açıldı⟧.', 'The shop opened at nine.'], fut: ['Dükkan saat dokuzda ⟦açılacak⟧.', 'The shop will open at nine.'] } },
+  { tr: 'cami', eng: 'mosque', ex: 'Eski camiyi ziyaret ederiz.', exEng: 'We visit the old mosque.',
+    ext: { aor: ['Eski camiyi ziyaret ⟦ederiz⟧.', 'We visit the old mosque.'], cont: ['Eski camiyi ziyaret ⟦ediyoruz⟧.', 'We are visiting the old mosque.'], past: ['Eski camiyi ziyaret ⟦ettik⟧.', 'We visited the old mosque.'], fut: ['Eski camiyi ziyaret ⟦edeceğiz⟧.', 'We will visit the old mosque.'] } },
+  { tr: 'müze', eng: 'museum', ex: 'Hafta sonları müzeyi gezerim.', exEng: 'I visit the museum at weekends.',
+    ext: { aor: ['Hafta sonları müzeyi ⟦gezerim⟧.', 'I visit the museum at weekends.'], cont: ['Bu hafta sonu müzeyi ⟦geziyorum⟧.', 'I am visiting the museum this weekend.'], past: ['Geçen hafta sonu müzeyi ⟦gezdim⟧.', 'I visited the museum last weekend.'], fut: ['Gelecek hafta sonu müzeyi ⟦gezeceğim⟧.', 'I will visit the museum next weekend.'] } },
+  { tr: 'araba', eng: 'car', ex: 'Hafta sonları babam arabayı yıkar.', exEng: 'My father washes the car at weekends.',
+    ext: { aor: ['Hafta sonları babam arabayı ⟦yıkar⟧.', 'My father washes the car at weekends.'], cont: ['Bu hafta sonu babam arabayı ⟦yıkıyor⟧.', 'My father is washing the car this weekend.'], past: ['Geçen hafta sonu babam arabayı ⟦yıkadı⟧.', 'My father washed the car last weekend.'], fut: ['Gelecek hafta sonu babam arabayı ⟦yıkayacak⟧.', 'My father will wash the car next weekend.'] } },
+  { tr: 'otobüs', eng: 'bus', ex: 'Otobüs saat sekizde gelir.', exEng: 'The bus comes at eight.',
+    ext: { aor: ['Otobüs saat sekizde ⟦gelir⟧.', 'The bus comes at eight.'], cont: ['Otobüs saat sekizde ⟦geliyor⟧.', 'The bus is coming at eight.'], past: ['Otobüs saat sekizde ⟦geldi⟧.', 'The bus came at eight.'], fut: ['Otobüs saat sekizde ⟦gelecek⟧.', 'The bus will come at eight.'] } },
+  { tr: 'tren', eng: 'train', ex: 'Tren saat üçte kalkar.', exEng: 'The train leaves at three.',
+    ext: { aor: ['Tren saat üçte ⟦kalkar⟧.', 'The train leaves at three.'], cont: ['Tren saat üçte ⟦kalkıyor⟧.', 'The train is leaving at three.'], past: ['Tren saat üçte ⟦kalktı⟧.', 'The train left at three.'], fut: ['Tren saat üçte ⟦kalkacak⟧.', 'The train will leave at three.'] } },
+  { tr: 'uçak', eng: 'plane', ex: 'Uçak saat ikide iner.', exEng: 'The plane lands at two.',
+    ext: { aor: ['Uçak saat ikide ⟦iner⟧.', 'The plane lands at two.'], cont: ['Uçak saat ikide ⟦iniyor⟧.', 'The plane is landing at two.'], past: ['Uçak saat ikide ⟦indi⟧.', 'The plane landed at two.'], fut: ['Uçak saat ikide ⟦inecek⟧.', 'The plane will land at two.'] } },
+  { tr: 'bisiklet', eng: 'bicycle', ex: 'Her gün okula bisikletle giderim.', exEng: 'I go to school by bike every day.',
+    ext: { aor: ['Her gün okula bisikletle ⟦giderim⟧.', 'I go to school by bike every day.'], cont: ['Bugün okula bisikletle ⟦gidiyorum⟧.', 'I am going to school by bike today.'], past: ['Dün okula bisikletle ⟦gittim⟧.', 'I went to school by bike yesterday.'], fut: ['Yarın okula bisikletle ⟦gideceğim⟧.', 'I will go to school by bike tomorrow.'] } },
+  { tr: 'gemi', eng: 'ship', ex: 'Gemi limandan ayrılır.', exEng: 'The ship leaves the harbour.',
+    ext: { aor: ['Gemi limandan ⟦ayrılır⟧.', 'The ship leaves the harbour.'], cont: ['Gemi limandan ⟦ayrılıyor⟧.', 'The ship is leaving the harbour.'], past: ['Gemi limandan ⟦ayrıldı⟧.', 'The ship left the harbour.'], fut: ['Gemi limandan ⟦ayrılacak⟧.', 'The ship will leave the harbour.'] } },
+  { tr: 'gün', eng: 'day', ex: 'Bütün gün çalışırım.', exEng: 'I work all day.',
+    ext: { aor: ['Bütün gün ⟦çalışırım⟧.', 'I work all day.'], cont: ['Bütün gün ⟦çalışıyorum⟧.', 'I am working all day.'], past: ['Bütün gün ⟦çalıştım⟧.', 'I worked all day.'], fut: ['Bütün gün ⟦çalışacağım⟧.', 'I will work all day.'] } },
+  { tr: 'gece', eng: 'night', ex: 'Bebek gece ağlar.', exEng: 'The baby cries at night.',
+    ext: { aor: ['Bebek gece ⟦ağlar⟧.', 'The baby cries at night.'], cont: ['Bebek gece ⟦ağlıyor⟧.', 'The baby is crying at night.'], past: ['Bebek gece ⟦ağladı⟧.', 'The baby cried at night.'], fut: ['Bebek gece ⟦ağlayacak⟧.', 'The baby will cry at night.'] } },
+  { tr: 'sabah', eng: 'morning', ex: 'Sabah erken kalkarım.', exEng: 'I get up early in the morning.',
+    ext: { aor: ['Sabah erken ⟦kalkarım⟧.', 'I get up early in the morning.'], cont: ['Sabah erken ⟦kalkıyorum⟧.', 'I am getting up early in the morning.'], past: ['Sabah erken ⟦kalktım⟧.', 'I got up early in the morning.'], fut: ['Sabah erken ⟦kalkacağım⟧.', 'I will get up early in the morning.'] } },
+  { tr: 'akşam', eng: 'evening', ex: 'Akşam televizyon izleriz.', exEng: 'We watch TV in the evening.',
+    ext: { aor: ['Akşam televizyon ⟦izleriz⟧.', 'We watch TV in the evening.'], cont: ['Akşam televizyon ⟦izliyoruz⟧.', 'We are watching TV in the evening.'], past: ['Akşam televizyon ⟦izledik⟧.', 'We watched TV in the evening.'], fut: ['Akşam televizyon ⟦izleyeceğiz⟧.', 'We will watch TV in the evening.'] } },
+  { tr: 'hafta', eng: 'week', ex: 'Haftada iki gün çalışırım.', exEng: 'I work two days a week.',
+    ext: { aor: ['Haftada iki gün ⟦çalışırım⟧.', 'I work two days a week.'], cont: ['Haftada iki gün ⟦çalışıyorum⟧.', 'I am working two days a week.'], past: ['Haftada iki gün ⟦çalıştım⟧.', 'I worked two days a week.'], fut: ['Haftada iki gün ⟦çalışacağım⟧.', 'I will work two days a week.'] } },
+  { tr: 'ay', eng: 'month / moon', ex: 'Ayda bir kitap okurum.', exEng: 'I read one book a month.',
+    ext: { aor: ['Ayda bir kitap ⟦okurum⟧.', 'I read one book a month.'], cont: ['Ayda bir kitap ⟦okuyorum⟧.', 'I am reading one book a month.'], past: ['Ayda bir kitap ⟦okudum⟧.', 'I read one book a month.'], fut: ['Ayda bir kitap ⟦okuyacağım⟧.', 'I will read one book a month.'] } },
+  { tr: 'yıl', eng: 'year', ex: 'Yılda bir kez tatile gideriz.', exEng: 'We go on holiday once a year.',
+    ext: { aor: ['Yılda bir kez tatile ⟦gideriz⟧.', 'We go on holiday once a year.'], cont: ['Yılda bir kez tatile ⟦gidiyoruz⟧.', 'We are going on holiday once a year.'], past: ['Yılda bir kez tatile ⟦gittik⟧.', 'We went on holiday once a year.'], fut: ['Yılda bir kez tatile ⟦gideceğiz⟧.', 'We will go on holiday once a year.'] } },
+  { tr: 'saat', eng: 'hour / clock', ex: 'Toplantı saat onda başlar.', exEng: 'The meeting starts at ten.',
+    ext: { aor: ['Toplantı saat onda ⟦başlar⟧.', 'The meeting starts at ten.'], cont: ['Toplantı saat onda ⟦başlıyor⟧.', 'The meeting is starting at ten.'], past: ['Toplantı saat onda ⟦başladı⟧.', 'The meeting started at ten.'], fut: ['Toplantı saat onda ⟦başlayacak⟧.', 'The meeting will start at ten.'] } },
+  { tr: 'zaman', eng: 'time', ex: 'Boş zamanımda resim yaparım.', exEng: 'I paint in my free time.',
+    ext: { aor: ['Boş zamanımda resim ⟦yaparım⟧.', 'I paint in my free time.'], cont: ['Boş zamanımda resim ⟦yapıyorum⟧.', 'I am painting in my free time.'], past: ['Boş zamanımda resim ⟦yaptım⟧.', 'I painted in my free time.'], fut: ['Boş zamanımda resim ⟦yapacağım⟧.', 'I will paint in my free time.'] } },
+  { tr: 'kitap', eng: 'book', ex: 'Her akşam bir kitap okurum.', exEng: 'I read a book every evening.',
+    ext: { aor: ['Her akşam bir kitap ⟦okurum⟧.', 'I read a book every evening.'], cont: ['Bu akşam bir kitap ⟦okuyorum⟧.', 'I am reading a book this evening.'], past: ['Dün akşam bir kitap ⟦okudum⟧.', 'I read a book yesterday evening.'], fut: ['Yarın akşam bir kitap ⟦okuyacağım⟧.', 'I will read a book tomorrow evening.'] } },
+  { tr: 'kalem', eng: 'pen', ex: 'Kalemle yazarım.', exEng: 'I write with a pen.',
+    ext: { aor: ['Kalemle ⟦yazarım⟧.', 'I write with a pen.'], cont: ['Kalemle ⟦yazıyorum⟧.', 'I am writing with a pen.'], past: ['Kalemle ⟦yazdım⟧.', 'I wrote with a pen.'], fut: ['Kalemle ⟦yazacağım⟧.', 'I will write with a pen.'] } },
+  { tr: 'defter', eng: 'notebook', ex: 'Öğrenci deftere yazar.', exEng: 'The student writes in the notebook.',
+    ext: { aor: ['Öğrenci deftere ⟦yazar⟧.', 'The student writes in the notebook.'], cont: ['Öğrenci deftere ⟦yazıyor⟧.', 'The student is writing in the notebook.'], past: ['Öğrenci deftere ⟦yazdı⟧.', 'The student wrote in the notebook.'], fut: ['Öğrenci deftere ⟦yazacak⟧.', 'The student will write in the notebook.'] } },
+  { tr: 'telefon', eng: 'phone', ex: 'Her akşam annemle telefonda konuşurum.', exEng: 'I talk to my mother on the phone every evening.',
+    ext: { aor: ['Her akşam annemle telefonda ⟦konuşurum⟧.', 'I talk to my mother on the phone every evening.'], cont: ['Bu akşam annemle telefonda ⟦konuşuyorum⟧.', 'I am talking to my mother on the phone this evening.'], past: ['Dün akşam annemle telefonda ⟦konuştum⟧.', 'I talked to my mother on the phone yesterday evening.'], fut: ['Yarın akşam annemle telefonda ⟦konuşacağım⟧.', 'I will talk to my mother on the phone tomorrow evening.'] } },
+  { tr: 'bilgisayar', eng: 'computer', ex: 'Her gün bilgisayarda çalışırım.', exEng: 'I work on the computer every day.',
+    ext: { aor: ['Her gün bilgisayarda ⟦çalışırım⟧.', 'I work on the computer every day.'], cont: ['Bugün bilgisayarda ⟦çalışıyorum⟧.', 'I am working on the computer today.'], past: ['Dün bilgisayarda ⟦çalıştım⟧.', 'I worked on the computer yesterday.'], fut: ['Yarın bilgisayarda ⟦çalışacağım⟧.', 'I will work on the computer tomorrow.'] } },
+  { tr: 'para', eng: 'money', ex: 'Para biriktiririm.', exEng: 'I save money.',
+    ext: { aor: ['Para ⟦biriktiririm⟧.', 'I save money.'], cont: ['Para ⟦biriktiriyorum⟧.', 'I am saving money.'], past: ['Para ⟦biriktirdim⟧.', 'I saved money.'], fut: ['Para ⟦biriktireceğim⟧.', 'I will save money.'] } },
+  { tr: 'çanta', eng: 'bag', ex: 'Çantamı taşırım.', exEng: 'I carry my bag.',
+    ext: { aor: ['Çantamı ⟦taşırım⟧.', 'I carry my bag.'], cont: ['Çantamı ⟦taşıyorum⟧.', 'I am carrying my bag.'], past: ['Çantamı ⟦taşıdım⟧.', 'I carried my bag.'], fut: ['Çantamı ⟦taşıyacağım⟧.', 'I will carry my bag.'] } },
+  { tr: 'ayakkabı', eng: 'shoes', ex: 'Yeni ayakkabılarımı giyerim.', exEng: 'I wear my new shoes.',
+    ext: { aor: ['Yeni ayakkabılarımı ⟦giyerim⟧.', 'I wear my new shoes.'], cont: ['Yeni ayakkabılarımı ⟦giyiyorum⟧.', 'I am wearing my new shoes.'], past: ['Yeni ayakkabılarımı ⟦giydim⟧.', 'I wore my new shoes.'], fut: ['Yeni ayakkabılarımı ⟦giyeceğim⟧.', 'I will wear my new shoes.'] } },
+  { tr: 'elbise', eng: 'dress', ex: 'Ablam mavi bir elbise giyer.', exEng: 'My older sister wears a blue dress.',
+    ext: { aor: ['Ablam mavi bir elbise ⟦giyer⟧.', 'My older sister wears a blue dress.'], cont: ['Ablam mavi bir elbise ⟦giyiyor⟧.', 'My older sister is wearing a blue dress.'], past: ['Ablam mavi bir elbise ⟦giydi⟧.', 'My older sister wore a blue dress.'], fut: ['Ablam mavi bir elbise ⟦giyecek⟧.', 'My older sister will wear a blue dress.'] } },
+  { tr: 'gömlek', eng: 'shirt', ex: 'Babam beyaz bir gömlek giyer.', exEng: 'My father wears a white shirt.',
+    ext: { aor: ['Babam beyaz bir gömlek ⟦giyer⟧.', 'My father wears a white shirt.'], cont: ['Babam beyaz bir gömlek ⟦giyiyor⟧.', 'My father is wearing a white shirt.'], past: ['Babam beyaz bir gömlek ⟦giydi⟧.', 'My father wore a white shirt.'], fut: ['Babam beyaz bir gömlek ⟦giyecek⟧.', 'My father will wear a white shirt.'] } },
+  { tr: 'şapka', eng: 'hat', ex: 'Her yaz şapka takarım.', exEng: 'I wear a hat every summer.',
+    ext: { aor: ['Her yaz şapka ⟦takarım⟧.', 'I wear a hat every summer.'], cont: ['Bu yaz şapka ⟦takıyorum⟧.', 'I am wearing a hat this summer.'], past: ['Geçen yaz şapka ⟦taktım⟧.', 'I wore a hat last summer.'], fut: ['Gelecek yaz şapka ⟦takacağım⟧.', 'I will wear a hat next summer.'] } },
+  { tr: 'baş', eng: 'head', ex: 'Başım ağrır.', exEng: 'My head hurts.',
+    ext: { aor: ['Başım ⟦ağrır⟧.', 'My head hurts.'], cont: ['Başım ⟦ağrıyor⟧.', 'My head is hurting.'], past: ['Başım ⟦ağrıdı⟧.', 'My head hurt.'], fut: ['Başım ⟦ağrıyacak⟧.', 'My head will hurt.'] } },
+  { tr: 'göz', eng: 'eye', ex: 'Gözlerimi kapatırım.', exEng: 'I close my eyes.',
+    ext: { aor: ['Gözlerimi ⟦kapatırım⟧.', 'I close my eyes.'], cont: ['Gözlerimi ⟦kapatıyorum⟧.', 'I am closing my eyes.'], past: ['Gözlerimi ⟦kapattım⟧.', 'I closed my eyes.'], fut: ['Gözlerimi ⟦kapatacağım⟧.', 'I will close my eyes.'] } },
+  { tr: 'el', eng: 'hand', ex: 'Ellerimi yıkarım.', exEng: 'I wash my hands.',
+    ext: { aor: ['Ellerimi ⟦yıkarım⟧.', 'I wash my hands.'], cont: ['Ellerimi ⟦yıkıyorum⟧.', 'I am washing my hands.'], past: ['Ellerimi ⟦yıkadım⟧.', 'I washed my hands.'], fut: ['Ellerimi ⟦yıkayacağım⟧.', 'I will wash my hands.'] } },
+  { tr: 'ayak', eng: 'foot', ex: 'Ayağım ağrır.', exEng: 'My foot hurts.',
+    ext: { aor: ['Ayağım ⟦ağrır⟧.', 'My foot hurts.'], cont: ['Ayağım ⟦ağrıyor⟧.', 'My foot is hurting.'], past: ['Ayağım ⟦ağrıdı⟧.', 'My foot hurt.'], fut: ['Ayağım ⟦ağrıyacak⟧.', 'My foot will hurt.'] } },
+  { tr: 'ağız', eng: 'mouth', ex: 'Doktorda ağzımı açarım.', exEng: 'I open my mouth at the doctor’s.',
+    ext: { aor: ['Doktorda ağzımı ⟦açarım⟧.', 'I open my mouth at the doctor’s.'], cont: ['Doktorda ağzımı ⟦açıyorum⟧.', 'I am opening my mouth at the doctor’s.'], past: ['Doktorda ağzımı ⟦açtım⟧.', 'I opened my mouth at the doctor’s.'], fut: ['Doktorda ağzımı ⟦açacağım⟧.', 'I will open my mouth at the doctor’s.'] } },
+  { tr: 'kulak', eng: 'ear', ex: 'Kulağım ağrır.', exEng: 'My ear hurts.',
+    ext: { aor: ['Kulağım ⟦ağrır⟧.', 'My ear hurts.'], cont: ['Kulağım ⟦ağrıyor⟧.', 'My ear is hurting.'], past: ['Kulağım ⟦ağrıdı⟧.', 'My ear hurt.'], fut: ['Kulağım ⟦ağrıyacak⟧.', 'My ear will hurt.'] } },
+  { tr: 'burun', eng: 'nose', ex: 'Köpek burnuyla her şeyi bulur.', exEng: 'The dog finds everything with its nose.',
+    ext: { aor: ['Köpek burnuyla her şeyi ⟦bulur⟧.', 'The dog finds everything with its nose.'], cont: ['Köpek burnuyla her şeyi ⟦buluyor⟧.', 'The dog is finding everything with its nose.'], past: ['Köpek burnuyla her şeyi ⟦buldu⟧.', 'The dog found everything with its nose.'], fut: ['Köpek burnuyla her şeyi ⟦bulacak⟧.', 'The dog will find everything with its nose.'] } },
+  { tr: 'saç', eng: 'hair', ex: 'Her sabah saçımı yıkarım.', exEng: 'I wash my hair every morning.',
+    ext: { aor: ['Her sabah saçımı ⟦yıkarım⟧.', 'I wash my hair every morning.'], cont: ['Bu sabah saçımı ⟦yıkıyorum⟧.', 'I am washing my hair this morning.'], past: ['Dün sabah saçımı ⟦yıkadım⟧.', 'I washed my hair yesterday morning.'], fut: ['Yarın sabah saçımı ⟦yıkayacağım⟧.', 'I will wash my hair tomorrow morning.'] } },
+  { tr: 'kalp', eng: 'heart', ex: 'Kalbim hızlı atar.', exEng: 'My heart beats fast.',
+    ext: { aor: ['Kalbim hızlı ⟦atar⟧.', 'My heart beats fast.'], cont: ['Kalbim hızlı ⟦atıyor⟧.', 'My heart is beating fast.'], past: ['Kalbim hızlı ⟦attı⟧.', 'My heart beat fast.'], fut: ['Kalbim hızlı ⟦atacak⟧.', 'My heart will beat fast.'] } },
+  { tr: 'yüz', eng: 'face', ex: 'Her sabah yüzümü yıkarım.', exEng: 'I wash my face every morning.',
+    ext: { aor: ['Her sabah yüzümü ⟦yıkarım⟧.', 'I wash my face every morning.'], cont: ['Bu sabah yüzümü ⟦yıkıyorum⟧.', 'I am washing my face this morning.'], past: ['Dün sabah yüzümü ⟦yıkadım⟧.', 'I washed my face yesterday morning.'], fut: ['Yarın sabah yüzümü ⟦yıkayacağım⟧.', 'I will wash my face tomorrow morning.'] } },
+  { tr: 'güneş', eng: 'sun', ex: 'Güneş saat altıda doğar.', exEng: 'The sun rises at six.',
+    ext: { aor: ['Güneş saat altıda ⟦doğar⟧.', 'The sun rises at six.'], cont: ['Güneş saat altıda ⟦doğuyor⟧.', 'The sun is rising at six.'], past: ['Güneş saat altıda ⟦doğdu⟧.', 'The sun rose at six.'], fut: ['Güneş saat altıda ⟦doğacak⟧.', 'The sun will rise at six.'] } },
+  { tr: 'yıldız', eng: 'star', ex: 'Gökyüzünde yıldızları görürüz.', exEng: 'We see the stars in the sky.',
+    ext: { aor: ['Gökyüzünde yıldızları ⟦görürüz⟧.', 'We see the stars in the sky.'], cont: ['Gökyüzünde yıldızları ⟦görüyoruz⟧.', 'We see the stars in the sky.'], past: ['Gökyüzünde yıldızları ⟦gördük⟧.', 'We saw the stars in the sky.'], fut: ['Gökyüzünde yıldızları ⟦göreceğiz⟧.', 'We will see the stars in the sky.'] } },
+  { tr: 'hava', eng: 'weather / air', ex: 'Kışın hava soğuk olur.', exEng: 'The weather gets cold in winter.',
+    ext: { aor: ['Kışın hava soğuk ⟦olur⟧.', 'The weather gets cold in winter.'], cont: ['Bu kış hava soğuk ⟦oluyor⟧.', 'The weather is getting cold this winter.'], past: ['Geçen kış hava soğuk ⟦oldu⟧.', 'The weather got cold last winter.'], fut: ['Gelecek kış hava soğuk ⟦olacak⟧.', 'The weather will get cold next winter.'] } },
+  { tr: 'yağmur', eng: 'rain', ex: 'Her gün yağmur yağar.', exEng: 'It rains every day.',
+    ext: { aor: ['Her gün yağmur ⟦yağar⟧.', 'It rains every day.'], cont: ['Bugün yağmur ⟦yağıyor⟧.', 'It is raining today.'], past: ['Dün yağmur ⟦yağdı⟧.', 'It rained yesterday.'], fut: ['Yarın yağmur ⟦yağacak⟧.', 'It will rain tomorrow.'] } },
+  { tr: 'kar', eng: 'snow', ex: 'Kışın kar yağar.', exEng: 'It snows in winter.',
+    ext: { aor: ['Kışın kar ⟦yağar⟧.', 'It snows in winter.'], cont: ['Bu kış kar ⟦yağıyor⟧.', 'It is snowing this winter.'], past: ['Geçen kış kar ⟦yağdı⟧.', 'It snowed last winter.'], fut: ['Gelecek kış kar ⟦yağacak⟧.', 'It will snow next winter.'] } },
+  { tr: 'ağaç', eng: 'tree', ex: 'Dedem bahçeye bir ağaç diker.', exEng: 'My grandfather plants a tree in the garden.',
+    ext: { aor: ['Dedem bahçeye bir ağaç ⟦diker⟧.', 'My grandfather plants a tree in the garden.'], cont: ['Dedem bahçeye bir ağaç ⟦dikiyor⟧.', 'My grandfather is planting a tree in the garden.'], past: ['Dedem bahçeye bir ağaç ⟦dikti⟧.', 'My grandfather planted a tree in the garden.'], fut: ['Dedem bahçeye bir ağaç ⟦dikecek⟧.', 'My grandfather will plant a tree in the garden.'] } },
+  { tr: 'çiçek', eng: 'flower', ex: 'Her sabah annem çiçekleri sular.', exEng: 'My mother waters the flowers every morning.',
+    ext: { aor: ['Her sabah annem çiçekleri ⟦sular⟧.', 'My mother waters the flowers every morning.'], cont: ['Bu sabah annem çiçekleri ⟦suluyor⟧.', 'My mother is watering the flowers this morning.'], past: ['Dün sabah annem çiçekleri ⟦suladı⟧.', 'My mother watered the flowers yesterday morning.'], fut: ['Yarın sabah annem çiçekleri ⟦sulayacak⟧.', 'My mother will water the flowers tomorrow morning.'] } },
+  { tr: 'köpek', eng: 'dog', ex: 'Her akşam köpeğimle parkta yürürüm.', exEng: 'I walk my dog in the park every evening.',
+    ext: { aor: ['Her akşam köpeğimle parkta ⟦yürürüm⟧.', 'I walk my dog in the park every evening.'], cont: ['Bu akşam köpeğimle parkta ⟦yürüyorum⟧.', 'I am walking my dog in the park this evening.'], past: ['Dün akşam köpeğimle parkta ⟦yürüdüm⟧.', 'I walked my dog in the park yesterday evening.'], fut: ['Yarın akşam köpeğimle parkta ⟦yürüyeceğim⟧.', 'I will walk my dog in the park tomorrow evening.'] } },
+  { tr: 'kedi', eng: 'cat', ex: 'Kedi masanın altında uyur.', exEng: 'The cat sleeps under the table.',
+    ext: { aor: ['Kedi masanın altında ⟦uyur⟧.', 'The cat sleeps under the table.'], cont: ['Kedi masanın altında ⟦uyuyor⟧.', 'The cat is sleeping under the table.'], past: ['Kedi masanın altında ⟦uyudu⟧.', 'The cat slept under the table.'], fut: ['Kedi masanın altında ⟦uyuyacak⟧.', 'The cat will sleep under the table.'] } },
+  { tr: 'kuş', eng: 'bird', ex: 'Her sabah kuşlar ağaçta öterler.', exEng: 'The birds sing in the tree every morning.',
+    ext: { aor: ['Her sabah kuşlar ağaçta ⟦öterler⟧.', 'The birds sing in the tree every morning.'], cont: ['Bu sabah kuşlar ağaçta ⟦ötüyorlar⟧.', 'The birds are singing in the tree this morning.'], past: ['Dün sabah kuşlar ağaçta ⟦öttüler⟧.', 'The birds sang in the tree yesterday morning.'], fut: ['Yarın sabah kuşlar ağaçta ⟦ötecekler⟧.', 'The birds will sing in the tree tomorrow morning.'] } },
+  { tr: 'at', eng: 'horse', ex: 'At çok hızlı koşar.', exEng: 'The horse runs very fast.',
+    ext: { aor: ['At çok hızlı ⟦koşar⟧.', 'The horse runs very fast.'], cont: ['At çok hızlı ⟦koşuyor⟧.', 'The horse is running very fast.'], past: ['At çok hızlı ⟦koştu⟧.', 'The horse ran very fast.'], fut: ['At çok hızlı ⟦koşacak⟧.', 'The horse will run very fast.'] } },
+  { tr: 'iş', eng: 'work / job', ex: 'Her gün işe giderim.', exEng: 'I go to work every day.',
+    ext: { aor: ['Her gün işe ⟦giderim⟧.', 'I go to work every day.'], cont: ['Bugün işe ⟦gidiyorum⟧.', 'I am going to work today.'], past: ['Dün işe ⟦gittim⟧.', 'I went to work yesterday.'], fut: ['Yarın işe ⟦gideceğim⟧.', 'I will go to work tomorrow.'] } },
+  { tr: 'öğretmen', eng: 'teacher', ex: 'Öğretmen dersi anlatır.', exEng: 'The teacher explains the lesson.',
+    ext: { aor: ['Öğretmen dersi ⟦anlatır⟧.', 'The teacher explains the lesson.'], cont: ['Öğretmen dersi ⟦anlatıyor⟧.', 'The teacher is explaining the lesson.'], past: ['Öğretmen dersi ⟦anlattı⟧.', 'The teacher explained the lesson.'], fut: ['Öğretmen dersi ⟦anlatacak⟧.', 'The teacher will explain the lesson.'] } },
+  { tr: 'öğrenci', eng: 'student', ex: 'Öğrenciler kütüphanede çalışırlar.', exEng: 'The students study in the library.',
+    ext: { aor: ['Öğrenciler kütüphanede ⟦çalışırlar⟧.', 'The students study in the library.'], cont: ['Öğrenciler kütüphanede ⟦çalışıyorlar⟧.', 'The students are studying in the library.'], past: ['Öğrenciler kütüphanede ⟦çalıştılar⟧.', 'The students studied in the library.'], fut: ['Öğrenciler kütüphanede ⟦çalışacaklar⟧.', 'The students will study in the library.'] } },
+  { tr: 'doktor', eng: 'doctor', ex: 'Doktora giderim.', exEng: 'I go to the doctor.',
+    ext: { aor: ['Doktora ⟦giderim⟧.', 'I go to the doctor.'], cont: ['Doktora ⟦gidiyorum⟧.', 'I am going to the doctor.'], past: ['Doktora ⟦gittim⟧.', 'I went to the doctor.'], fut: ['Doktora ⟦gideceğim⟧.', 'I will go to the doctor.'] } },
+  { tr: 'isim', eng: 'name', ex: 'Öğretmen isimleri yazar.', exEng: 'The teacher writes the names.',
+    ext: { aor: ['Öğretmen isimleri ⟦yazar⟧.', 'The teacher writes the names.'], cont: ['Öğretmen isimleri ⟦yazıyor⟧.', 'The teacher is writing the names.'], past: ['Öğretmen isimleri ⟦yazdı⟧.', 'The teacher wrote the names.'], fut: ['Öğretmen isimleri ⟦yazacak⟧.', 'The teacher will write the names.'] } },
+  { tr: 'dil', eng: 'language', ex: 'Yeni bir dil öğrenirim.', exEng: 'I learn a new language.',
+    ext: { aor: ['Yeni bir dil ⟦öğrenirim⟧.', 'I learn a new language.'], cont: ['Yeni bir dil ⟦öğreniyorum⟧.', 'I am learning a new language.'], past: ['Yeni bir dil ⟦öğrendim⟧.', 'I learned a new language.'], fut: ['Yeni bir dil ⟦öğreneceğim⟧.', 'I will learn a new language.'] } },
+  { tr: 'soru', eng: 'question', ex: 'Öğrenci bir soru sorar.', exEng: 'The student asks a question.',
+    ext: { aor: ['Öğrenci bir soru ⟦sorar⟧.', 'The student asks a question.'], cont: ['Öğrenci bir soru ⟦soruyor⟧.', 'The student is asking a question.'], past: ['Öğrenci bir soru ⟦sordu⟧.', 'The student asked a question.'], fut: ['Öğrenci bir soru ⟦soracak⟧.', 'The student will ask a question.'] } },
+  { tr: 'cevap', eng: 'answer', ex: 'Soruya cevap veririm.', exEng: 'I answer the question.',
+    ext: { aor: ['Soruya cevap ⟦veririm⟧.', 'I answer the question.'], cont: ['Soruya cevap ⟦veriyorum⟧.', 'I am answering the question.'], past: ['Soruya cevap ⟦verdim⟧.', 'I answered the question.'], fut: ['Soruya cevap ⟦vereceğim⟧.', 'I will answer the question.'] } },
+  { tr: 'renk', eng: 'colour', ex: 'Ressam renkleri karıştırır.', exEng: 'The painter mixes the colours.',
+    ext: { aor: ['Ressam renkleri ⟦karıştırır⟧.', 'The painter mixes the colours.'], cont: ['Ressam renkleri ⟦karıştırıyor⟧.', 'The painter is mixing the colours.'], past: ['Ressam renkleri ⟦karıştırdı⟧.', 'The painter mixed the colours.'], fut: ['Ressam renkleri ⟦karıştıracak⟧.', 'The painter will mix the colours.'] } },
+  { tr: 'müzik', eng: 'music', ex: 'Her akşam müzik dinlerim.', exEng: 'I listen to music every evening.',
+    ext: { aor: ['Her akşam müzik ⟦dinlerim⟧.', 'I listen to music every evening.'], cont: ['Bu akşam müzik ⟦dinliyorum⟧.', 'I am listening to music this evening.'], past: ['Dün akşam müzik ⟦dinledim⟧.', 'I listened to music yesterday evening.'], fut: ['Yarın akşam müzik ⟦dinleyeceğim⟧.', 'I will listen to music tomorrow evening.'] } },
+  { tr: 'film', eng: 'film', ex: 'Hafta sonları bir film izleriz.', exEng: 'We watch a film at weekends.',
+    ext: { aor: ['Hafta sonları bir film ⟦izleriz⟧.', 'We watch a film at weekends.'], cont: ['Bu hafta sonu bir film ⟦izliyoruz⟧.', 'We are watching a film this weekend.'], past: ['Geçen hafta sonu bir film ⟦izledik⟧.', 'We watched a film last weekend.'], fut: ['Gelecek hafta sonu bir film ⟦izleyeceğiz⟧.', 'We will watch a film next weekend.'] } },
+  { tr: 'oyun', eng: 'game', ex: 'Her akşam çocuklar bir oyun oynarlar.', exEng: 'The children play a game every evening.',
+    ext: { aor: ['Her akşam çocuklar bir oyun ⟦oynarlar⟧.', 'The children play a game every evening.'], cont: ['Bu akşam çocuklar bir oyun ⟦oynuyorlar⟧.', 'The children are playing a game this evening.'], past: ['Dün akşam çocuklar bir oyun ⟦oynadılar⟧.', 'The children played a game yesterday evening.'], fut: ['Yarın akşam çocuklar bir oyun ⟦oynayacaklar⟧.', 'The children will play a game tomorrow evening.'] } },
+  { tr: 'hediye', eng: 'gift', ex: 'Anneme bir hediye alırım.', exEng: 'I buy my mother a present.',
+    ext: { aor: ['Anneme bir hediye ⟦alırım⟧.', 'I buy my mother a present.'], cont: ['Anneme bir hediye ⟦alıyorum⟧.', 'I am buying my mother a present.'], past: ['Anneme bir hediye ⟦aldım⟧.', 'I bought my mother a present.'], fut: ['Anneme bir hediye ⟦alacağım⟧.', 'I will buy my mother a present.'] } },
+  { tr: 'fiyat', eng: 'price', ex: 'Satıcı fiyatı söyler.', exEng: 'The seller tells the price.',
+    ext: { aor: ['Satıcı fiyatı ⟦söyler⟧.', 'The seller tells the price.'], cont: ['Satıcı fiyatı ⟦söylüyor⟧.', 'The seller is telling the price.'], past: ['Satıcı fiyatı ⟦söyledi⟧.', 'The seller told the price.'], fut: ['Satıcı fiyatı ⟦söyleyecek⟧.', 'The seller will tell the price.'] } },
+  { tr: 'bilet', eng: 'ticket', ex: 'İki bilet alırım.', exEng: 'I buy two tickets.',
+    ext: { aor: ['İki bilet ⟦alırım⟧.', 'I buy two tickets.'], cont: ['İki bilet ⟦alıyorum⟧.', 'I am buying two tickets.'], past: ['İki bilet ⟦aldım⟧.', 'I bought two tickets.'], fut: ['İki bilet ⟦alacağım⟧.', 'I will buy two tickets.'] } },
+  { tr: 'harita', eng: 'map', ex: 'Haritaya bakarım.', exEng: 'I look at the map.',
+    ext: { aor: ['Haritaya ⟦bakarım⟧.', 'I look at the map.'], cont: ['Haritaya ⟦bakıyorum⟧.', 'I am looking at the map.'], past: ['Haritaya ⟦baktım⟧.', 'I looked at the map.'], fut: ['Haritaya ⟦bakacağım⟧.', 'I will look at the map.'] } }
 ];
 
 /* Present simple (geniş zaman): ben sen o biz siz onlar, space-separated */
@@ -2892,6 +3105,7 @@ function handleTrWordAnswer(mode, chosen) {
   if (correct) {
     showFeedback(mode, true, res.justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
       res.justLearned ? item.tr + ' fully learned!' : res.now + ' / ' + MAX_PTS + ' pts');
+    trRevealExample(mode);
   } else {
     showFeedback(mode, false, res.now < res.prev ? '-1 pt' : 'Miss!', 'Correct: ' + item.eng);
     trShowExample(mode, item);
@@ -2969,6 +3183,7 @@ function handleTrConjAnswer(chosen) {
   if (correct) {
     showFeedback('tconj', true, res.justLearned ? 'Learned!' : '+' + CORRECT_PT + ' pts',
       res.justLearned ? item.inf + ' fully learned!' : sentence + ' · ' + res.now + ' / ' + MAX_PTS + ' pts');
+    trRevealExample('tconj');
   } else {
     var f = trForms(item);
     showFeedback('tconj', false, res.now < res.prev ? '-1 pt' : 'Miss!',
@@ -3032,18 +3247,34 @@ function trDontKnow(mode) {
 }
 
 /* ── Example sentence ────────────────────────────────────────
-   Shown after "I don't know" or a wrong answer. Verbs and Conjugate use
-   the verb's example (TR_VERBS), nouns their own. */
+   Every Turkish verb and noun has an example in four tenses (ext).
+   • Before answering, "Example" shows it WITHOUT the translation (in
+     Conjugate the answer itself is blanked out if the sentence contains it).
+   • After a wrong answer or "I don't know" it opens with the translation.
+   • Tabs switch the tense; the last choice is remembered.
+   Verbs and Conjugate use the verb's example, nouns their own. Words added
+   in /admin only have one sentence (ex / exEng), shown without tabs. */
+var TR_EX_TENSES = [
+  { k: 'aor',  tr: 'Geniş',   en: 'present simple' },
+  { k: 'cont', tr: 'Şimdiki', en: 'present cont.' },
+  { k: 'past', tr: 'Geçmiş',  en: 'past' },
+  { k: 'fut',  tr: 'Gelecek', en: 'future' }
+];
+var TR_EX_TENSE_KEY = 'ua_tr_example_tense';
+var trExTense = 'aor';
+try { var savedTense = localStorage.getItem(TR_EX_TENSE_KEY); if (savedTense) trExTense = savedTense; } catch(e) {}
+var trExView = { tverbs: null, tnouns: null, tconj: null };   /* { item, reveal } while the box is open */
+
 function trExampleFor(mode, item) {
   if (mode === 'tconj') {
-    for (var i = 0; i < TR_VERBS.length; i++) if (TR_VERBS[i].tr === item.inf && TR_VERBS[i].ex) return TR_VERBS[i];
+    for (var i = 0; i < TR_VERBS.length; i++) if (TR_VERBS[i].tr === item.inf && (TR_VERBS[i].ext || TR_VERBS[i].ex)) return TR_VERBS[i];
     return item.ex ? item : null;
   }
-  return item.ex ? item : null;
+  return (item.ext || item.ex) ? item : null;
 }
+function trEsc(t) { return String(t).replace(/[&<>"]/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 /* highlight the word in the sentence: the exact form, else its stem */
 function trHighlight(sentence, word, form) {
-  var esc = function(t) { return t.replace(/[&<>"]/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var lower = sentence.toLocaleLowerCase('tr-TR');
   var needles = [form, word, String(word).replace(/m[ae]k$/, '')]
     .filter(Boolean).map(function(n) { return String(n).toLocaleLowerCase('tr-TR'); });
@@ -3053,26 +3284,91 @@ function trHighlight(sentence, word, form) {
     if (at === -1 || stem.length < 2) continue;
     var end = at; while (end < sentence.length && /[\wçğıöşüâîû]/i.test(sentence.charAt(end))) end++;
     var start = at; while (start > 0 && /[\wçğıöşüâîû]/i.test(sentence.charAt(start - 1))) start--;
-    return esc(sentence.slice(0, start)) + '<mark>' + esc(sentence.slice(start, end)) + '</mark>' + esc(sentence.slice(end));
+    return trEsc(sentence.slice(0, start)) + '<mark>' + trEsc(sentence.slice(start, end)) + '</mark>' + trEsc(sentence.slice(end));
   }
-  return esc(sentence);
+  return trEsc(sentence);
 }
-function trShowExample(mode, item, form) {
+/* Turkish sentence → HTML. ⟦…⟧ marks the verb (verbs/conjugate highlight it;
+   nouns highlight the noun instead). `mask` blanks out that exact form. */
+function trSentenceHtml(mode, raw, item, mask) {
+  var plain = raw.replace(/[⟦⟧]/g, '');
+  if (mask) {
+    var m = /⟦([^⟧]*)⟧/.exec(raw);
+    if (m && m[1].toLocaleLowerCase('tr-TR') === String(mask).toLocaleLowerCase('tr-TR')) {
+      return trEsc(raw.slice(0, m.index).replace(/[⟦⟧]/g, '')) + '<span class="gap">&nbsp;</span>' +
+             trEsc(raw.slice(m.index + m[0].length).replace(/[⟦⟧]/g, ''));
+    }
+  }
+  if (mode === 'tnouns') return trHighlight(plain, item.tr);
+  if (raw.indexOf('⟦') !== -1) {
+    return trEsc(raw).replace(/⟦([^⟧]*)⟧/g, '<mark>$1</mark>');
+  }
+  return trHighlight(plain, mode === 'tconj' ? item.inf : item.tr);
+}
+function trRenderExample(mode) {
   var box = document.getElementById(mode + '-example');
+  var view = trExView[mode];
   if (!box) return;
-  var ex = trExampleFor(mode, item);
-  if (!ex) { box.className = 'example-box'; box.innerHTML = ''; return; }
-  var word = mode === 'tconj' ? item.inf : item.tr;
-  box.innerHTML = '<div class="ex-label">Example</div>' +
-    '<div class="ex-tr">' + trHighlight(String(ex.ex), word, form) + '</div>' +
-    (ex.exEng ? '<div class="ex-en" lang="en"></div>' : '');
-  if (ex.exEng) box.querySelector('.ex-en').textContent = ex.exEng;
+  if (!view) { box.className = 'example-box'; box.innerHTML = ''; trSyncExButton(mode); return; }
+  var ex = trExampleFor(mode, view.item);
+  if (!ex) { trExView[mode] = null; trRenderExample(mode); return; }
+  var pair = ex.ext ? (ex.ext[trExTense] || ex.ext.aor) : [ex.ex, ex.exEng];
+  var mask = (!view.reveal && mode === 'tconj' && trState.tconj.q) ? trState.tconj.q.correct : null;
+  var html = '<div class="ex-label">Example</div>';
+  if (ex.ext) {
+    html += '<div class="ex-tabs" role="tablist">' + TR_EX_TENSES.map(function(t) {
+      return '<button type="button" class="ex-tab' + (t.k === trExTense ? ' active' : '') + '" data-tense="' + t.k + '" lang="tr">' +
+             t.tr + '<small lang="en">' + t.en + '</small></button>';
+    }).join('') + '</div>';
+  }
+  html += '<div class="ex-tr">' + trSentenceHtml(mode, String(pair[0]), view.item, mask) + '</div>';
+  if (view.reveal && pair[1]) html += '<div class="ex-en" lang="en"></div>';
+  else if (pair[1]) html += '<div class="ex-en pending" lang="en">translation shows after you answer</div>';
+  box.innerHTML = html;
+  if (view.reveal && pair[1]) box.querySelector('.ex-en').textContent = pair[1];
   box.className = 'example-box show';
+  trSyncExButton(mode);
+}
+function trSyncExButton(mode) {
+  var b = document.getElementById(mode + '-exbtn');
+  if (!b) return;
+  var st = trState[mode], item = st && st.current !== null ? trList(mode)[st.current] : null;
+  var has = !!(item && trExampleFor(mode, item));
+  b.className = 'idk-btn ex-btn' + (has ? '' : ' hidden');
+  b.querySelector('.ex-btn-label').textContent = trExView[mode] ? 'Hide example' : 'Example';
+}
+/* "Example" button / E key */
+function trToggleExample(mode) {
+  var st = trState[mode];
+  if (!st || st.current === null) return;
+  if (trExView[mode]) { trExView[mode] = null; trRenderExample(mode); return; }
+  trExView[mode] = { item: trList(mode)[st.current], reveal: st.answered };
+  trRenderExample(mode);
+}
+/* after a wrong answer / "I don't know": open with translation */
+function trShowExample(mode, item) {
+  trExView[mode] = { item: item, reveal: true };
+  trRenderExample(mode);
+}
+/* after a correct answer: if it's open, reveal the translation */
+function trRevealExample(mode) {
+  if (trExView[mode]) { trExView[mode].reveal = true; trRenderExample(mode); }
 }
 function trHideExample(mode) {
-  var box = document.getElementById(mode + '-example');
-  if (box) { box.className = 'example-box'; box.innerHTML = ''; }
+  trExView[mode] = null;
+  trRenderExample(mode);
 }
+['tverbs', 'tnouns', 'tconj'].forEach(function(mode) {
+  var box = document.getElementById(mode + '-example');
+  if (!box) return;
+  box.addEventListener('click', function(e) {
+    var t = e.target.closest('.ex-tab');
+    if (!t) return;
+    trExTense = t.getAttribute('data-tense');
+    try { localStorage.setItem(TR_EX_TENSE_KEY, trExTense); } catch(err) {}
+    trRenderExample(mode);
+  });
+});
 
 /* ── Progress grids ── */
 var TR_TILE_PREFIX = { tverbs: 'tvtile-', tnouns: 'tntile-', tconj: 'tctile-' };
@@ -4473,6 +4769,11 @@ document.addEventListener('keydown', function(e) {
   if ((e.code === 'Space' || e.code === 'Enter') && answered) {
     e.preventDefault();
     nextQ(tab);
+    return;
+  }
+  if (e.code === 'KeyE' && trState[tab]) {
+    e.preventDefault();
+    trToggleExample(tab);
     return;
   }
   if (!answered && e.code === 'KeyD' && trState[tab]) {

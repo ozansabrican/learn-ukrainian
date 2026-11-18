@@ -234,7 +234,8 @@ describe('custom words + admin', () => {
     const withEx = await post('tr_nouns', { tr: 'balkon', eng: 'balcony', ex: 'Balkonda çay içeriz.', exEng: 'We drink tea on the balcony.' });
     assert.equal(withEx.statusCode, 201, withEx.body);
     assert.equal(withEx.json().ex, 'Balkonda çay içeriz.');
-    assert.equal(decks.tr_nouns.find((n) => n.key === 'kitap')?.ex, 'Bu kitap çok ilginç.');
+    assert.equal(decks.tr_nouns.find((n) => n.key === 'kitap')?.ex, 'Her akşam bir kitap okurum.');
+    assert.deepEqual((decks.tr_nouns.find((n) => n.key === 'kitap') as { ext?: { past: string[] } }).ext?.past, ['Dün akşam bir kitap ⟦okudum⟧.', 'I read a book yesterday evening.']);
     assert.equal((await post('tr_conj', { inf: 'uçmak', eng: 'to fly', pres: 'uçarım uçarsın uçar uçarız uçarsınız uçarlar' })).statusCode, 201);
     assert.equal((await post('tr_conj', { inf: 'x', eng: 'x', pres: 'a b c' })).statusCode, 400, 'needs 6 forms');
   });
