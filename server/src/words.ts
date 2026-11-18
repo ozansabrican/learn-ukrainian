@@ -101,6 +101,8 @@ export const DECK_INFO: Record<DeckName, DeckInfo> = {
     fields: [
       { name: 'tr', label: 'Turkish', required: true, placeholder: 'okumak' },
       { name: 'eng', label: 'English', required: true, placeholder: 'to read' },
+      { name: 'ex', label: 'Example', required: false, emptyValue: '', placeholder: 'Akşamları kitap okurum.', hint: 'optional; shown after a wrong answer or “I don’t know”' },
+      { name: 'exEng', label: 'Example (English)', required: false, emptyValue: '', placeholder: 'I read books in the evenings.' },
     ],
   },
   tr_nouns: {
@@ -109,6 +111,8 @@ export const DECK_INFO: Record<DeckName, DeckInfo> = {
     fields: [
       { name: 'tr', label: 'Turkish', required: true, placeholder: 'kitap' },
       { name: 'eng', label: 'English', required: true, placeholder: 'book' },
+      { name: 'ex', label: 'Example', required: false, emptyValue: '', placeholder: 'Bu kitap çok ilginç.', hint: 'optional; shown after a wrong answer or “I don’t know”' },
+      { name: 'exEng', label: 'Example (English)', required: false, emptyValue: '', placeholder: 'This book is very interesting.' },
     ],
   },
   tr_conj: {

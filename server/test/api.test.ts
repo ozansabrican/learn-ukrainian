@@ -231,6 +231,10 @@ describe('custom words + admin', () => {
     assert.equal((await post('tr_nouns', { tr: 'masa', eng: 'table' })).statusCode, 409, 'built-in noun');
     assert.equal((await post('tr_nouns', { tr: 'pencere kenarı', eng: 'window sill' })).statusCode, 201);
     assert.equal((await post('tr_verbs', { tr: 'uçmak', eng: 'to fly' })).statusCode, 201);
+    const withEx = await post('tr_nouns', { tr: 'balkon', eng: 'balcony', ex: 'Balkonda çay içeriz.', exEng: 'We drink tea on the balcony.' });
+    assert.equal(withEx.statusCode, 201, withEx.body);
+    assert.equal(withEx.json().ex, 'Balkonda çay içeriz.');
+    assert.equal(decks.tr_nouns.find((n) => n.key === 'kitap')?.ex, 'Bu kitap çok ilginç.');
     assert.equal((await post('tr_conj', { inf: 'uçmak', eng: 'to fly', pres: 'uçarım uçarsın uçar uçarız uçarsınız uçarlar' })).statusCode, 201);
     assert.equal((await post('tr_conj', { inf: 'x', eng: 'x', pres: 'a b c' })).statusCode, 400, 'needs 6 forms');
   });

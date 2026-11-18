@@ -166,6 +166,12 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .kbd-key.wide { flex: 1.6 1 0; max-width: 64px; font-size: 0.9rem; }
 .kbd.locked .kbd-key { opacity: 0.4; pointer-events: none; }
 .quiz-wrap.typing .idk-btn .key-hint { display: none; }
+.example-box { display: none; margin: 12px auto 0; max-width: 440px; text-align: left; background: #0c151f; border: 1px solid #1b2d3e; border-left: 3px solid #f5c518; border-radius: 10px; padding: 10px 14px; }
+.example-box.show { display: block; }
+.example-box .ex-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #4a6275; margin-bottom: 4px; }
+.example-box .ex-tr { font-size: 1rem; font-weight: 600; color: #fff; line-height: 1.4; }
+.example-box .ex-tr mark { background: none; color: #f5c518; }
+.example-box .ex-en { font-size: 0.8rem; color: #8aa0b2; margin-top: 2px; }
 .kbd-note { font-size: 0.65rem; color: #2a4a60; text-align: center; margin-top: 8px; }
 @media (max-width: 440px) { .kbd-key { height: 38px; font-size: 0.92rem; } }
 
@@ -490,6 +496,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
       <div class="feedback-msg" id="tverbs-fb-msg"></div>
       <div class="feedback-sub" id="tverbs-fb-sub"></div>
     </div>
+    <div class="example-box" id="tverbs-example" lang="tr"></div>
     <button class="next-btn" id="tverbs-next" onclick="nextQ('tverbs')">Next &#8594;</button>
   </div>
   <div class="completion" id="tverbs-done">
@@ -514,6 +521,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
       <div class="feedback-msg" id="tnouns-fb-msg"></div>
       <div class="feedback-sub" id="tnouns-fb-sub"></div>
     </div>
+    <div class="example-box" id="tnouns-example" lang="tr"></div>
     <button class="next-btn" id="tnouns-next" onclick="nextQ('tnouns')">Next &#8594;</button>
   </div>
   <div class="completion" id="tnouns-done">
@@ -538,6 +546,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
       <div class="feedback-msg" id="tconj-fb-msg"></div>
       <div class="feedback-sub" id="tconj-fb-sub"></div>
     </div>
+    <div class="example-box" id="tconj-example" lang="tr"></div>
     <button class="next-btn" id="tconj-next" onclick="nextQ('tconj')">Next &#8594;</button>
   </div>
   <div class="completion" id="tconj-done">
@@ -2020,204 +2029,204 @@ var CONJ = [
    TURKISH (A1)
 ══════════════════════════════════════════ */
 var TR_VERBS = [
-  { tr: 'olmak', eng: 'to be / to become' },
-  { tr: 'gelmek', eng: 'to come' },
-  { tr: 'gitmek', eng: 'to go' },
-  { tr: 'yapmak', eng: 'to do / to make' },
-  { tr: 'etmek', eng: 'to do (with nouns)' },
-  { tr: 'almak', eng: 'to take / to buy' },
-  { tr: 'vermek', eng: 'to give' },
-  { tr: 'görmek', eng: 'to see' },
-  { tr: 'bilmek', eng: 'to know' },
-  { tr: 'istemek', eng: 'to want' },
-  { tr: 'demek', eng: 'to say' },
-  { tr: 'söylemek', eng: 'to say / to tell' },
-  { tr: 'konuşmak', eng: 'to speak' },
-  { tr: 'yemek', eng: 'to eat' },
-  { tr: 'içmek', eng: 'to drink' },
-  { tr: 'okumak', eng: 'to read' },
-  { tr: 'yazmak', eng: 'to write' },
-  { tr: 'dinlemek', eng: 'to listen' },
-  { tr: 'bakmak', eng: 'to look' },
-  { tr: 'izlemek', eng: 'to watch' },
-  { tr: 'çalışmak', eng: 'to work / to study' },
-  { tr: 'öğrenmek', eng: 'to learn' },
-  { tr: 'öğretmek', eng: 'to teach' },
-  { tr: 'anlamak', eng: 'to understand' },
-  { tr: 'sevmek', eng: 'to love / to like' },
-  { tr: 'beğenmek', eng: 'to like' },
-  { tr: 'beklemek', eng: 'to wait' },
-  { tr: 'bulmak', eng: 'to find' },
-  { tr: 'aramak', eng: 'to look for / to call' },
-  { tr: 'sormak', eng: 'to ask' },
-  { tr: 'açmak', eng: 'to open' },
-  { tr: 'kapatmak', eng: 'to close' },
-  { tr: 'başlamak', eng: 'to begin' },
-  { tr: 'bitirmek', eng: 'to finish' },
-  { tr: 'oturmak', eng: 'to sit / to live' },
-  { tr: 'kalkmak', eng: 'to get up' },
-  { tr: 'yatmak', eng: 'to go to bed' },
-  { tr: 'uyumak', eng: 'to sleep' },
-  { tr: 'uyanmak', eng: 'to wake up' },
-  { tr: 'koşmak', eng: 'to run' },
-  { tr: 'yürümek', eng: 'to walk' },
-  { tr: 'binmek', eng: 'to get on / to ride' },
-  { tr: 'inmek', eng: 'to get off' },
-  { tr: 'satmak', eng: 'to sell' },
-  { tr: 'ödemek', eng: 'to pay' },
-  { tr: 'kullanmak', eng: 'to use' },
-  { tr: 'düşünmek', eng: 'to think' },
-  { tr: 'hatırlamak', eng: 'to remember' },
-  { tr: 'unutmak', eng: 'to forget' },
-  { tr: 'gülmek', eng: 'to laugh' },
-  { tr: 'ağlamak', eng: 'to cry' },
-  { tr: 'yüzmek', eng: 'to swim' },
-  { tr: 'pişirmek', eng: 'to cook' },
-  { tr: 'yıkamak', eng: 'to wash' },
-  { tr: 'temizlemek', eng: 'to clean' },
-  { tr: 'giymek', eng: 'to put on / to wear' },
-  { tr: 'getirmek', eng: 'to bring' },
-  { tr: 'göndermek', eng: 'to send' },
-  { tr: 'kalmak', eng: 'to stay' },
-  { tr: 'dönmek', eng: 'to return' },
-  { tr: 'girmek', eng: 'to enter' },
-  { tr: 'çıkmak', eng: 'to go out' },
-  { tr: 'oynamak', eng: 'to play' },
-  { tr: 'tanımak', eng: 'to know (a person)' },
-  { tr: 'yaşamak', eng: 'to live' },
-  { tr: 'durmak', eng: 'to stop' },
-  { tr: 'taşımak', eng: 'to carry' },
-  { tr: 'göstermek', eng: 'to show' },
-  { tr: 'koymak', eng: 'to put' },
-  { tr: 'tutmak', eng: 'to hold' },
-  { tr: 'duymak', eng: 'to hear' },
-  { tr: 'hissetmek', eng: 'to feel' }
+  { tr: 'olmak', eng: 'to be / to become', ex: 'Kışın hava soğuk olur.', exEng: 'In winter the weather is cold.' },
+  { tr: 'gelmek', eng: 'to come', ex: 'Babam her akşam eve geç gelir.', exEng: 'My father comes home late every evening.' },
+  { tr: 'gitmek', eng: 'to go', ex: 'Her gün okula giderim.', exEng: 'I go to school every day.' },
+  { tr: 'yapmak', eng: 'to do / to make', ex: 'Annem çok güzel yemek yapar.', exEng: 'My mother makes very good food.' },
+  { tr: 'etmek', eng: 'to do (with nouns)', ex: 'Sana teşekkür ederim.', exEng: 'I thank you.' },
+  { tr: 'almak', eng: 'to take / to buy', ex: 'Her sabah ekmek alırım.', exEng: 'I buy bread every morning.' },
+  { tr: 'vermek', eng: 'to give', ex: 'Öğretmen bize ödev verir.', exEng: 'The teacher gives us homework.' },
+  { tr: 'görmek', eng: 'to see', ex: 'Pencereden denizi görürüm.', exEng: 'I see the sea from the window.' },
+  { tr: 'bilmek', eng: 'to know', ex: 'Ben biraz Türkçe bilirim.', exEng: 'I know a little Turkish.' },
+  { tr: 'istemek', eng: 'to want', ex: 'Çocuklar her zaman dondurma ister.', exEng: 'Children always want ice cream.' },
+  { tr: 'demek', eng: 'to say', ex: 'Türkler sabah “günaydın” der.', exEng: 'Turks say “good morning” in the morning.' },
+  { tr: 'söylemek', eng: 'to say / to tell', ex: 'O her zaman doğruyu söyler.', exEng: 'He always tells the truth.' },
+  { tr: 'konuşmak', eng: 'to speak', ex: 'Biz evde Türkçe konuşuruz.', exEng: 'We speak Turkish at home.' },
+  { tr: 'yemek', eng: 'to eat', ex: 'Öğlen genellikle salata yerim.', exEng: 'I usually eat salad at noon.' },
+  { tr: 'içmek', eng: 'to drink', ex: 'Her sabah kahve içerim.', exEng: 'I drink coffee every morning.' },
+  { tr: 'okumak', eng: 'to read', ex: 'Akşamları kitap okurum.', exEng: 'I read books in the evenings.' },
+  { tr: 'yazmak', eng: 'to write', ex: 'Arkadaşıma mektup yazarım.', exEng: 'I write a letter to my friend.' },
+  { tr: 'dinlemek', eng: 'to listen', ex: 'Arabada müzik dinleriz.', exEng: 'We listen to music in the car.' },
+  { tr: 'bakmak', eng: 'to look', ex: 'Sabahları telefonuma bakarım.', exEng: 'I look at my phone in the mornings.' },
+  { tr: 'izlemek', eng: 'to watch', ex: 'Akşamları film izleriz.', exEng: 'We watch films in the evenings.' },
+  { tr: 'çalışmak', eng: 'to work / to study', ex: 'Annem bir bankada çalışır.', exEng: 'My mother works at a bank.' },
+  { tr: 'öğrenmek', eng: 'to learn', ex: 'Her gün yeni kelimeler öğrenirim.', exEng: 'I learn new words every day.' },
+  { tr: 'öğretmek', eng: 'to teach', ex: 'O, çocuklara İngilizce öğretir.', exEng: 'She teaches English to children.' },
+  { tr: 'anlamak', eng: 'to understand', ex: 'Türkçeyi biraz anlarım.', exEng: 'I understand Turkish a little.' },
+  { tr: 'sevmek', eng: 'to love / to like', ex: 'Kedileri çok severim.', exEng: 'I love cats a lot.' },
+  { tr: 'beğenmek', eng: 'to like', ex: 'Herkes bu filmi beğenir.', exEng: 'Everyone likes this film.' },
+  { tr: 'beklemek', eng: 'to wait', ex: 'Her sabah otobüsü beklerim.', exEng: 'I wait for the bus every morning.' },
+  { tr: 'bulmak', eng: 'to find', ex: 'Annem her şeyi bulur.', exEng: 'My mother finds everything.' },
+  { tr: 'aramak', eng: 'to look for / to call', ex: 'Annemi her akşam ararım.', exEng: 'I call my mother every evening.' },
+  { tr: 'sormak', eng: 'to ask', ex: 'Öğrenciler çok soru sorar.', exEng: 'The students ask a lot of questions.' },
+  { tr: 'açmak', eng: 'to open', ex: 'Sabah pencereyi açarım.', exEng: 'I open the window in the morning.' },
+  { tr: 'kapatmak', eng: 'to close', ex: 'Akşam kapıyı kapatırım.', exEng: 'I close the door in the evening.' },
+  { tr: 'başlamak', eng: 'to begin', ex: 'Ders saat dokuzda başlar.', exEng: 'The lesson starts at nine o\'clock.' },
+  { tr: 'bitirmek', eng: 'to finish', ex: 'İşimi saat beşte bitiririm.', exEng: 'I finish my work at five.' },
+  { tr: 'oturmak', eng: 'to sit / to live', ex: 'Biz İstanbul\'da otururuz.', exEng: 'We live in Istanbul.' },
+  { tr: 'kalkmak', eng: 'to get up', ex: 'Her gün saat yedide kalkarım.', exEng: 'I get up at seven every day.' },
+  { tr: 'yatmak', eng: 'to go to bed', ex: 'Genellikle saat on birde yatarım.', exEng: 'I usually go to bed at eleven.' },
+  { tr: 'uyumak', eng: 'to sleep', ex: 'Bebek çok uyur.', exEng: 'The baby sleeps a lot.' },
+  { tr: 'uyanmak', eng: 'to wake up', ex: 'Sabah erken uyanırım.', exEng: 'I wake up early in the morning.' },
+  { tr: 'koşmak', eng: 'to run', ex: 'Her sabah parkta koşarım.', exEng: 'I run in the park every morning.' },
+  { tr: 'yürümek', eng: 'to walk', ex: 'Okula yürürüm.', exEng: 'I walk to school.' },
+  { tr: 'binmek', eng: 'to get on / to ride', ex: 'Her gün otobüse binerim.', exEng: 'I take the bus every day.' },
+  { tr: 'inmek', eng: 'to get off', ex: 'Bir sonraki durakta ineriz.', exEng: 'We get off at the next stop.' },
+  { tr: 'satmak', eng: 'to sell', ex: 'Bu dükkan meyve satar.', exEng: 'This shop sells fruit.' },
+  { tr: 'ödemek', eng: 'to pay', ex: 'Faturaları ben öderim.', exEng: 'I pay the bills.' },
+  { tr: 'kullanmak', eng: 'to use', ex: 'Her gün bilgisayar kullanırım.', exEng: 'I use a computer every day.' },
+  { tr: 'düşünmek', eng: 'to think', ex: 'Sık sık seni düşünürüm.', exEng: 'I often think about you.' },
+  { tr: 'hatırlamak', eng: 'to remember', ex: 'Büyükannem her şeyi hatırlar.', exEng: 'My grandmother remembers everything.' },
+  { tr: 'unutmak', eng: 'to forget', ex: 'Babam anahtarlarını sık sık unutur.', exEng: 'My father often forgets his keys.' },
+  { tr: 'gülmek', eng: 'to laugh', ex: 'Çocuklar çok güler.', exEng: 'Children laugh a lot.' },
+  { tr: 'ağlamak', eng: 'to cry', ex: 'Bebekler çok ağlar.', exEng: 'Babies cry a lot.' },
+  { tr: 'yüzmek', eng: 'to swim', ex: 'Yazın denizde yüzeriz.', exEng: 'In summer we swim in the sea.' },
+  { tr: 'pişirmek', eng: 'to cook', ex: 'Annem pazar günleri tavuk pişirir.', exEng: 'My mother cooks chicken on Sundays.' },
+  { tr: 'yıkamak', eng: 'to wash', ex: 'Yemekten önce ellerimi yıkarım.', exEng: 'I wash my hands before eating.' },
+  { tr: 'temizlemek', eng: 'to clean', ex: 'Cumartesi günü evi temizleriz.', exEng: 'We clean the house on Saturday.' },
+  { tr: 'giymek', eng: 'to put on / to wear', ex: 'Kışın kalın bir mont giyerim.', exEng: 'In winter I wear a thick coat.' },
+  { tr: 'getirmek', eng: 'to bring', ex: 'Garson su getirir.', exEng: 'The waiter brings water.' },
+  { tr: 'göndermek', eng: 'to send', ex: 'Arkadaşlarıma mesaj gönderirim.', exEng: 'I send messages to my friends.' },
+  { tr: 'kalmak', eng: 'to stay', ex: 'Tatilde otelde kalırız.', exEng: 'On holiday we stay at a hotel.' },
+  { tr: 'dönmek', eng: 'to return', ex: 'Akşam saat altıda eve dönerim.', exEng: 'I return home at six in the evening.' },
+  { tr: 'girmek', eng: 'to enter', ex: 'Öğretmen sınıfa girer.', exEng: 'The teacher enters the classroom.' },
+  { tr: 'çıkmak', eng: 'to go out', ex: 'Sabah sekizde evden çıkarım.', exEng: 'I leave the house at eight in the morning.' },
+  { tr: 'oynamak', eng: 'to play', ex: 'Çocuklar parkta oynar.', exEng: 'The children play in the park.' },
+  { tr: 'tanımak', eng: 'to know (a person)', ex: 'Ben onu iyi tanırım.', exEng: 'I know him well.' },
+  { tr: 'yaşamak', eng: 'to live', ex: 'Ailem Ankara\'da yaşar.', exEng: 'My family lives in Ankara.' },
+  { tr: 'durmak', eng: 'to stop', ex: 'Otobüs burada durur.', exEng: 'The bus stops here.' },
+  { tr: 'taşımak', eng: 'to carry', ex: 'Babam ağır çantaları taşır.', exEng: 'My father carries the heavy bags.' },
+  { tr: 'göstermek', eng: 'to show', ex: 'Haritada yolu gösteririm.', exEng: 'I show the way on the map.' },
+  { tr: 'koymak', eng: 'to put', ex: 'Çantamı masaya koyarım.', exEng: 'I put my bag on the table.' },
+  { tr: 'tutmak', eng: 'to hold', ex: 'Anne bebeğin elini tutar.', exEng: 'The mother holds the baby\'s hand.' },
+  { tr: 'duymak', eng: 'to hear', ex: 'Sabahları kuşları duyarım.', exEng: 'In the mornings I hear the birds.' },
+  { tr: 'hissetmek', eng: 'to feel', ex: 'Burada kendimi mutlu hissederim.', exEng: 'I feel happy here.' }
 ];
 
 var TR_NOUNS = [
-  { tr: 'anne', eng: 'mother' },
-  { tr: 'baba', eng: 'father' },
-  { tr: 'kardeş', eng: 'sibling' },
-  { tr: 'abla', eng: 'older sister' },
-  { tr: 'ağabey', eng: 'older brother' },
-  { tr: 'çocuk', eng: 'child' },
-  { tr: 'arkadaş', eng: 'friend' },
-  { tr: 'adam', eng: 'man' },
-  { tr: 'kadın', eng: 'woman' },
-  { tr: 'kız', eng: 'girl / daughter' },
-  { tr: 'oğul', eng: 'son' },
-  { tr: 'aile', eng: 'family' },
-  { tr: 'bebek', eng: 'baby' },
-  { tr: 'insan', eng: 'person' },
-  { tr: 'ev', eng: 'house' },
-  { tr: 'oda', eng: 'room' },
-  { tr: 'kapı', eng: 'door' },
-  { tr: 'pencere', eng: 'window' },
-  { tr: 'masa', eng: 'table' },
-  { tr: 'sandalye', eng: 'chair' },
-  { tr: 'yatak', eng: 'bed' },
-  { tr: 'mutfak', eng: 'kitchen' },
-  { tr: 'banyo', eng: 'bathroom' },
-  { tr: 'anahtar', eng: 'key' },
-  { tr: 'duvar', eng: 'wall' },
-  { tr: 'ekmek', eng: 'bread' },
-  { tr: 'su', eng: 'water' },
-  { tr: 'çay', eng: 'tea' },
-  { tr: 'kahve', eng: 'coffee' },
-  { tr: 'süt', eng: 'milk' },
-  { tr: 'peynir', eng: 'cheese' },
-  { tr: 'yumurta', eng: 'egg' },
-  { tr: 'et', eng: 'meat' },
-  { tr: 'tavuk', eng: 'chicken' },
-  { tr: 'balık', eng: 'fish' },
-  { tr: 'elma', eng: 'apple' },
-  { tr: 'şeker', eng: 'sugar' },
-  { tr: 'tuz', eng: 'salt' },
-  { tr: 'yemek', eng: 'food / meal' },
-  { tr: 'kahvaltı', eng: 'breakfast' },
-  { tr: 'meyve', eng: 'fruit' },
-  { tr: 'sebze', eng: 'vegetable' },
-  { tr: 'okul', eng: 'school' },
-  { tr: 'şehir', eng: 'city' },
-  { tr: 'köy', eng: 'village' },
-  { tr: 'sokak', eng: 'street' },
-  { tr: 'hastane', eng: 'hospital' },
-  { tr: 'otel', eng: 'hotel' },
-  { tr: 'restoran', eng: 'restaurant' },
-  { tr: 'banka', eng: 'bank' },
-  { tr: 'park', eng: 'park' },
-  { tr: 'deniz', eng: 'sea' },
-  { tr: 'plaj', eng: 'beach' },
-  { tr: 'havalimanı', eng: 'airport' },
-  { tr: 'istasyon', eng: 'station' },
-  { tr: 'ofis', eng: 'office' },
-  { tr: 'ülke', eng: 'country' },
-  { tr: 'dükkan', eng: 'shop' },
-  { tr: 'cami', eng: 'mosque' },
-  { tr: 'müze', eng: 'museum' },
-  { tr: 'araba', eng: 'car' },
-  { tr: 'otobüs', eng: 'bus' },
-  { tr: 'tren', eng: 'train' },
-  { tr: 'uçak', eng: 'plane' },
-  { tr: 'bisiklet', eng: 'bicycle' },
-  { tr: 'gemi', eng: 'ship' },
-  { tr: 'gün', eng: 'day' },
-  { tr: 'gece', eng: 'night' },
-  { tr: 'sabah', eng: 'morning' },
-  { tr: 'akşam', eng: 'evening' },
-  { tr: 'hafta', eng: 'week' },
-  { tr: 'ay', eng: 'month / moon' },
-  { tr: 'yıl', eng: 'year' },
-  { tr: 'saat', eng: 'hour / clock' },
-  { tr: 'zaman', eng: 'time' },
-  { tr: 'kitap', eng: 'book' },
-  { tr: 'kalem', eng: 'pen' },
-  { tr: 'defter', eng: 'notebook' },
-  { tr: 'telefon', eng: 'phone' },
-  { tr: 'bilgisayar', eng: 'computer' },
-  { tr: 'para', eng: 'money' },
-  { tr: 'çanta', eng: 'bag' },
-  { tr: 'ayakkabı', eng: 'shoes' },
-  { tr: 'elbise', eng: 'dress' },
-  { tr: 'gömlek', eng: 'shirt' },
-  { tr: 'şapka', eng: 'hat' },
-  { tr: 'baş', eng: 'head' },
-  { tr: 'göz', eng: 'eye' },
-  { tr: 'el', eng: 'hand' },
-  { tr: 'ayak', eng: 'foot' },
-  { tr: 'ağız', eng: 'mouth' },
-  { tr: 'kulak', eng: 'ear' },
-  { tr: 'burun', eng: 'nose' },
-  { tr: 'saç', eng: 'hair' },
-  { tr: 'kalp', eng: 'heart' },
-  { tr: 'yüz', eng: 'face' },
-  { tr: 'güneş', eng: 'sun' },
-  { tr: 'yıldız', eng: 'star' },
-  { tr: 'hava', eng: 'weather / air' },
-  { tr: 'yağmur', eng: 'rain' },
-  { tr: 'kar', eng: 'snow' },
-  { tr: 'ağaç', eng: 'tree' },
-  { tr: 'çiçek', eng: 'flower' },
-  { tr: 'köpek', eng: 'dog' },
-  { tr: 'kedi', eng: 'cat' },
-  { tr: 'kuş', eng: 'bird' },
-  { tr: 'at', eng: 'horse' },
-  { tr: 'iş', eng: 'work / job' },
-  { tr: 'öğretmen', eng: 'teacher' },
-  { tr: 'öğrenci', eng: 'student' },
-  { tr: 'doktor', eng: 'doctor' },
-  { tr: 'isim', eng: 'name' },
-  { tr: 'dil', eng: 'language' },
-  { tr: 'soru', eng: 'question' },
-  { tr: 'cevap', eng: 'answer' },
-  { tr: 'renk', eng: 'colour' },
-  { tr: 'müzik', eng: 'music' },
-  { tr: 'film', eng: 'film' },
-  { tr: 'oyun', eng: 'game' },
-  { tr: 'hediye', eng: 'gift' },
-  { tr: 'fiyat', eng: 'price' },
-  { tr: 'bilet', eng: 'ticket' },
-  { tr: 'harita', eng: 'map' }
+  { tr: 'anne', eng: 'mother', ex: 'Annem öğretmen.', exEng: 'My mother is a teacher.' },
+  { tr: 'baba', eng: 'father', ex: 'Babam her sabah gazete okur.', exEng: 'My father reads the newspaper every morning.' },
+  { tr: 'kardeş', eng: 'sibling', ex: 'İki kardeşim var.', exEng: 'I have two siblings.' },
+  { tr: 'abla', eng: 'older sister', ex: 'Ablam çok güzel şarkı söyler.', exEng: 'My older sister sings very well.' },
+  { tr: 'ağabey', eng: 'older brother', ex: 'Ağabeyim futbol oynar.', exEng: 'My older brother plays football.' },
+  { tr: 'çocuk', eng: 'child', ex: 'Çocuk bahçede oynar.', exEng: 'The child plays in the garden.' },
+  { tr: 'arkadaş', eng: 'friend', ex: 'O benim en iyi arkadaşım.', exEng: 'He is my best friend.' },
+  { tr: 'adam', eng: 'man', ex: 'Bu adam benim komşum.', exEng: 'This man is my neighbour.' },
+  { tr: 'kadın', eng: 'woman', ex: 'O kadın bir doktor.', exEng: 'That woman is a doctor.' },
+  { tr: 'kız', eng: 'girl / daughter', ex: 'Onların bir kızı var.', exEng: 'They have a daughter.' },
+  { tr: 'oğul', eng: 'son', ex: 'Oğlum on yaşında.', exEng: 'My son is ten years old.' },
+  { tr: 'aile', eng: 'family', ex: 'Ailem çok büyük.', exEng: 'My family is very big.' },
+  { tr: 'bebek', eng: 'baby', ex: 'Bebek çok küçük.', exEng: 'The baby is very small.' },
+  { tr: 'insan', eng: 'person', ex: 'Burada çok insan var.', exEng: 'There are a lot of people here.' },
+  { tr: 'ev', eng: 'house', ex: 'Evimiz okula yakın.', exEng: 'Our house is close to the school.' },
+  { tr: 'oda', eng: 'room', ex: 'Benim odam küçük ama güzel.', exEng: 'My room is small but nice.' },
+  { tr: 'kapı', eng: 'door', ex: 'Kapı açık.', exEng: 'The door is open.' },
+  { tr: 'pencere', eng: 'window', ex: 'Pencere çok büyük.', exEng: 'The window is very big.' },
+  { tr: 'masa', eng: 'table', ex: 'Kitap masanın üstünde.', exEng: 'The book is on the table.' },
+  { tr: 'sandalye', eng: 'chair', ex: 'Bu sandalye çok rahat.', exEng: 'This chair is very comfortable.' },
+  { tr: 'yatak', eng: 'bed', ex: 'Yatağım çok rahat.', exEng: 'My bed is very comfortable.' },
+  { tr: 'mutfak', eng: 'kitchen', ex: 'Annem mutfakta.', exEng: 'My mother is in the kitchen.' },
+  { tr: 'banyo', eng: 'bathroom', ex: 'Banyo nerede?', exEng: 'Where is the bathroom?' },
+  { tr: 'anahtar', eng: 'key', ex: 'Anahtarım cebimde.', exEng: 'My key is in my pocket.' },
+  { tr: 'duvar', eng: 'wall', ex: 'Duvarda bir resim var.', exEng: 'There is a picture on the wall.' },
+  { tr: 'ekmek', eng: 'bread', ex: 'Fırından taze ekmek alırım.', exEng: 'I buy fresh bread from the bakery.' },
+  { tr: 'su', eng: 'water', ex: 'Bir bardak su lütfen.', exEng: 'A glass of water, please.' },
+  { tr: 'çay', eng: 'tea', ex: 'Türkiye\'de herkes çay içer.', exEng: 'In Turkey everyone drinks tea.' },
+  { tr: 'kahve', eng: 'coffee', ex: 'Kahve çok sıcak.', exEng: 'The coffee is very hot.' },
+  { tr: 'süt', eng: 'milk', ex: 'Çocuklar her sabah süt içer.', exEng: 'The children drink milk every morning.' },
+  { tr: 'peynir', eng: 'cheese', ex: 'Kahvaltıda peynir yerim.', exEng: 'I eat cheese at breakfast.' },
+  { tr: 'yumurta', eng: 'egg', ex: 'Buzdolabında altı yumurta var.', exEng: 'There are six eggs in the fridge.' },
+  { tr: 'et', eng: 'meat', ex: 'Kasap et satar.', exEng: 'The butcher sells meat.' },
+  { tr: 'tavuk', eng: 'chicken', ex: 'Tavuk çorbası çok lezzetli.', exEng: 'Chicken soup is very tasty.' },
+  { tr: 'balık', eng: 'fish', ex: 'Denizde çok balık var.', exEng: 'There are many fish in the sea.' },
+  { tr: 'elma', eng: 'apple', ex: 'Her gün bir elma yerim.', exEng: 'I eat an apple every day.' },
+  { tr: 'şeker', eng: 'sugar', ex: 'Çayına şeker ister misin?', exEng: 'Do you want sugar in your tea?' },
+  { tr: 'tuz', eng: 'salt', ex: 'Tuzu verir misin?', exEng: 'Can you pass the salt?' },
+  { tr: 'yemek', eng: 'food / meal', ex: 'Yemek hazır!', exEng: 'The food is ready!' },
+  { tr: 'kahvaltı', eng: 'breakfast', ex: 'Kahvaltı saat sekizde.', exEng: 'Breakfast is at eight o\'clock.' },
+  { tr: 'meyve', eng: 'fruit', ex: 'Meyve çok sağlıklı.', exEng: 'Fruit is very healthy.' },
+  { tr: 'sebze', eng: 'vegetable', ex: 'Pazarda taze sebze var.', exEng: 'There are fresh vegetables at the market.' },
+  { tr: 'okul', eng: 'school', ex: 'Okul saat dokuzda başlar.', exEng: 'School starts at nine o\'clock.' },
+  { tr: 'şehir', eng: 'city', ex: 'İstanbul çok büyük bir şehir.', exEng: 'Istanbul is a very big city.' },
+  { tr: 'köy', eng: 'village', ex: 'Dedem bir köyde yaşar.', exEng: 'My grandfather lives in a village.' },
+  { tr: 'sokak', eng: 'street', ex: 'Bu sokak çok sessiz.', exEng: 'This street is very quiet.' },
+  { tr: 'hastane', eng: 'hospital', ex: 'Hastane nerede?', exEng: 'Where is the hospital?' },
+  { tr: 'otel', eng: 'hotel', ex: 'Otelimiz denize yakın.', exEng: 'Our hotel is close to the sea.' },
+  { tr: 'restoran', eng: 'restaurant', ex: 'Bu restoran çok güzel.', exEng: 'This restaurant is very nice.' },
+  { tr: 'banka', eng: 'bank', ex: 'Banka saat beşte kapanır.', exEng: 'The bank closes at five.' },
+  { tr: 'park', eng: 'park', ex: 'Parkta çok ağaç var.', exEng: 'There are many trees in the park.' },
+  { tr: 'deniz', eng: 'sea', ex: 'Deniz bugün çok mavi.', exEng: 'The sea is very blue today.' },
+  { tr: 'plaj', eng: 'beach', ex: 'Yazın plaja gideriz.', exEng: 'In summer we go to the beach.' },
+  { tr: 'havalimanı', eng: 'airport', ex: 'Havalimanı şehirden uzak.', exEng: 'The airport is far from the city.' },
+  { tr: 'istasyon', eng: 'station', ex: 'İstasyon buraya yakın mı?', exEng: 'Is the station close to here?' },
+  { tr: 'ofis', eng: 'office', ex: 'Ofisim üçüncü katta.', exEng: 'My office is on the third floor.' },
+  { tr: 'ülke', eng: 'country', ex: 'Türkiye güzel bir ülke.', exEng: 'Turkey is a beautiful country.' },
+  { tr: 'dükkan', eng: 'shop', ex: 'Dükkan saat dokuzda açılır.', exEng: 'The shop opens at nine.' },
+  { tr: 'cami', eng: 'mosque', ex: 'Bu cami çok eski.', exEng: 'This mosque is very old.' },
+  { tr: 'müze', eng: 'museum', ex: 'Müze pazartesi kapalı.', exEng: 'The museum is closed on Monday.' },
+  { tr: 'araba', eng: 'car', ex: 'Babamın arabası kırmızı.', exEng: 'My father\'s car is red.' },
+  { tr: 'otobüs', eng: 'bus', ex: 'Otobüs her on dakikada gelir.', exEng: 'The bus comes every ten minutes.' },
+  { tr: 'tren', eng: 'train', ex: 'Tren saat üçte kalkar.', exEng: 'The train leaves at three o\'clock.' },
+  { tr: 'uçak', eng: 'plane', ex: 'Uçak çok hızlı.', exEng: 'The plane is very fast.' },
+  { tr: 'bisiklet', eng: 'bicycle', ex: 'Okula bisikletle giderim.', exEng: 'I go to school by bicycle.' },
+  { tr: 'gemi', eng: 'ship', ex: 'Gemi limanda.', exEng: 'The ship is in the harbour.' },
+  { tr: 'gün', eng: 'day', ex: 'Bugün güzel bir gün.', exEng: 'Today is a beautiful day.' },
+  { tr: 'gece', eng: 'night', ex: 'Gece çok soğuk.', exEng: 'The night is very cold.' },
+  { tr: 'sabah', eng: 'morning', ex: 'Sabah kahve içerim.', exEng: 'I drink coffee in the morning.' },
+  { tr: 'akşam', eng: 'evening', ex: 'Akşam televizyon izleriz.', exEng: 'We watch TV in the evening.' },
+  { tr: 'hafta', eng: 'week', ex: 'Bir haftada yedi gün var.', exEng: 'There are seven days in a week.' },
+  { tr: 'ay', eng: 'month / moon', ex: 'Bir yılda on iki ay var.', exEng: 'There are twelve months in a year.' },
+  { tr: 'yıl', eng: 'year', ex: 'Her yıl Türkiye\'ye gideriz.', exEng: 'Every year we go to Turkey.' },
+  { tr: 'saat', eng: 'hour / clock', ex: 'Saat kaç?', exEng: 'What time is it?' },
+  { tr: 'zaman', eng: 'time', ex: 'Çok zamanım yok.', exEng: 'I don\'t have much time.' },
+  { tr: 'kitap', eng: 'book', ex: 'Bu kitap çok ilginç.', exEng: 'This book is very interesting.' },
+  { tr: 'kalem', eng: 'pen', ex: 'Kalemin var mı?', exEng: 'Do you have a pen?' },
+  { tr: 'defter', eng: 'notebook', ex: 'Defterim çantamda.', exEng: 'My notebook is in my bag.' },
+  { tr: 'telefon', eng: 'phone', ex: 'Telefonum nerede?', exEng: 'Where is my phone?' },
+  { tr: 'bilgisayar', eng: 'computer', ex: 'Yeni bir bilgisayarım var.', exEng: 'I have a new computer.' },
+  { tr: 'para', eng: 'money', ex: 'Cebimde hiç para yok.', exEng: 'I have no money in my pocket.' },
+  { tr: 'çanta', eng: 'bag', ex: 'Bu çanta çok ağır.', exEng: 'This bag is very heavy.' },
+  { tr: 'ayakkabı', eng: 'shoes', ex: 'Yeni ayakkabılarım siyah.', exEng: 'My new shoes are black.' },
+  { tr: 'elbise', eng: 'dress', ex: 'Bu elbise çok güzel.', exEng: 'This dress is very nice.' },
+  { tr: 'gömlek', eng: 'shirt', ex: 'Babam beyaz bir gömlek giyer.', exEng: 'My father wears a white shirt.' },
+  { tr: 'şapka', eng: 'hat', ex: 'Yazın şapka takarım.', exEng: 'In summer I wear a hat.' },
+  { tr: 'baş', eng: 'head', ex: 'Başım ağrıyor.', exEng: 'I have a headache.' },
+  { tr: 'göz', eng: 'eye', ex: 'Onun gözleri mavi.', exEng: 'Her eyes are blue.' },
+  { tr: 'el', eng: 'hand', ex: 'Ellerin çok soğuk.', exEng: 'Your hands are very cold.' },
+  { tr: 'ayak', eng: 'foot', ex: 'Ayaklarım yorgun.', exEng: 'My feet are tired.' },
+  { tr: 'ağız', eng: 'mouth', ex: 'Ağzını aç lütfen.', exEng: 'Open your mouth, please.' },
+  { tr: 'kulak', eng: 'ear', ex: 'Kedinin kulakları küçük.', exEng: 'The cat\'s ears are small.' },
+  { tr: 'burun', eng: 'nose', ex: 'Köpeğin burnu soğuk.', exEng: 'The dog\'s nose is cold.' },
+  { tr: 'saç', eng: 'hair', ex: 'Kızın saçları uzun.', exEng: 'The girl\'s hair is long.' },
+  { tr: 'kalp', eng: 'heart', ex: 'Onun kalbi çok iyi.', exEng: 'He has a very good heart.' },
+  { tr: 'yüz', eng: 'face', ex: 'Bebeğin yüzü çok tatlı.', exEng: 'The baby\'s face is very sweet.' },
+  { tr: 'güneş', eng: 'sun', ex: 'Bugün güneş çok sıcak.', exEng: 'The sun is very hot today.' },
+  { tr: 'yıldız', eng: 'star', ex: 'Gökyüzünde çok yıldız var.', exEng: 'There are many stars in the sky.' },
+  { tr: 'hava', eng: 'weather / air', ex: 'Bugün hava çok güzel.', exEng: 'The weather is very nice today.' },
+  { tr: 'yağmur', eng: 'rain', ex: 'Bugün yağmur yağıyor.', exEng: 'It\'s raining today.' },
+  { tr: 'kar', eng: 'snow', ex: 'Kışın burada çok kar yağar.', exEng: 'In winter it snows a lot here.' },
+  { tr: 'ağaç', eng: 'tree', ex: 'Bahçede büyük bir ağaç var.', exEng: 'There is a big tree in the garden.' },
+  { tr: 'çiçek', eng: 'flower', ex: 'Annem çiçekleri çok sever.', exEng: 'My mother loves flowers a lot.' },
+  { tr: 'köpek', eng: 'dog', ex: 'Köpeğimin adı Karabaş.', exEng: 'My dog\'s name is Karabaş.' },
+  { tr: 'kedi', eng: 'cat', ex: 'Kedi masanın altında.', exEng: 'The cat is under the table.' },
+  { tr: 'kuş', eng: 'bird', ex: 'Ağaçta bir kuş var.', exEng: 'There is a bird in the tree.' },
+  { tr: 'at', eng: 'horse', ex: 'At çok hızlı koşar.', exEng: 'The horse runs very fast.' },
+  { tr: 'iş', eng: 'work / job', ex: 'Yeni işim çok güzel.', exEng: 'My new job is very nice.' },
+  { tr: 'öğretmen', eng: 'teacher', ex: 'Öğretmenimiz çok iyi.', exEng: 'Our teacher is very good.' },
+  { tr: 'öğrenci', eng: 'student', ex: 'Sınıfta yirmi öğrenci var.', exEng: 'There are twenty students in the class.' },
+  { tr: 'doktor', eng: 'doctor', ex: 'Doktor çok iyi bir insan.', exEng: 'The doctor is a very good person.' },
+  { tr: 'isim', eng: 'name', ex: 'İsmin ne?', exEng: 'What is your name?' },
+  { tr: 'dil', eng: 'language', ex: 'Türkçe güzel bir dil.', exEng: 'Turkish is a beautiful language.' },
+  { tr: 'soru', eng: 'question', ex: 'Bir sorum var.', exEng: 'I have a question.' },
+  { tr: 'cevap', eng: 'answer', ex: 'Cevap çok kolay.', exEng: 'The answer is very easy.' },
+  { tr: 'renk', eng: 'colour', ex: 'En sevdiğin renk ne?', exEng: 'What is your favourite colour?' },
+  { tr: 'müzik', eng: 'music', ex: 'Türk müziğini çok severim.', exEng: 'I love Turkish music a lot.' },
+  { tr: 'film', eng: 'film', ex: 'Bu film çok komik.', exEng: 'This film is very funny.' },
+  { tr: 'oyun', eng: 'game', ex: 'Bu oyun çok eğlenceli.', exEng: 'This game is very fun.' },
+  { tr: 'hediye', eng: 'gift', ex: 'Bu hediye senin için.', exEng: 'This gift is for you.' },
+  { tr: 'fiyat', eng: 'price', ex: 'Bunun fiyatı ne kadar?', exEng: 'How much is this?' },
+  { tr: 'bilet', eng: 'ticket', ex: 'İki bilet lütfen.', exEng: 'Two tickets, please.' },
+  { tr: 'harita', eng: 'map', ex: 'Haritaya bakalım.', exEng: 'Let\'s look at the map.' }
 ];
 
 /* Present simple (geniş zaman): ben sen o biz siz onlar, space-separated */
@@ -2843,6 +2852,7 @@ function renderTrWordQuestion(mode) {
   if (st.current === null) { showCompletion(mode); return; }
   var item = list[st.current];
   trShowIdk(mode, true);
+  trHideExample(mode);
   document.getElementById(mode + '-prompt').innerHTML = '<div class="verb-inf">' + item.tr + '</div>';
   trSetPtsUI(mode, pts[st.current]);
   clearFeedback(mode);
@@ -2884,6 +2894,7 @@ function handleTrWordAnswer(mode, chosen) {
       res.justLearned ? item.tr + ' fully learned!' : res.now + ' / ' + MAX_PTS + ' pts');
   } else {
     showFeedback(mode, false, res.now < res.prev ? '-1 pt' : 'Miss!', 'Correct: ' + item.eng);
+    trShowExample(mode, item);
   }
   trSetPtsUI(mode, res.now);
   updateTrTile(mode, st.current);
@@ -2913,6 +2924,7 @@ function renderTrConjQuestion() {
   if (st.current === null) { showCompletion('tconj'); return; }
   var item = TR_CONJ[st.current];
   trShowIdk('tconj', true);
+  trHideExample('tconj');
   st.q = buildTrConjQuestion(item);
   var pr = TR_PRONOUNS[st.q.p];
   document.getElementById('tconj-prompt').innerHTML =
@@ -2961,6 +2973,7 @@ function handleTrConjAnswer(chosen) {
     var f = trForms(item);
     showFeedback('tconj', false, res.now < res.prev ? '-1 pt' : 'Miss!',
       'Correct: ' + sentence + '\n' + TR_PRONOUNS.map(function(p, i) { return p.tr + ' ' + f[i]; }).join(' · '));
+    trShowExample('tconj', item);
   }
   trSetPtsUI('tconj', res.now);
   updateTrTile('tconj', st.current);
@@ -3014,7 +3027,51 @@ function trDontKnow(mode) {
   q2.splice(Math.min(TR_IDK_RETURN_AFTER, q2.length), 0, st.current);
   st.queue = q2;
   if (mode === 'tconj') conjInputLock('tconj');
+  trShowExample(mode, mode === 'tconj' ? TR_CONJ[st.current] : trList(mode)[st.current]);
   document.getElementById(mode + '-next').className = 'next-btn show';
+}
+
+/* ── Example sentence ────────────────────────────────────────
+   Shown after "I don't know" or a wrong answer. Verbs and Conjugate use
+   the verb's example (TR_VERBS), nouns their own. */
+function trExampleFor(mode, item) {
+  if (mode === 'tconj') {
+    for (var i = 0; i < TR_VERBS.length; i++) if (TR_VERBS[i].tr === item.inf && TR_VERBS[i].ex) return TR_VERBS[i];
+    return item.ex ? item : null;
+  }
+  return item.ex ? item : null;
+}
+/* highlight the word in the sentence: the exact form, else its stem */
+function trHighlight(sentence, word, form) {
+  var esc = function(t) { return t.replace(/[&<>"]/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var lower = sentence.toLocaleLowerCase('tr-TR');
+  var needles = [form, word, String(word).replace(/m[ae]k$/, '')]
+    .filter(Boolean).map(function(n) { return String(n).toLocaleLowerCase('tr-TR'); });
+  for (var n = 0; n < needles.length; n++) {
+    var stem = needles[n].length > 4 ? needles[n].slice(0, needles[n].length - 1) : needles[n];
+    var at = lower.indexOf(stem);
+    if (at === -1 || stem.length < 2) continue;
+    var end = at; while (end < sentence.length && /[\wçğıöşüâîû]/i.test(sentence.charAt(end))) end++;
+    var start = at; while (start > 0 && /[\wçğıöşüâîû]/i.test(sentence.charAt(start - 1))) start--;
+    return esc(sentence.slice(0, start)) + '<mark>' + esc(sentence.slice(start, end)) + '</mark>' + esc(sentence.slice(end));
+  }
+  return esc(sentence);
+}
+function trShowExample(mode, item, form) {
+  var box = document.getElementById(mode + '-example');
+  if (!box) return;
+  var ex = trExampleFor(mode, item);
+  if (!ex) { box.className = 'example-box'; box.innerHTML = ''; return; }
+  var word = mode === 'tconj' ? item.inf : item.tr;
+  box.innerHTML = '<div class="ex-label">Example</div>' +
+    '<div class="ex-tr">' + trHighlight(String(ex.ex), word, form) + '</div>' +
+    (ex.exEng ? '<div class="ex-en" lang="en"></div>' : '');
+  if (ex.exEng) box.querySelector('.ex-en').textContent = ex.exEng;
+  box.className = 'example-box show';
+}
+function trHideExample(mode) {
+  var box = document.getElementById(mode + '-example');
+  if (box) { box.className = 'example-box'; box.innerHTML = ''; }
 }
 
 /* ── Progress grids ── */
