@@ -141,6 +141,11 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .next-btn { display: none; margin: 14px auto 0; padding: 11px 36px; border-radius: 99px; border: none; background: #f5c518; color: #0f1923; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: background 0.2s, transform 0.15s; }
 .next-btn:hover { background: #ffd740; transform: scale(1.04); }
 .next-btn.show { display: block; }
+.idk-btn { display: flex; align-items: center; gap: 8px; margin: -4px auto 12px; padding: 8px 16px; border-radius: 99px; border: 1.5px dashed #2a4a60; background: transparent; color: #8aa0b2; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+.idk-btn:hover { border-color: #f5c518; color: #f5c518; }
+.idk-btn .key-hint { position: static; }
+.idk-btn.hidden { display: none; }
+.feedback-msg.idk { color: #f5c518; }
 
 /* ── Completion ── */
 .completion { display: none; flex-direction: column; align-items: center; text-align: center; gap: 14px; width: 100%; background: #162230; border: 1.5px solid #2d7a55; border-radius: 22px; padding: 44px 24px; margin-bottom: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
@@ -451,13 +456,14 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 <!-- ══ TURKISH TABS ══ -->
 <div class="tab-panel" id="panel-tverbs">
   <div class="quiz-wrap" id="tverbs-quiz-wrap">
-    <div class="q-type-badge">fiil · verb</div>
+    <div class="q-type-badge" lang="tr">fiil · verb</div>
     <div class="prompt-verb" id="tverbs-prompt" style="padding:8px 0"></div>
     <div class="pts-row">
       <div class="pts-bar"><div class="pts-fill" id="tverbs-pts-fill" style="width:0%"></div></div>
       <div class="pts-text" id="tverbs-pts-text">0 / 10 pts</div>
     </div>
     <div class="options-grid" id="tverbs-options"></div>
+    <button class="idk-btn" id="tverbs-idk" onclick="trDontKnow('tverbs')"><span class="key-hint">D</span>I don&rsquo;t know &mdash; show me</button>
     <div class="feedback-row">
       <div class="feedback-msg" id="tverbs-fb-msg"></div>
       <div class="feedback-sub" id="tverbs-fb-sub"></div>
@@ -474,13 +480,14 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 
 <div class="tab-panel" id="panel-tnouns">
   <div class="quiz-wrap" id="tnouns-quiz-wrap">
-    <div class="q-type-badge">isim · noun</div>
+    <div class="q-type-badge" lang="tr">isim · noun</div>
     <div class="prompt-verb" id="tnouns-prompt" style="padding:8px 0"></div>
     <div class="pts-row">
       <div class="pts-bar"><div class="pts-fill" id="tnouns-pts-fill" style="width:0%"></div></div>
       <div class="pts-text" id="tnouns-pts-text">0 / 10 pts</div>
     </div>
     <div class="options-grid" id="tnouns-options"></div>
+    <button class="idk-btn" id="tnouns-idk" onclick="trDontKnow('tnouns')"><span class="key-hint">D</span>I don&rsquo;t know &mdash; show me</button>
     <div class="feedback-row">
       <div class="feedback-msg" id="tnouns-fb-msg"></div>
       <div class="feedback-sub" id="tnouns-fb-sub"></div>
@@ -504,6 +511,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
       <div class="pts-text" id="tconj-pts-text">0 / 10 pts</div>
     </div>
     <div class="options-grid" id="tconj-options"></div>
+    <button class="idk-btn" id="tconj-idk" onclick="trDontKnow('tconj')"><span class="key-hint">D</span>I don&rsquo;t know &mdash; show me</button>
     <div class="feedback-row">
       <div class="feedback-msg" id="tconj-fb-msg"></div>
       <div class="feedback-sub" id="tconj-fb-sub"></div>
@@ -2811,6 +2819,7 @@ function renderTrWordQuestion(mode) {
   st.current = trPickNext(mode);
   if (st.current === null) { showCompletion(mode); return; }
   var item = list[st.current];
+  trShowIdk(mode, true);
   document.getElementById(mode + '-prompt').innerHTML = '<div class="verb-inf">' + item.tr + '</div>';
   trSetPtsUI(mode, pts[st.current]);
   clearFeedback(mode);
@@ -2837,6 +2846,7 @@ function handleTrWordAnswer(mode, chosen) {
   var st = trState[mode];
   if (st.answered) return;
   st.answered = true;
+  trShowIdk(mode, false);
   var item = trList(mode)[st.current];
   var correct = chosen === st.current;
   var res = trScore(mode, st.current, correct);
@@ -2879,6 +2889,7 @@ function renderTrConjQuestion() {
   st.current = trPickNext('tconj');
   if (st.current === null) { showCompletion('tconj'); return; }
   var item = TR_CONJ[st.current];
+  trShowIdk('tconj', true);
   st.q = buildTrConjQuestion(item);
   var pr = TR_PRONOUNS[st.q.p];
   document.getElementById('tconj-prompt').innerHTML =
@@ -2906,6 +2917,7 @@ function handleTrConjAnswer(chosen) {
   var st = trState.tconj;
   if (st.answered) return;
   st.answered = true;
+  trShowIdk('tconj', false);
   var item = TR_CONJ[st.current], q = st.q;
   var correct = chosen === q.correct;
   var res = trScore('tconj', st.current, correct);
@@ -2932,6 +2944,52 @@ function handleTrConjAnswer(chosen) {
   saveProgress();
   document.getElementById('tconj-next').className = 'next-btn show';
   if (correct) setTimeout(function() { if (activeTab === 'tconj') nextQ('tconj'); }, 700);
+}
+
+/* ── "I don't know" ─────────────────────────────────────────
+   Shows the answer instead of a guess: no points gained or lost,
+   no auto-advance (take your time), and the same item comes back a
+   few questions later so it can be memorised. */
+var TR_IDK_RETURN_AFTER = 3;
+function trShowIdk(mode, show) {
+  var b = document.getElementById(mode + '-idk');
+  if (b) b.className = 'idk-btn' + (show ? '' : ' hidden');
+}
+function trDontKnow(mode) {
+  var st = trState[mode];
+  if (!st || st.answered || st.current === null) return;
+  st.answered = true;
+  trShowIdk(mode, false);
+  var sub;
+  if (mode === 'tconj') {
+    var item = TR_CONJ[st.current], q = st.q, f = trForms(item);
+    document.querySelectorAll('#tconj-options .opt-btn').forEach(function(b) {
+      b.classList.add('locked');
+      if (b.getAttribute('data-form') === q.correct) b.classList.add('correct');
+    });
+    var blank = document.querySelector('#tconj-prompt .blank');
+    if (blank) blank.textContent = q.correct;
+    sub = TR_PRONOUNS[q.p].tr + ' ' + q.correct + '\n' +
+          TR_PRONOUNS.map(function(p, i) { return p.tr + ' ' + f[i]; }).join(' · ');
+  } else {
+    var it = trList(mode)[st.current];
+    document.querySelectorAll('#' + mode + '-options .opt-btn').forEach(function(b) {
+      b.classList.add('locked');
+      if (parseInt(b.getAttribute('data-idx'), 10) === st.current) b.classList.add('correct');
+    });
+    sub = it.tr + ' = ' + it.eng;
+  }
+  var msg = document.getElementById(mode + '-fb-msg');
+  msg.textContent = 'Here it is — no points lost';
+  msg.className = 'feedback-msg show idk';
+  var subEl = document.getElementById(mode + '-fb-sub');
+  subEl.textContent = sub;
+  subEl.className = 'feedback-sub show';
+  /* bring it back soon */
+  var q2 = st.queue.filter(function(i) { return i !== st.current; });
+  q2.splice(Math.min(TR_IDK_RETURN_AFTER, q2.length), 0, st.current);
+  st.queue = q2;
+  document.getElementById(mode + '-next').className = 'next-btn show';
 }
 
 /* ── Progress grids ── */
@@ -4126,6 +4184,11 @@ document.addEventListener('keydown', function(e) {
   if ((e.code === 'Space' || e.code === 'Enter') && answered) {
     e.preventDefault();
     nextQ(tab);
+    return;
+  }
+  if (!answered && e.code === 'KeyD' && trState[tab]) {
+    e.preventDefault();
+    trDontKnow(tab);
     return;
   }
   if (!answered) {
