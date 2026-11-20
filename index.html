@@ -150,6 +150,11 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
 .idk-btn.hidden { display: none; }
 .feedback-msg.idk { color: #f5c518; }
 /* Conjugate: Choose | Type switch, answer box and on-screen keyboard */
+.tense-pick { display: flex; align-items: center; justify-content: center; gap: 6px; margin: -6px auto 12px; font-size: 0.68rem; color: #4a6275; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.tense-chip { border: 1.5px solid #1b2d3e; background: transparent; color: #4a6275; border-radius: 99px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer; text-transform: none; letter-spacing: 0; }
+.tense-chip.active { border-color: #3d8bcd; background: rgba(61,139,205,0.12); color: #8cc4f0; }
+.tense-chip.active.past { border-color: rgba(245,197,24,0.5); background: rgba(245,197,24,0.08); color: #f5c518; }
+.tense-chip:disabled { cursor: default; }
 .input-switch { display: flex; width: fit-content; margin: 0 auto 14px; gap: 4px; background: #0c151f; border-radius: 10px; padding: 4px; }
 .input-btn { padding: 6px 14px; border-radius: 8px; border: none; background: transparent; color: #4a6275; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
 .input-btn.active { background: #162230; color: #f5c518; }
@@ -365,6 +370,7 @@ header p  { font-size: 0.82rem; color: #4a6275; margin-top: 4px; }
     <div style="font-size:3rem">&#127942;</div>
     <h2>Conjugation mastered!</h2>
     <p>Every verb conjugated.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1086;!</p>
+    <div class="tense-pick" style="margin:0 0 6px">Tenses <button type="button" class="tense-chip" data-t="pres" onclick="toggleConjTenseFromDone('pres')">Present</button><button type="button" class="tense-chip past" data-t="past" onclick="toggleConjTenseFromDone('past')">Past</button></div>
     <button class="reset-btn" onclick="resetMode('conj')">Start over</button>
   </div>
 </div>
@@ -2828,15 +2834,31 @@ function conjForms(item, tense) {
 }
 function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+/* Which tenses to practise (Present / Past chips above the question). */
+var CONJ_TENSE_KEY = 'ua_conj_tenses_v1';
+var conjTenses = { pres: true, past: true };
+try {
+  var savedTenses = JSON.parse(localStorage.getItem(CONJ_TENSE_KEY) || 'null');
+  if (savedTenses && (savedTenses.pres || savedTenses.past)) conjTenses = { pres: !!savedTenses.pres, past: !!savedTenses.past };
+} catch(e) {}
+function conjTensesFor(item) {
+  var t = [];
+  if (conjTenses.pres && conjForms(item, 'pres').length === 6) t.push('pres');
+  if (conjTenses.past && conjForms(item, 'past').length === 4) t.push('past');
+  return t;
+}
+/* not learned yet, and can be asked in one of the selected tenses */
+function conjEligible(i) { return conjPts[i] < MAX_PTS && conjTensesFor(CONJ[i]).length > 0; }
+
 function refillConjQueue() {
   var pool = [];
   for (var i = 0; i < CONJ.length; i++) {
-    if (conjPts[i] < MAX_PTS && conjForms(CONJ[i], 'past').length === 4) pool.push(i);
+    if (conjEligible(i)) pool.push(i);
   }
   conjQueue = shuffle(pool);
 }
 function pickNextConj() {
-  conjQueue = conjQueue.filter(function(i) { return conjPts[i] < MAX_PTS; });
+  conjQueue = conjQueue.filter(conjEligible);
   if (conjQueue.length === 0) refillConjQueue();
   if (conjQueue.length === 0) return null;
   return conjQueue.shift();
@@ -2844,13 +2866,15 @@ function pickNextConj() {
 
 function buildConjQuestion(item) {
   var pres = conjForms(item, 'pres'), past = conjForms(item, 'past');
-  var hasPres = pres.length === 6;
-  var tense = hasPres && Math.random() < 0.5 ? 'pres' : 'past';
+  var tenses = conjTensesFor(item);
+  if (!tenses.length) tenses = pres.length === 6 ? ['pres'] : ['past'];
+  var tense = pickRandom(tenses);
+  var both = conjTenses.pres && conjTenses.past && pres.length === 6;   /* other-tense traps only when practising both */
   var pr, correct, wrong = null;
   if (tense === 'pres') {
     pr = pickRandom(CONJ_PRES_PRONOUNS);
     correct = pres[pr.f];
-    if (Math.random() < 0.25) {                         /* tense trap */
+    if (both && Math.random() < 0.25) {                 /* tense trap */
       wrong = past[pr.f === 2 ? pickRandom([0, 1, 2]) : pr.f >= 3 ? 3 : pickRandom([0, 1])];
     } else {
       var c = CONJ_PRES_CONFUSE[pr.f].map(function(i) { return pres[i]; }).filter(function(f) { return f !== correct; });
@@ -2859,7 +2883,7 @@ function buildConjQuestion(item) {
   } else {
     pr = pickRandom(CONJ_PAST_PRONOUNS);
     correct = past[pr.f];
-    if (hasPres && Math.random() < 0.25) {              /* tense trap */
+    if (both && Math.random() < 0.25) {                 /* tense trap */
       wrong = pres[pr.pf];
     } else {
       var c2 = CONJ_PAST_CONFUSE[pr.f].map(function(i) { return past[i]; }).filter(function(f) { return f !== correct; });
@@ -2867,7 +2891,7 @@ function buildConjQuestion(item) {
     }
   }
   if (!wrong || wrong === correct) {                    /* fallback: any other form */
-    var all = pres.concat(past).filter(function(f) { return f !== correct; });
+    var all = (both ? pres.concat(past) : tense === 'pres' ? pres : past).filter(function(f) { return f !== correct; });
     wrong = pickRandom(all);
   }
   return { tense: tense, pronoun: pr, correct: correct, options: shuffle([correct, wrong]) };
@@ -2876,7 +2900,15 @@ function buildConjQuestion(item) {
 function renderConjQuestion() {
   conjAnswered = false;
   conjCurrent  = pickNextConj();
-  if (conjCurrent === null) { showCompletion('conj'); return; }
+  if (conjCurrent === null) {
+    var left = CONJ.filter(function(_, i) { return conjPts[i] < MAX_PTS; }).length;
+    var p = document.querySelector('#conj-done p');
+    if (p) p.innerHTML = left
+      ? 'Every verb learned for ' + (conjTenses.pres ? 'the present' : 'the past') + '.<br>Turn on ' + (conjTenses.pres ? 'Past' : 'Present') + ' to practise the other ' + left + '.'
+      : 'Every verb conjugated.<br>&#1063;&#1091;&#1076;&#1086;&#1074;&#1086;!';
+    showCompletion('conj');
+    return;
+  }
 
   var item = CONJ[conjCurrent];
   var pts  = conjPts[conjCurrent];
@@ -4612,6 +4644,46 @@ var coarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').
 function isTypeMode(mode) { return !!CONJ_INPUT[mode] && conjInputModes[mode] === 'type'; }
 function conjInputEl(mode) { return document.getElementById(mode + '-type-input'); }
 
+function setupConjTenses() {
+  var wrap = document.getElementById('conj-quiz-wrap');
+  if (!wrap) return;
+  var row = document.createElement('div');
+  row.className = 'tense-pick';
+  row.innerHTML = 'Tenses <button type="button" class="tense-chip" data-t="pres">Present</button>' +
+                  '<button type="button" class="tense-chip past" data-t="past">Past</button>';
+  var sw = wrap.querySelector('.input-switch');
+  wrap.insertBefore(row, sw ? sw.nextSibling : wrap.firstChild);
+  row.addEventListener('click', function(e) {
+    var b = e.target.closest('.tense-chip');
+    if (!b) return;
+    var t = b.getAttribute('data-t'), other = t === 'pres' ? 'past' : 'pres';
+    if (conjTenses[t] && !conjTenses[other]) return;          /* keep at least one */
+    conjTenses[t] = !conjTenses[t];
+    try { localStorage.setItem(CONJ_TENSE_KEY, JSON.stringify(conjTenses)); } catch(err) {}
+    syncConjTenseChips();
+    conjQueue = [];
+    var done = document.getElementById('conj-done');
+    if (done && done.style.display === 'flex') {
+      done.style.display = 'none';
+      wrap.style.display = 'block';
+    }
+    renderConjQuestion();
+  });
+  syncConjTenseChips();
+}
+function toggleConjTenseFromDone(t) {
+  var chip = document.querySelector('#conj-quiz-wrap .tense-chip[data-t="' + t + '"]');
+  if (chip) chip.click();
+}
+function syncConjTenseChips() {
+  document.querySelectorAll('#conj-quiz-wrap .tense-chip, #conj-done .tense-chip').forEach(function(b) {
+    var t = b.getAttribute('data-t'), other = t === 'pres' ? 'past' : 'pres';
+    b.classList.toggle('active', !!conjTenses[t]);
+    b.disabled = conjTenses[t] && !conjTenses[other];
+    b.title = b.disabled ? 'At least one tense stays on' : (conjTenses[t] ? 'Click to leave out' : 'Click to include');
+  });
+}
+
 function setupConjInputs() {
   Object.keys(CONJ_INPUT).forEach(function(mode) {
     var cfg = CONJ_INPUT[mode];
@@ -4817,6 +4889,7 @@ document.addEventListener('keydown', function(e) {
 ══════════════════════════════════════════ */
 loadProgress();
 setupConjInputs();
+setupConjTenses();
 renderLetterGrid();
 renderWordsGrid();
 renderSentencesGrid();
