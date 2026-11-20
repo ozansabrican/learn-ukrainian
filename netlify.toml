@@ -1,0 +1,20 @@
+# Netlify copy of the app — for places where *.vercel.app is blocked (e.g. Turkey).
+# Netlify serves index.html and forwards /api and /admin to the Vercel backend
+# from its own servers, so the browser only ever talks to Netlify.
+# Same progress, same profiles, same added words as the Vercel site.
+
+[build]
+  command = "mkdir -p netlify-dist && cp index.html netlify-dist/"
+  publish = "netlify-dist"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://learn-ukrainian-seven.vercel.app/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/admin"
+  to = "https://learn-ukrainian-seven.vercel.app/admin"
+  status = 200
+  force = true
